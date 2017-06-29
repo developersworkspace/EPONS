@@ -1,0 +1,1 @@
+ALTER TABLE Account ADD CONSTRAINT FK_Account_Language FOREIGN KEY (LanguageId) REFERENCES ListItem (ListItemId);

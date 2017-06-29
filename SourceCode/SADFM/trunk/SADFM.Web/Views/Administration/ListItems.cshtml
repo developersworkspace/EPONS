@@ -1,0 +1,356 @@
+﻿@{
+    ViewBag.Title = "List Items";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>List Item maintenance</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a>Administration</a>
+            </li>
+            <li class="active">
+                <strong>List Items</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="col-xs-10">
+                        <h5>SADFM General System List Items</h5>
+                    </div>
+                    <div class="col-xs-2 pull-right">
+                        <button class="btn btn-xs btn-primary" id="btnAdd"><i class="fa fa-plus"></i>&nbsp;Add</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <table class="table table-striped table-bordered table-hover tblData">
+                        <thead>
+                            <tr>
+                                <th>List</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Code</th>
+                                <th>Value</th>
+                                <th>Sort Order</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>List</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Code</th>
+                                <th>Value</th>
+                                <th>Sort Order</th>
+                                <th>Edit</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal inmodal" id="popupEditor" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">#</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">List</label>
+                        <div class="col-lg-9" id="lblList">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Name</label>
+                        <div class="col-lg-9" id="lblName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Description</label>
+                        <div class="col-lg-9">
+                            <textarea style="width: 100%; height: 45px" id="txtDescription" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Code</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="txtCode" style="width: 100%" placeholder="Code" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Value</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="txtValue" style="width: 100%" placeholder="Value" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Sort Order</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="txtSortOrder" style="width: 100%" placeholder="Sort Order" />
+                        </div>
+                    </div>
+                    <input type="hidden" id="ID" /><input type="hidden" id="AGE" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-save">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal" id="popupAdd" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Add new ListItem</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Parent</label>
+                        <div class="col-lg-9" id="parentBox">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Name</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="txtNameAdd" style="width: 100%" placeholder="Name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Description</label>
+                        <div class="col-lg-9">
+                            <textarea style="width: 100%; height: 45px" id="txtDescriptionAdd" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Code</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="txtCodeAdd" style="width: 100%" placeholder="Code" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Value</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="txtValueAdd" style="width: 100%" placeholder="Value" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Sort Order</label>
+                        <div class="col-lg-9">
+                            <input type="text" id="txtSortOrderAdd" style="width: 100%" placeholder="Sort Order" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-save" id="btnSaveAdd">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/dataTablesStyles")
+    @Styles.Render("~/plugins/chosenStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jeditable")
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/chosen")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#btnAdd').click(function () {
+                $('#parentBox').html('');
+                addChildDropdown(0, '');
+                $('#txtNameAdd').val('');
+                $('#txtDescriptionAdd').val('');
+                $('#txtCodeAdd').val('');
+                $('#txtValueAdd').val('');
+                $('#txtSortOrderAdd').val('');
+                $("#popupAdd").modal("show");
+            });
+
+            $('#btnSaveAdd').click(function () {
+                var parentID = null;
+                var len = $("#parentBox select").length;
+                var lastValue = $("#parentBox select").eq(len - 1).val();
+                if (lastValue == "" || lastValue == null) {
+                    parentID = $("#parentBox select").eq(len - 2).val();
+                } else {
+                    parentID = $("#parentBox select").eq(len - 1).val();
+                }
+
+                var model = {
+                    ParentID: parentID,
+                    Name: $('#txtNameAdd').val(),
+                    Description: $('#txtDescriptionAdd').val(),
+                    Code: $('#txtCodeAdd').val(),
+                    Value: $('#txtValueAdd').val(),
+                    SortOrder: $('#txtSortOrderAdd').val()
+                };
+
+                Post("/Administration/NewListItem", model,
+                              function () {
+                                  $("#popupAdd").modal("hide");
+
+                              });
+
+            });
+
+            $("#ParentID0").chosen({
+                "width": "100%",
+                disable_search_threshold: 5
+            });
+
+            $("#ParentID0").change(function () {
+                addChildDropdown(1, $("#ParentID0").val());
+            });
+
+            $('.tblData').dataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/Administration/ListItemList",
+                    "type": "POST"
+                },
+                "oLanguage": {
+                    "sProcessing": "<img src='/Images/loading.gif' height='25'/>"
+                },
+                "order": [[0, "asc"]],
+                "bAutoWidth": false,
+                "columns": [
+                    { "data": "ListName" },
+                    { "data": "Name" },
+                    { "data": "Description" },
+                    { "data": "Code" },
+                    { "data": "Value" },
+                    { "data": "SortOrder" },
+                    { "data": null, orderable: false, defaultContent: "<button class='btn btn-sm btn-primary btn-edit'>Edit</button>" }],
+                "drawCallback": function () {
+                    $(".btn-edit").click(function () {
+                        editListItem($('.tblData').DataTable().row($(this).closest('tr')).data());
+                    });
+                }
+                @*"dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../scripts/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
+                }*@
+            });
+
+        });
+
+        function addChildDropdown(id, parent) {
+            $.get("/Administration/ListItemChilds?id=" + id + "&parent=" + encodeURIComponent(String(parent)), function (data) {
+
+                if (data != "") {
+
+                    $('#parentBox').append(data + '<button class="btn btn-warning" type="button" onclick="removeComboBox(' + id + ')">X</button>');
+
+                    $("#ParentID" + id).chosen({
+                        "width": "80%",
+                        disable_search_threshold: 5
+                    });
+
+                    $("#ParentID" + id).change(function () {
+                        addChildDropdown(id + 1, $("#ParentID" + id).val());
+                    });
+
+                    $("#ParentID" + (id - 1)).prop('disabled', true).trigger("chosen:updated");
+                }
+
+            });
+        }
+
+        function removeComboBox(id) {
+
+            var baseId = id;
+
+            id = id + 1;
+            var exist = $("#ParentID" + id).length != 0;
+            while (exist) {
+
+                $("#ParentID" + id).next().next().remove();
+                $("#ParentID" + id).next().remove();
+                $("#ParentID" + id).remove();
+                id = id + 1;
+                exist = $("#ParentID" + id).length != 0;
+            }
+
+            $("#ParentID" + baseId).val('');
+            $("#ParentID" + baseId).prop('disabled', false).trigger("chosen:updated");
+
+        }
+
+        function editListItem(data) {
+            $("#popupEditor .modal-title").html("Edit " + data.Name);
+            $("#popupEditor #lblList").html(data.ListName);
+            $("#popupEditor #lblName").html(data.Name);
+            $("#popupEditor #txtDescription").val(data.Description);
+            $("#popupEditor #txtCode").val(data.Code);
+            $("#popupEditor #txtValue").val(data.Value);
+            $("#popupEditor #txtSortOrder").val(data.SortOrder);
+            $("#popupEditor #ID").val(data.ID);
+            $("#popupEditor #AGE").val(data.Age);
+            $("#popupEditor").modal("show");
+
+            $("#popupEditor .btn-save").unbind("click");
+            $("#popupEditor .btn-save").bind("click", function () {
+                $.ajax({
+                    url: "/Administration/SetListItem",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        ID: $("#popupEditor #ID").val(),
+                        Age: $("#popupEditor #AGE").val(),
+                        Description: $("#popupEditor #txtDescription").val(),
+                        Code: $("#popupEditor #txtCode").val(),
+                        Value: $("#popupEditor #txtValue").val(),
+                        SortOrder: $("#popupEditor #txtSortOrder").val()
+                    },
+                    success: function (result) {
+                        if (result.Success) {
+                            $('#popupEditor').modal('hide');
+                            $('.tblData').dataTable().fnFilter();
+                        } else {
+                            toastr.error(result.Message, 'ERROR!');
+                        }
+                    },
+                    error: function (x1, x2, x3) {
+                        toastr.error(x2, 'ERROR!');
+                    }
+                });
+            });
+        }
+    </script>
+}

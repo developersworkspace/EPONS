@@ -1,0 +1,1 @@
+ALTER TABLE [Account] ADD  HPSCANumber varchar(255), PracticeNumber varchar(255);

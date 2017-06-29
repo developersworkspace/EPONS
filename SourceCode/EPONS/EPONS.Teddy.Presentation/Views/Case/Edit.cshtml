@@ -1,0 +1,155 @@
+﻿@model EPONS.Teddy.Presentation.Models.CaseEdit
+@{
+    ViewBag.Title = "Edit";
+    var baseModel = (EPONS.Teddy.Presentation.Models.Base)Model;
+    ViewData["BaseModel"] = baseModel;
+    ViewData["PatientModel"] = Model.PatientModel;
+}
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>
+            <img src="http://placehold.it/75x75" class="img-responsive img-circle pull-left profile" alt="Profile Image">
+            @Model.PatientModel.GetTitleLine()
+            <small>@Model.PatientModel.GetSubTitleLine()</small>
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index-2.html">Home</a>
+            </li>
+            <li>
+                <a>Case</a>
+            </li>
+            <li class="active">
+                <strong>Edit</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("Edit", "Patient", new { patientId = Model.PatientModel.Id})" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true" class="">Case Details</a>
+                                </h4>
+                            </div>
+                            <div id="collapse1" class="panel-collapse collapse in" aria-expanded="true">
+                                <div class='panel-body'>
+                                    @Html.Partial("_CaseDetails", Model.Case)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" class="collapsed" aria-expanded="false">Current Measurement Tools</a>
+                                </h4>
+                                @if (Model.UserModel.CanAssignMeasurementTools())
+                                {
+                                    <button onclick="showAssignMeasurementToolModal()" class="btn btn-primary btn-sm pull-right">Assign Measurement Tool</button>
+                                }
+                            </div>
+                            <div id="collapse2" class="panel-collapse collapse" aria-expanded="false">
+                                <div class='panel-body'>
+                                    @Html.Partial("~/Views/Patient/_ListMeasurementTools.cshtml", Model.MeasurementTools)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" class="collapsed" aria-expanded="false">Multi-Disciplinary Team (MDT)</a>
+                                </h4>
+                                @if (Model.UserModel.CanAllocateTeamMember())
+                                {
+                                    <button onclick="showAllocateTeamMemberModal()" class="btn btn-primary btn-sm pull-right">Allocate Team Member</button>
+                                }
+                            </div>
+                            <div id="collapse3" class="panel-collapse collapse" aria-expanded="false">
+                                <div class="panel-body">
+                                    @Html.Partial("~/Views/Patient/_ListTeamMembers.cshtml", Model.PatientModel.TeamMembers)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.UserModel.CanAssignMeasurementTools())
+{
+
+    @Html.Partial("~/Views/Patient/_AssignMeasurementToolModal.cshtml", new EPONS.Teddy.Presentation.ViewModels.MeasurementTool()
+{
+    MeasurementTools = Model.MeasurementToolList,
+    Frequencies = Model.FrequencyList,
+    PatientId = Model.PatientModel.Id
+})
+}
+
+@if (Model.UserModel.CanAllocateTeamMember())
+{
+    @Html.Partial("~/Views/Patient/_AllocateTeamMemberModal.cshtml", new EPONS.Teddy.Presentation.ViewModels.TeamMember()
+{
+    Facilities = Model.FacilityList,
+    PatientId = Model.PatientModel.Id,
+    Users = new SelectList(new List<Object>())
+})
+}
+
+@section styles {
+    <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+
+}
+
+@section scripts {
+    <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/plugins/typeahead/typeahead.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            $('input.typeahead').typeahead({
+                ajax: '/Ajax/SearchICD10Codes'
+            });
+
+
+            $('#StartDate').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/MM/yyyy'
+            });
+
+            $('#EndDate').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/MM/yyyy'
+            });
+
+            $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+
+        });
+
+
+    </script>
+}
+

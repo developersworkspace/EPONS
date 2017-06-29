@@ -1,0 +1,80 @@
+﻿@using EPONS.Teddy.Application.Entities
+@model IEnumerable<EPONS.Teddy.Application.EntityViews.EpisodeOfCare>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Facility)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AllocationNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AllocationTimestamp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReasonForAdmissionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImpairmentGroup)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeallocationTimestamp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReferringDoctorName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AttendingDoctorName)
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Facility)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AllocationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AllocationTimestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReasonForAdmissionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImpairmentGroup)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeallocationTimestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReferringDoctorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AttendingDoctorName)
+            </td>
+            <td>
+                @*@Html.Partial("EditEpisodeOfCare", typeof(EpisodeOfCare))*@
+                @*<button onclick="showeditEpisodeOfCareModal()" class="btn btn-primary btn-sm pull-right">Create</button>*@
+                @if(item.DeallocationTimestamp == null) { 
+                <button onclick="showEditEpisodeOfCareModal($(this))" class="btn btn-primary btn-sm edit" EpisodeOfCareId="@item.EpisodeOfCareId">Edit</button>
+                }
+                @*<a href="@Url.Action("EditEpisodeOfCare", "Patient", new {episodeofCareId = item.EpisodeOfCareId})" class="btn btn-primary btn-sm pull-right">">Edit</a>*@
+                @*<a href="javascript:void(0);" id="myModalContent" data-id="@item.EpisodeOfCareId">Edit</a>*@ 
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+@*<script type="text/x-mustache-template" id="modalTemplate">
+    <%Html.RenderPartial("EPONS.Teddy.Application.Entities.EpisodeOfCare");%>
+    @Html.Partial("EditEpisodeOfCare", typeof(EpisodeOfCare))
+</script>*@

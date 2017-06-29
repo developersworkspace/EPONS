@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:user="http://schemas.microsoft.com/wix/UtilExtension">
+	<Product Id="*" Name="SADFM" Language="1033" Version="1.0.0.0" Manufacturer="Return True" UpgradeCode="34319587-65c2-4557-b670-46845463f9b7">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+    <Property Id="APPCOMMENTS" Value="SADFM Electronic Patient Outcomes Nursing System developed by Return True SA." />
+    <Property Id="APPHELPLINK" Value="http://www.sadfm.co.za/" />
+    <Property Id="MSIUSEREALADMINDETECTION" Value="1" />
+
+    <Property Id="SADFM_IIS" Value="SADFM_IIS"/>
+
+    <UIRef Id="WixUI_MyUI" />
+    
+    <Feature Id="SADFM" Title="SADFM ePons" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="SADFM" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			<!-- </Component> -->
+      
+		</ComponentGroup>
+	</Fragment>
+
+</Wix>

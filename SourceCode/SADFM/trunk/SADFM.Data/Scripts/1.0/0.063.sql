@@ -1,0 +1,1 @@
+﻿ALTER TABLE [Visit] ADD MimeType varchar(100);

@@ -1,0 +1,294 @@
+﻿@model EPONS.Teddy.Application.Entities.EpisodeOfCare
+@{
+
+}
+<style type="text/css">
+    .display {
+    }
+</style>
+<div id="createEpisodeOfCareModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create Episode of Care</h4>
+            </div>
+            @using (Html.BeginForm("CreateEpisodeOfCare", "Patient"))
+            {
+                <div class="modal-body">
+                    <p class="text-danger">@TempData["Message_CreateEpisodeOfCare"]</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.ReasonForAdmissionName)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(x => x.ReasonForAdmissionName, new
+                       {
+                           @class = "typeahead form-control",
+                           placeholder = "Select an ICD10 Code",
+                           Value = Model.ReasonForAdmissionName == null ? null : Model.ReasonForAdmissionName
+                       })
+
+                            @Html.ValidationMessageFor(x => x.ReasonForAdmissionName, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.ReasonForAdmissionTimestamp)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(x => x.ReasonForAdmissionTimestamp, "{0:yyyy-MM-dd HH:mm}", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.ReasonForAdmissionTimestamp, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.AllocationNumber)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(x => x.AllocationNumber, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.AllocationNumber, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.ImpairmentGroupId) (optional on admission)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DropDownListFor(x => x.ImpairmentGroupId, new SelectList(Model.ImpairmentGroups, "Id", "Name"), "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.ImpairmentGroupId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.AdmissionTypeId)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DropDownListFor(x => x.AdmissionTypeId, new SelectList(Model.AdmissionTypes, "Id", "Name"), "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.AdmissionTypeId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <table>
+                        <tr>
+                            <td><h4>Referring Doctor</h4></td>
+                            <td><input type="checkbox" id="referringCheckbox"></td>
+                        </tr>
+                    </table>
+                    @*<h4>Referring Doctor</h4>
+                        <input type="checkbox" id="referringCheckbox">*@
+                    <section id="ShowHideReferring" style="display:none">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorName)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.Name, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorNumber)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.ContactNumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorEmail)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.Email, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorPracticeName)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.PracticeName, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorHPCSANumber)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.HPCSANumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                    </section>
+                    <br />
+                    <table>
+                        <tr>
+                            <td><h4>Treating Doctor</h4></td>
+                            <td><input type="checkbox" id="attendingCheckbox"></td>
+                        </tr>
+                    </table>
+                    @*<h4>Attending Doctor</h4>
+                        <input type="checkbox" id="attendingCheckbox">*@
+                    <section id="ShowHideAttending" style="display:none">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctorName)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.Name, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctorNumber)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.ContactNumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctorEmail)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.Email, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctor.PracticeName)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.PracticeName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @Html.DisplayNameFor(x => x.AttendingDoctor.HPCSANumber)
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(x => x.AttendingDoctor.HPCSANumber, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        
+                    </section>
+
+
+                    @Html.HiddenFor(x => x.PatientId)
+                    @Html.HiddenFor(x => x.FacilityId)
+                    @Html.HiddenFor(x => x.userId)
+                    @Html.AntiForgeryToken()
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btnCreate">Create</button>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
+
+@*<script>
+        $(function () {
+            $('#referringCheckbox').change(function () {
+                $('#ShowHideReferring').toggle($(this).is(':checked'));
+            });
+            $('#attendingCheckbox').change(function () {
+                $('#ShowHideAttending').toggle($(this).is(':checked'));
+            });
+        });
+    </script>*@
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#ShowHideReferring').toggle($(this).is(':checked'));
+        $('#ShowHideAttending').toggle($(this).is(':checked'));
+        $('#referringCheckbox').change(function () {
+            $('#ShowHideReferring').toggle($(this).is(':checked'));
+        });
+
+        $('#attendingCheckbox').change(function () {
+            $('#ShowHideAttending').toggle($(this).is(':checked'));
+        });
+
+        @if (TempData["Message_CreateEpisodeOfCare"] != null) {
+            <text>
+        showCreateEpisodeOfCareModal();
+        </text>
+        }
+
+
+        $('#createEpisodeOfCareModal #ReasonForAdmissionTimestamp').datepicker({
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            format: 'yyyy/mm/dd',
+            immediateUpdates: true
+        });
+
+        $('#createEpisodeOfCareModal input.typeahead').typeahead({
+            ajax: '@Url.Action("SearchICD10Codes", "Ajax")'
+        });
+
+
+    });
+
+    function showCreateEpisodeOfCareModal() {
+        $('#createEpisodeOfCareModal').modal('show');
+    }
+
+
+  
+
+</script>
+
+

@@ -1,0 +1,630 @@
+﻿@model List<SADFM.Data.Models.Scale>
+@using SADFM.Web.Shared;
+@{
+    ViewBag.Title = "Graphs";
+}
+@{
+    //window.location.search.substring(9)
+    SADFM.Data.Models.Patient patient = SADFM.Data.DataAccess.Patient.GetById(Guid.ParseExact(Request["Patient"], "N"), lightWeight: true);
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Patients Analytics</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a href="/Patient/Details?Patient=@patient.GetId().ToString("N")">Patients</a>
+            </li>
+            <li class="active">
+                <strong>Patient Graphs</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+        <h2><a href="/Patient/Details?Patient=@patient.GetId().ToString("N")" class="btn btn-primary">Close</a></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom: 0px;">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins" style="margin-bottom: 0px;">
+                <div class="ibox-title">
+                    <h3>@patient.FirstName @patient.LastName</h3>
+                </div>
+            </div>
+
+            <div class="ibox float-e-margins" style="margin-bottom: 0px;">
+                <div class="ibox-title">
+                    <h5>Graph query</h5>
+                </div>
+                <div class="ibox-content" style="padding-bottom: 55px;">
+                    <div class="row">
+                        <div class="col-xs-2">Scale</div>
+                        <div class="col-xs-4">
+                            @SADFM.Web.Shared.HtmlHelper.DropdownBox(Model, "ScaleID", l => l.ScaleID, l => l.Description, "chosen-select", dataPlaceholder: "Select scale")
+                        </div>
+                        <div class="col-xs-2">Show as</div>
+                        <div class="col-xs-4">
+                            <select id="ChartType" class="chosen-select" data-placeholder="Select graph type">
+                                <option></option>
+                                <option value="AllVisitsLine">Line - All Visits</option>
+                                <option value="CondensedVisitsLine">Line - Condensed</option>
+                                <option value="Polar">Polar</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" id="dateSearch" style="display: none">
+                        <div class="col-xs-2">
+                            Select dates
+                        </div>
+                        <div style="border: 2px solid #ccc; width: 100%; height: 100px; overflow-y: scroll;" id="dateList">
+                            Waiting for evaluation dates...
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-8">
+
+                        </div>
+                        <div class="col-xs-2">
+                            <form target="_blank" action="/Report/DownloadPatientReport" method="post" id="formDownload" style="display:none">
+                                <input type="hidden" name="PatientId" value="@patient.GetId().ToString("N")" />
+                                <input type="hidden" name="ScaleId" value="" />
+                                <input type="hidden" name="Graph" value="" />
+                                <input type="hidden" name="SelectedDatesString" value="" />
+                                <button type="submit" class="btn btn-primary">
+                                    Download
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-primary pull-right" style="display:none" id="showGraph">Show</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content" id="lineContainer" style="display: none">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Line Graph</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="flot-chart" style="width: 100%; height: 600px">
+                        <div class="flot-chart-content" id="lineChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content" id="radarContainer" style="display: none">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Polar Graph</h5>
+                </div>
+                <div class="ibox-content">
+                    <div id="radarGraph" style="margin: 0 auto"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    @Styles.Render("~/plugins/chosenStyles")
+    <style>
+        .chosen-container {
+            z-index: 500;
+        }
+    </style>
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/chartjs")
+    @Scripts.Render("~/plugins/flot")
+    @Scripts.Render("~/plugins/html2canvas")
+    @Scripts.Render("~/plugins/Canvg")
+    @Scripts.Render("~/plugins/html2canvas-extra")
+    @Scripts.Render("~/plugins/HighCharts")
+    @Scripts.Render("~/plugins/HighCharts-More")
+
+    <script type="text/javascript">
+        var lineChart;
+        var radarChart;
+        var loaded = false;
+        $(function () {
+
+            //$(window).resize(function () {
+            //    if (this.resizeTO) clearTimeout(this.resizeTO);
+            //    this.resizeTO = setTimeout(function () {
+            //        $(this).trigger('resizeEnd');
+            //    }, 500);
+            //});
+
+
+            //$(window).bind('resizeEnd', function () {
+            //    $("button#showGraph").click();
+            //});
+
+
+
+            $(".chosen-select").chosen({
+                "width": "100%",
+                disable_search_threshold: 5
+            }).change(function () {
+
+                if ($("#ScaleID option:selected").html() == "Vital Signs") {
+
+                    $("#ChartType option").each(function( index ) {
+                        if ($(this).val() != 'AllVisitsLine') {
+                            $(this).attr('disabled', true);
+                        }
+                    });
+
+                    $("#ChartType").val('AllVisitsLine');
+                    $('#ChartType').trigger("chosen:updated");
+                } else {
+                    $("#ChartType option").each(function (index) {
+                        if ($(this).val() != 'AllVisitsLine') {
+                            $(this).attr('disabled', false);
+                        }
+                    });
+
+                    $('#ChartType').trigger("chosen:updated");
+                }
+
+                if (!(($("#ScaleID option:selected").val() != "") && ($("#ChartType option:selected").val() != ""))) {
+                    $('button#showGraph').css('display', 'none');
+                    return;
+                }
+              
+                
+
+                if ($("#ChartType option:selected").val() == "Polar") {
+                    refreshAvailableDates();
+                } else {
+                    $("#dateSearch").css("display", "none");
+                    $('button#showGraph').css('display', 'block');
+                }
+            });
+
+
+            $('#formDownload').submit(function () {
+
+
+                    $("#formDownload input[name='ScaleId']").val($("#ScaleID option:selected").val());
+                   
+                    if ($('#ChartType :selected').val() != 'Polar') {
+                        $("#formDownload input[name='Graph']").val(LineToDataUri());
+                        $("#formDownload input[name='SelectedDatesString']").val(getSelectedDates().join("|"));
+                    } else {
+                        $("#formDownload input[name='Graph']").val(RadarToDataUri());
+                        $("#formDownload input[name='SelectedDatesString']").val(getSelectedDates().join("|"));
+
+                      
+                        
+                    }
+
+
+                return true;
+            });
+
+            //$("button#download").click(function () {
+            //    DownloadPDF();
+            //});
+
+
+            $("button#showGraph").click(function () {
+
+                if ($("#ChartType option:selected").val() == "Polar") {
+                    if (getSelectedDates().length > 3 || getSelectedDates().length == 0) {
+                        $.fn.jAlert({
+                            'title': 'Error!',
+                            'message': 'You can select up to 3, but no more than 3 dates / evaluations',
+                            'theme': 'error'
+                        });
+                        return;
+                    }
+
+                }
+
+                if ($("#ScaleID option:selected").text() == "Vital Signs" && $("#ChartType option:selected").val() != "AllVisitsLine") {
+                    $.fn.jAlert({
+                        'title': 'Error!',
+                        'message': 'Vitial signs are only available for Line - All Visits',
+                        'theme': 'error'
+                    });
+                    return;
+                }
+
+                $("#lineContainer, #radarContainer").css("display", "none");
+
+                $.ajax({
+                    url: "/Patient/GraphData",
+                    data: {
+                        PatientId: window.location.search.substring(9),
+                        ScaleID: $("#ScaleID option:selected").val(),
+                        GraphType: $("#ChartType option:selected").val(),
+                        SelectedDates: getSelectedDates()
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+
+                        $('#formDownload').css('display', 'block');
+
+                        switch ($("#ChartType option:selected").val()) {
+                            case "AllVisitsLine":
+                            case "CondensedVisitsLine":
+                                drawLine(data.Data, data.Format);
+                                break;
+                            case "Polar":
+                                drawRadar(data);
+                                break;
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Could not load graph data", 'ERROR!');
+                    }
+                });
+            });
+
+        });
+
+        function drawLine(data, format) {
+
+            $("#lineContainer").css("display", "");
+
+
+            $('#lineChart').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: { // don't display the dummy year
+                        month: '%e. %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                    min: 0
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%e. %b}: {point.y:.1f}'
+                },
+
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: data
+            });
+
+
+
+            ////
+            /*
+            lineChart = $.plot(
+                $("#lineChart"),
+                data, {
+                    xaxes: [{
+                        mode: 'time',
+                        tickFormatter: function (date) {
+                            return new Date(date).toString(format);
+                        }
+                    }],
+                    yaxes: [{
+                        mode: "linear",
+                        min: 1,
+                        max: 7,
+                        ticks: 6
+                    }],
+                    legend: {
+                        position: 'nw',
+                        noColumns: 2,
+                        backgroundOpacity: 0.8,
+                        labelFormatter: function (lbl) {
+                            return "<a href=#>" + lbl + "</a>";
+                        }
+                    },
+                    lines: { show: true },
+                    points: { show: true },
+                    colors: ["#1ab394"],
+                    grid: {
+                        color: "#999999",
+                        hoverable: true,
+                        clickable: true,
+                        tickColor: "#D4D4D4",
+                        borderWidth: 0,
+                        hoverable: true
+
+                    },
+                    tooltip: true,
+                    tooltipOpts: {
+                        content: "%s for %x was %y",
+                        xDateFormat: "%y-%0m-%0d",
+                        onHover: function (flotItem, $tooltipEl) {
+                            // console.log(flotItem, $tooltipEl);
+                        }
+                    }
+
+                });
+
+                */
+        }
+
+        function drawRadar(data) {
+
+            $("#radarContainer").css("display", "");
+
+            for (i = 0; i < data.data.length; i++) {
+                var scoreSum = 0;
+                for (j = 0; j < data.data[i].points.length; j++) {
+                    scoreSum += data.data[i].points[j];
+                }
+                //Total Score = 86 / 126, (BOC)Burden of ADL Care: 2.25 Hrs/24hrs (the formula is as follows: 126 - 86  = 40 x 3.38 devided by 60 = 2.25 Hrs/24hrs)
+                if ($("#ScaleID option:selected").html() == 'Beta')
+                    data.data[i].fullTitle = data.data[i].title + ' - Total Score = ' + scoreSum + ' / ' + (data.labels.length * 7) + ', (BOC)Burden of ADL Care:' + (((data.labels.length * 7) - scoreSum) * 3.38 / 60).toFixed(2) + ' Hrs/24hrs';
+                else
+                    data.data[i].fullTitle = data.data[i].title + ' - Total Score = ' + scoreSum + ' / ' + (data.labels.length * ($("#ScaleID option:selected").html() == 'APOM' ? 18 : 7));
+            }
+
+            dataSet = new Array();
+            color = new Array("255,37,37", "49,134,155", "0,176,80");
+            for (i = 0; i < data.data.length; i++)
+                if (data.data.length >= 1) {
+                    dataSet.unshift({
+                        name: data.data[i].title,
+                        fullTitle: data.data[i].fullTitle,
+                        data: data.data[i].points,
+                        pointPlacement: 'on',
+                        fillColor: "rgba(" + color[i] + ",0.2)",
+                        color: "rgba(" + color[i] + ",1)",
+                        marker: {
+                            symbol: "circle"
+                        }
+                    });
+                }
+
+            $('#radarGraph').highcharts({
+
+                chart: {
+                    polar: true,
+                    type: 'area',
+                    height: 800
+                },
+
+                title: {
+                    text: null
+                },
+
+                xAxis: {
+                    categories: data.labels,
+                    tickmarkPlacement: 'on',
+                    lineWidth: 0,
+                    labels: {
+                        style: {
+                            color: 'red',
+                            fontSize: '15px'
+                        }
+                    }
+                },
+
+                yAxis: {
+                    gridLineInterpolation: 'polygon',
+                    lineWidth: 0,
+                    tickInterval: 1,
+                    min: 0,
+                    ceiling: $("#ScaleID option:selected").text() == 'APOM'? 18 : 7,
+                    max: $("#ScaleID option:selected").text() == 'APOM' ? 18 : 7,
+                    showFirstLabel: false,
+                    showLastLabel: true,
+                    labels: {
+                        style: {
+                            color: 'red',
+                            fontSize: '15px'
+                        }
+                    }
+                },
+
+                tooltip: {
+                    shared: true,
+                    pointFormat: '<span style="color:{series.color}">{series.name}: {point.y:,.0f}<br/>'
+                },
+
+                legend: {
+                    align: 'left',
+                    verticalAlign: 'top',
+                    layout: 'horizontal',
+                    labelFormatter: function () {
+                        return this.userOptions.fullTitle;
+                    },
+                    itemStyle: {
+                        font: '13pt Arial'
+                    }
+                },
+
+                series: dataSet
+
+            });
+
+
+
+        }
+
+        function refreshAvailableDates() {
+
+            $("#dateSearch").css("display", "");
+
+            $.ajax({
+                url: "/Patient/GraphData",
+                data: {
+                    PatientId: window.location.search.substring(9),
+                    ScaleID: $("#ScaleID option:selected").val(),
+                    GraphType: "PolarDates"
+                },
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    $('#dateList').html('');
+                    for (i = 0; i < data.length; i++)
+                        $('#dateList').append("<input type='checkbox' value='" + data[i].ticks + "' /> <label>" + data[i].display + " </label><br />");
+                    
+                    $('button#showGraph').css('display', 'block');
+                },
+                error: function () {
+                    toastr.error("Could not load graph dates", 'ERROR!');
+                }
+            });
+        }
+
+
+        function getSelectedDates() {
+            result = new Array();
+
+            $('#dateList').children('input:checked').each(function () {
+                result.push($(this).val());
+            });
+
+
+            return result;
+        }
+
+        function DownloadPDF() {
+
+
+            if ($('#ChartType :selected').val() == 'Polar') {
+
+
+                var PatientId = window.location.search.substring(9);
+
+                Post("/Report/DownloadPatientReport", {
+                    PatientId: PatientId,
+                    Graph: RadarToDataUri(),
+                    SelectedDates: getSelectedDates(),
+                    ScaleId: $("#ScaleID option:selected").val()
+                },
+                function (data) {
+                    downloadURI(data.File, "PatientReport.pdf");
+                    //document.body.innerHTML = data.Html;
+                });
+
+
+            } else {
+                if (lineChart == null) {
+                    alert("Press show before report can be generated.");
+                    return;
+                } else {
+                    html2canvas($("#lineContainer"), {
+                        onrendered: function (cs) {
+
+                            var canvas = cs;
+                            var context = canvas.getContext('2d');
+
+                            var PatientId = window.location.search.substring(9);
+
+                            Post("/Report/DownloadPatientReport", {
+                                PatientId: PatientId,
+                                Graph: cs.toDataURL(),
+                                SelectedDates: getSelectedDates(),
+                                ScaleId: $("#ScaleID option:selected").val()
+                            },
+                            function (data) {
+                                downloadURI(data.File, "PatientReport.pdf");
+                                document.body.innerHTML = data.Html;
+                            });
+                        }
+                    });
+                }
+            }
+
+
+        }
+
+
+        function LineToDataUri() {
+            $('#lineTempCanvas').remove();
+            var canvas = document.createElement('canvas');
+            canvas.id = "lineTempCanvas";
+            canvas.width = 1224;
+            canvas.height = 768;
+            canvas.style.zIndex = 8;
+            canvas.style.position = "absolute";
+            canvas.style.border = "1px solid";
+            canvas.style.display = "none"
+            document.body.appendChild(canvas);
+            canvg(document.getElementById('lineTempCanvas'), $("#lineContainer svg").parent().html());
+            var URL = canvas.toDataURL();
+            return URL;
+        }
+
+        function RadarToDataUri() {
+          // $('text').css('font', ''); 
+            //$('text').css('font-size', '20px');
+
+            $('#radarTempCanvas').remove();
+            var canvas = document.createElement('canvas');
+            canvas.id = "radarTempCanvas";
+            canvas.width = 1224;
+            canvas.height = 768;
+            canvas.style.zIndex = 8;
+            canvas.style.position = "absolute";
+            canvas.style.border = "1px solid";
+            canvas.style.display = "none"
+            document.body.appendChild(canvas);
+            canvg(document.getElementById('radarTempCanvas'), $("#radarContainer svg").parent().html());
+            var URL = canvas.toDataURL();
+            return URL;
+        }
+
+
+        function downloadURI(uri, name) {
+
+            if (!!window.chrome) {
+                var link = document.createElement("a");
+                link.download = name;
+                link.href = uri;
+                link.click();
+            } else {
+                var win = window.open(uri, '_blank');
+                win.focus();
+
+            }
+
+        }
+
+
+    </script>
+}
+

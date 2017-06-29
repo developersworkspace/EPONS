@@ -1,0 +1,112 @@
+﻿@using SADFM.Web.Shared;
+@{
+    Layout = null;
+}
+
+<form id="formPopUp" action="#" class="wizard-big">
+    <h1>Additional</h1>
+    <fieldset>
+        @*<div class="row">
+            <div class="col-lg-6">
+                <h4>Personal Information</h4>
+            </div>*@
+            @*<div class="col-lg-6">
+                <h4 class="error pull-right" style="color: red"></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Title"), "TitleID", l => l.ID, l => l.Name, "chosen-select", dataPlaceholder: "Select title")
+            </div>
+            <div class="col-lg-4">
+                <input id="firstName" name="firstName" placeholder="@Library.GetText("FirstNameLabel")" type="text" class="form-control required">
+            </div>
+            <div class="col-lg-4">
+                <input id="surname" name="surname" placeholder="@Library.GetText("SurnameLabel")" type="text" class="form-control required">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div id="dateofbirth">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input type="text" class="form-control required" placeholder="Birthdate">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <input id="idNumber" name="idNumber" placeholder="ID / Passport" type="text" class="form-control">
+            </div>
+            <div class="col-lg-2">
+                @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Gender"), "GenderID", l => l.ID, l => l.Name, "chosen-select", dataPlaceholder: "Gender")
+            </div>
+            <div class="col-lg-2">
+                @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Race"), "RaceID", l => l.ID, l => l.Name, "chosen-select", dataPlaceholder: "Race")
+            </div>
+        </div>*@
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>Contact Details</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <input id="contactNumber" name="contactNumber" placeholder="Contact number" type="text" class="form-control">
+            </div>
+            <div class="col-lg-4">
+                <input id="province" name="province" placeholder="Province" type="text" class="form-control">
+            </div>
+            <div class="col-lg-4">
+                @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Country"), "CountryID", l => l.ID, l => l.Description, "chosen-select", dataPlaceholder: "Country")
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <input id="street" name="street" placeholder="Street" type="text" class="form-control">
+            </div>
+            <div class="col-lg-4">
+                <input id="city" name="city" placeholder="City" type="text" class="form-control">
+            </div>
+            <div class="col-lg-4">
+                <input id="postalCode" name="postalCode" placeholder="Postal code" type="text" class="form-control">
+            </div>
+        </div>
+    </fieldset>
+
+    @*<h1>Additional info</h1>
+    <fieldset>
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>Next of Kin</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <input type="text" id="nextOfKin" style="width: 100%" placeholder="Next of Kin" class="form-control" />
+            </div>
+            <div class="col-lg-6">
+                <input type="text" id="nextOfKinContact" style="width: 100%" placeholder="Next of Kin Contact number" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>Medical Scheme</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("MedicalScheme"), "MedicalSchemeID", l => l.ID, l => l.Description, "chosen-select", dataPlaceholder: "Medical Scheme")
+            </div>
+            <div class="col-lg-6">
+                <input type="text" id="medicalSchemeNo" style="width: 100%" placeholder="Membership number" class="form-control" />
+            </div>
+        </div>
+    </fieldset>
+
+    <h1>Case</h1>
+    <fieldset>
+
+        @Html.Partial("~/Views/Wizard/Case.cshtml")
+
+    </fieldset>*@
+</form>

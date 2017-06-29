@@ -1,0 +1,2 @@
+﻿ALTER TABLE [ScalePermission] ADD CONSTRAINT [FK_ScalePermission_Account] FOREIGN KEY (AccountId) REFERENCES Account (AccountId);
+ALTER TABLE [ScalePermission] ADD CONSTRAINT [FK_ScalePermission_ListItem] FOREIGN KEY (ScaleId) REFERENCES ListItem (ListItemId);

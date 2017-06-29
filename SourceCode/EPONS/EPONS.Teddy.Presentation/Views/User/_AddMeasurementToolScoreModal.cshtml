@@ -1,0 +1,56 @@
+﻿@model EPONS.Teddy.Application.ValueObjects.MeasurementToolScore
+
+<div id="addMeasurementToolScoreModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Measurement Tool Score</h4>
+            </div>
+            @using (Html.BeginForm("AddMeasurementToolScore", "User"))
+            {
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.Id)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(x => x.Id, new SelectList(Model.MeasurementTools, "Id", "Name"), "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Id, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.Score)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(x => x.Score, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Score, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @Html.HiddenFor(x => x.UserId)
+                    @Html.AntiForgeryToken()
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+
+    function showAddMeasurementToolScoreModal() {
+        $('#addMeasurementToolScoreModal').modal('show');
+    }
+
+
+</script>
+

@@ -1,0 +1,6 @@
+<div class="custom-dropdown">
+  <span class="form-control" (click)="toggle()">{{selectedItem == null? 'Select an option' : selectedItem.Name}}</span>
+  <div class="dropdown-results" *ngIf="isOpen">
+    <div class="dropdown-item" *ngFor="let v of values" (click)="selectItem(v)">{{v.Name}}</div>
+  </div>
+</div>

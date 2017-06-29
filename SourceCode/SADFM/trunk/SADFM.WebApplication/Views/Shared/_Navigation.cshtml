@@ -1,0 +1,123 @@
+﻿@using SADFM.Infrastructure.Models;
+@using SADFM.WebApplication.Extensions;
+@model SADFM.Infrastructure.Models.Account
+@{
+    //MvcHtmlString messageSpan = new MvcHtmlString(Model.TotalMessageCount > 0 ? string.Format("<span class=\"label label-{0} pull-right\">{1}/{2}</span>", (Model.UnreadMessageCount == 0 ? "info" : "warning"), Model.UnreadMessageCount, Model.TotalMessageCount) : "");
+
+    SADFM.Infrastructure.Models.FacilityPermissions permissions = new SADFM.Infrastructure.Models.FacilityPermissions();
+    int numberOfmessages = 0;
+
+}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element" style="text-align: center">
+                    <span>
+                        <img alt="image" class="img-circle" src="@Model.Avatar" width="78%" />
+                    </span>
+                    <span class="clear">
+                        <strong class="font-bold">@Model.Firstname&nbsp;@Model.Lastname</strong>
+                    </span>
+                </div>
+                <div class="logo-element">
+                    EPONS
+                </div>
+            </li>
+            <li class="@Html.IsSelected(controller: "Home")">
+                <a href="@Url.Action("Index", "Home")"><i class="fa fa-home"></i><span class="nav-label">Home</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "Account")">
+                <a href="@Url.Action("Profile", "Account")"><i class="fa fa-user"></i><span class="nav-label">My Profile</span> </a>
+            </li>
+
+            @if (!(permissions.Facility.IsFunder && permissions.Permissions.FirstOrDefault(x => x.Name == "Mass Data User") != null))
+            {
+                <li class="@Html.IsSelected(controller: "Messages")">
+                    <a href="@Url.Action("Inbox", "Messages")"><i class="fa fa-envelope"></i><span class="nav-label">Inbox </span> @numberOfmessages</a>
+                </li>
+            }
+            @if (permissions.Permissions.FirstOrDefault(x => x.Name == "Administrator" || x.Name == "Case Manager") != null || permissions.Permissions.FirstOrDefault(x => x.Name == "Clinician" || x.Name == "Case Manager") != null)
+            {
+                <li class="@Html.IsSelected(controller: "Patient")">
+                    <a href="@Url.Action("Index", "Patient")"><i class="fa fa-wheelchair"></i><span class="nav-label">Patients</span><span class="fa arrow"></span> </a>
+                    <ul class="nav nav-second-level">
+                        <li class="@Html.IsSelected(action: "PatientList")"><a href="@Url.Action("PatientList", "Patient")">Active patients</a></li>
+                        <li class="@Html.IsSelected(action: "DischargedPatientList")"><a href="@Url.Action("DischargedPatientList", "Patient")">Discharged patients</a></li>
+                        <li class="@Html.IsSelected(action: "DeceasedPatientList")"><a href="@Url.Action("DeceasedPatientList", "Patient")">Deceased patients</a></li>
+                    </ul>
+                </li>
+            }
+
+            @if (Model.Type.Name == "Super Admin")
+            {
+                <li class="@Html.IsSelected(controller: "Client")">
+                    <a href="@Url.Action("Index", "Client")"><i class="fa fa-users"></i><span class="nav-label">Clients</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li class="@Html.IsSelected(action: "Providers")"><a href="@Url.Action("Providers", "Client")">Providers</a></li>
+                        <li class="@Html.IsSelected(action: "Funders")"><a href="@Url.Action("Funders", "Client")">Funders</a></li>
+                        <li class="@Html.IsSelected(action: "MedicalSchemes")"><a href="@Url.Action("MedicalSchemes", "Client")">Medical Schemes</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Model.Type.Name == "Super Admin" || permissions.Permissions.FirstOrDefault(x => x.Name == "Administrator") != null)
+            {
+                <li class="@Html.IsSelected(controller: "Administration")">
+                    <a href="@Url.Action("Index", "Administration")"><i class="fa fa-puzzle-piece"></i><span class="nav-label">Administration</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        @if (Model.Type.Name == "Super Admin" || permissions.Permissions.FirstOrDefault(x => x.Name == "Administrator") != null)
+                        {
+                            <li class="@Html.IsSelected(action: "Users")"><a href="@Url.Action("Users", "Administration")">Users</a></li>
+                        }
+                        @if (Model.Type.Name == "Super Admin")
+                        {
+                            <li class="@Html.IsSelected(action: "ListItems")"><a href="@Url.Action("ListItems", "Administration")">List Items</a></li>
+                            <li class="@Html.IsSelected(action: "Labels")"><a href="@Url.Action("Labels", "Administration")">Labels</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+
+            @if (Model.Type.Name == "Super Admin" || permissions.Permissions.FirstOrDefault(x => x.Name == "Trainer" || x.Name == "Mass Data User" || x.Name == "Administrator") != null)
+            {
+                <li class="@Html.IsSelected(controller: "Report")">
+                    <a href="@Url.Action("Index", "Report")"><i class="fa fa-file-text-o"></i><span class="nav-label">Report</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+
+                        @if (Model.Type.Name == "Super Admin" || (permissions.Permissions.FirstOrDefault(x => x.Name == "Case Manager") != null && !permissions.Facility.IsFunder))
+                        {
+
+                            <li class="@Html.IsSelected(action: "FacilityPerformanceReport")"><a href="@Url.Action("FacilityPerformanceReport", "Report")">Facility Performance Report</a></li>
+                            <li class="@Html.IsSelected(action: "FacilityVolumeReport")"><a href="@Url.Action("FacilityVolumeReport", "Report")">Facility Volume Report</a></li>
+                            <li class="@Html.IsSelected(action: "FacilityDashboardReport")"><a href="@Url.Action("FacilityDashboardReport", "Report")">Facility Dashboard Report</a></li>
+                        }
+
+
+                        @if (Model.Type.Name == "Super Admin")
+                        {
+                            <li class="@Html.IsSelected(action: "Audit")"><a href="@Url.Action("Audit", "Report")">Audit</a></li>
+                            <li class="@Html.IsSelected(action: "Billing")"><a href="@Url.Action("Billing", "Report")">Billing</a></li>
+                        }
+                        @if (permissions.Permissions.FirstOrDefault(x => x.Name == "Mass Data User") != null)
+                        {
+                            <li class="@Html.IsSelected(action: "MassDataReport")"><a href="@Url.Action("MassDataReport", "Report")">Mass Data Report</a></li>
+                            <li class="@Html.IsSelected(action: "PatientSummaryReport")"><a href="@Url.Action("PatientSummaryReport", "Report")">Patient Summary Report</a></li>
+                            <li class="@Html.IsSelected(action: "CaseReport")"><a href="@Url.Action("CaseReport", "Report")">Case Report</a></li>
+                        }
+                        @if (Model.Type.Name == "Super Admin" || permissions.Permissions.FirstOrDefault(x => x.Name == "Trainer" || x.Name == "Administrator") != null)
+                        {
+                            <li class="@Html.IsSelected(action: "TrainingReport")"><a href="@Url.Action("TrainingReport", "Report")">Training Report</a></li>
+                        }
+                    </ul>
+                </li>
+
+            }
+
+            <li>
+                <a href="/Documents/UserManual.pdf" target="_blank"><i class="fa fa-question"></i><span class="nav-label">User Manual</span></a>
+            </li>
+
+        </ul>
+    </div>
+</nav>

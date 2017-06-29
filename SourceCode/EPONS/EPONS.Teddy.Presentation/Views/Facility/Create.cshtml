@@ -1,0 +1,53 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Facility.Create
+@{
+    ViewBag.Title = "Create";
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)Model;
+    ViewData["BaseModel"] = baseModel;
+}
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>
+            Create Facility
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>Facility</a>
+            </li>
+            <li class="active">
+                <strong>Create</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    @Html.Partial("_FacilityCreate", Model.Facility)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section styles {
+    <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+
+}
+
+@section scripts{
+    <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+        });
+
+    </script>
+
+}

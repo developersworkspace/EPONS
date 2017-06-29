@@ -1,0 +1,37 @@
+﻿@model IEnumerable<EPONS.Teddy.Application.EntityViews.MeasurementTool>
+@{
+
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)ViewData["BaseModel"];
+    var patientId = (Guid)ViewData["PatientId"];
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th class="hidden-sm hidden-xs">
+            @Html.DisplayNameFor(model => model.Frequency)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="hidden-sm hidden-xs">
+                @Html.DisplayFor(modelItem => item.Frequency)
+            </td>
+            <td>
+                @if (baseModel.CanDeassignMeasurementTools())
+                {
+                    <a href="@Url.Action("DeassignMeasurementTool", "Patient", new { patientId = patientId, measurementToolId = item.Id })" class="btn btn-danger pull-right btn-action">Deassign</a>
+                }
+            </td>
+        </tr>
+    }
+
+</table>

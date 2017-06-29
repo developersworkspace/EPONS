@@ -1,0 +1,56 @@
+﻿@{
+    EPONS.Teddy.Application.Enums.ModalTypes modalType = ViewData["ModalType"] == null ? EPONS.Teddy.Application.Enums.ModalTypes.None : (EPONS.Teddy.Application.Enums.ModalTypes)ViewData["ModalType"];
+
+    if (modalType == EPONS.Teddy.Application.Enums.ModalTypes.None && Request.QueryString["modalType"] != null)
+    {
+        modalType = (EPONS.Teddy.Application.Enums.ModalTypes)int.Parse(Request.QueryString["modalType"]);
+    }
+
+}
+<!-- Modal -->
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                @if (modalType == EPONS.Teddy.Application.Enums.ModalTypes.PatientExist)
+                {
+                    <h4 class="modal-title">Patient Found</h4>
+                }
+                else if (modalType == EPONS.Teddy.Application.Enums.ModalTypes.PatientNotExist)
+                {
+                    <h4 class="modal-title">Patient Not Found</h4>
+                }
+            </div>
+            <div class="modal-body">
+                @if (modalType == EPONS.Teddy.Application.Enums.ModalTypes.PatientExist)
+                {
+                    <p>This patient exists in the ePONS database.  Please check:  That this is the correct patient, and that all information about this patient is up to date</p>
+                }
+                else if (modalType == EPONS.Teddy.Application.Enums.ModalTypes.PatientNotExist)
+                {
+                    <p>This patient does NOT exist in the ePONS database.  Please create a new profile.</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        @if (modalType != EPONS.Teddy.Application.Enums.ModalTypes.None)
+        {
+            <text>
+        $('#messageModal').modal('show');
+
+        </text>
+        }
+    });
+</script>

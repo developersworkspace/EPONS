@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+    string reportHtml = System.IO.File.ReadAllText(Server.MapPath(string.Format("\\App_Data\\patientprogressreports\\{0}.html", Request.QueryString["id"])));
+}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Patient Progress Report</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="/Content/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+    @Styles.Render("~/plugins/chosenStyles")
+
+    <script src="/Scripts/jquery-2.1.1.min.js"></script>
+    <script src="/Scripts/crypto.js"></script>
+    <script src="/Scripts/plugins/toastr/toastr.min.js"></script>
+    @Scripts.Render("~/plugins/chosen")
+
+    <style>
+        .btn {
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 25px;
+            font-weight: 700;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .blue {
+            background-color: blue;
+            color:white;
+        }
+
+        .orange {
+            background-color: orange;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            @Html.Raw(reportHtml)
+        </div>
+    </div>
+    <div style="position:fixed;top: 10px;right: 30px">
+        <a class="btn blue" href="@Url.Action("DownloadProgressReport", "Patient")?id=@Request.QueryString["id"] ">Download</a>
+    </div>
+
+</body>
+
+</html>
+
+
+
+

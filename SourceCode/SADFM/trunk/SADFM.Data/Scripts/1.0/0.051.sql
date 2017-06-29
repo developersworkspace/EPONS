@@ -1,0 +1,1 @@
+ALTER TABLE Account ADD ResetBySuperAdmin bit NOT NULL DEFAULT 0 WITH VALUES;

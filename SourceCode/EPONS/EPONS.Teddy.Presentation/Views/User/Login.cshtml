@@ -1,0 +1,36 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.User.Login
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Anonymous.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-md-6">
+        <h2 class="font-bold">Welcome to EPONS</h2>
+
+        <p>
+            The South African Database for Functional Medicine (SADFM) is a South African based organization doing developmental research into healthcare outcomes. The SADFM has developed an evidence-based reporting framework to convert patients’ functional abilities and behavioural observations into quantifiable data. This allows for collection and analysis of this valuable clinical information into a data base which in turn facilitates the design of meaningful reports which measure outcomes, monitor progress and direct care.
+        </p>
+
+    </div>
+    <div class="col-md-6">
+        <div class="ibox-content">
+
+            @Html.Partial("_Credentials", Model)
+
+            @*<div  class="text-center">
+                <a href="@Url.Action("ForgotPassword","User")">
+                    <small>Forgot password?</small>
+                </a>
+            </div>*@
+
+
+            @*<a class="btn btn-sm btn-success btn-block" href="@Url.Action("LoginGoogle","User")"><i class="fa fa-google"></i>&nbsp; Login with Google</a>*@
+            <p class="m-t">
+                <small>Developed by Developer's Workspace &copy; @DateTime.Now.Year</small>
+            </p>
+        </div>
+    </div>
+</div>
+

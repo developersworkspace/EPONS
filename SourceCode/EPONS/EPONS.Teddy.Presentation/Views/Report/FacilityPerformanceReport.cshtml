@@ -1,0 +1,132 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Report.FacilityPerformanceReport
+@{
+    ViewBag.Title = "Facility Performance Report";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Facility Performance Report</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Report</a>
+            </li>
+            <li class="active">
+                <strong>Facility Performance Report</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Facility Performance Report Filter</h5>
+                </div>
+                <div class="ibox-content">
+                    @using (Html.BeginForm("FacilityPerformanceReport", "Report", FormMethod.Post, new { id = "formProgressReport" }))
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.DisplayNameFor(x => x.FacilityId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(x => x.FacilityId, Model.Facilities, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.FacilityId, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.DisplayNameFor(x => x.MeasurementToolId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(x => x.MeasurementToolId, Model.MeasurementTools, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.MeasurementToolId, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.DisplayNameFor(x => x.StartDate)
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.StartDate, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.StartDate, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DisplayNameFor(x => x.EndDate)
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.EndDate, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.EndDate, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-success pull-right" type="submit" onclick="btnDownload_click()">Download</button>
+                                @*<button class="btn btn-primary pull-right" type="submit" onclick="btnView_click()">View</button>*@
+                            </div>
+                        </div>
+                        @Html.AntiForgeryToken()
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section styles {
+    <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+
+            $('#StartDate').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/MM/yyyy'
+            });
+
+            $('#EndDate').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/MM/yyyy'
+            });
+
+            $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+
+        });
+
+        function btnView_click() {
+            form = $('form#formProgressReport');
+            form.attr('action', '@Url.Action("ViewFacilityPerformanceReport", "Report")');
+            form.attr('method', 'get');
+
+            return true;
+        }
+
+        function btnDownload_click() {
+            form = $('form#formProgressReport');
+            form.attr('action', '@Url.Action("FacilityPerformanceReport", "Report")');
+            form.attr('method', 'post');
+
+            return true;
+        }
+
+
+
+    </script>
+}
+
+
+

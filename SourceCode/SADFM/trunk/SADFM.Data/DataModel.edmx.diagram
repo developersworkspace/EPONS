@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0a91ae6f86a84e719a474de63cbfba8b" Name="Diagram1" ZoomLevel="54" DisplayType="true" >
+        <EntityTypeShape EntityType="SADFM.Data.Account" Width="1.5" PointX="5.25" PointY="13.375" />
+        <EntityTypeShape EntityType="SADFM.Data.Audit" Width="1.5" PointX="13.5" PointY="20.5" />
+        <EntityTypeShape EntityType="SADFM.Data.FunderAccountPermission" Width="1.5" PointX="13.5" PointY="16.875" />
+        <EntityTypeShape EntityType="SADFM.Data.ListItem" Width="1.5" PointX="3" PointY="21" />
+        <EntityTypeShape EntityType="SADFM.Data.ListItemLabel" Width="1.5" PointX="5.25" PointY="31.375" />
+        <EntityTypeShape EntityType="SADFM.Data.Message" Width="1.5" PointX="7.5" PointY="16.625" />
+        <EntityTypeShape EntityType="SADFM.Data.MessageRecipient" Width="1.5" PointX="12.75" PointY="13.75" />
+        <EntityTypeShape EntityType="SADFM.Data.Provider" Width="1.5" PointX="0.75" PointY="23.625" />
+        <EntityTypeShape EntityType="SADFM.Data.ProviderAccountPermission" Width="1.5" PointX="5.25" PointY="24.75" />
+        <EntityTypeShape EntityType="SADFM.Data.ProviderServiceTypeScale" Width="1.5" PointX="11.625" PointY="26.75" />
+        <EntityTypeShape EntityType="SADFM.Data.ScoreDefinition" Width="1.5" PointX="5.25" PointY="28.25" />
+        <EntityTypeShape EntityType="SADFM.Data.Session" Width="1.5" PointX="8.625" PointY="36.375" />
+        <EntityTypeShape EntityType="SADFM.Data.VisitAttachment" Width="1.5" PointX="18" PointY="19" />
+        <EntityTypeShape EntityType="SADFM.Data.VisitScore" Width="1.5" PointX="18" PointY="23.75" />
+        <AssociationConnector Association="SADFM.Data.FK_Account_AccountType" />
+        <AssociationConnector Association="SADFM.Data.FK_Account_Language" />
+        <AssociationConnector Association="SADFM.Data.FK_Account_LastUpdateAccount" />
+        <AssociationConnector Association="SADFM.Data.FK_Account_Status" />
+        <AssociationConnector Association="SADFM.Data.FK_Account_Title" />
+        <AssociationConnector Association="SADFM.Data.FK_Audit_AccountId" />
+        <AssociationConnector Association="SADFM.Data.FK_FunderAccountPermission_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_ListItem_LastUpdateAccount" />
+        <AssociationConnector Association="SADFM.Data.FK_Message_FromAccountId" />
+        <AssociationConnector Association="SADFM.Data.FK_MessageRecipient_RecipientAccountId" />
+        <AssociationConnector Association="SADFM.Data.FK_Provider_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderAccountPermission_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_Session_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_Audit_ChangeType" />
+        <AssociationConnector Association="SADFM.Data.FK_FunderAccountPermission_Funder" />
+        <AssociationConnector Association="SADFM.Data.FK_FunderAccountPermission_Permission" />
+        <AssociationConnector Association="SADFM.Data.FK_ListItem_Parent" />
+        <AssociationConnector Association="SADFM.Data.FK_ListItem_Status" />
+        <AssociationConnector Association="SADFM.Data.FK_ListItemLabel_Language" />
+        <AssociationConnector Association="SADFM.Data.FK_ListItemLabel_ListItem" />
+        <AssociationConnector Association="SADFM.Data.FK_Provider_AcuityType" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderAccountPermission_Permission" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderServiceTypeScale_Scale" />
+        <AssociationConnector Association="SADFM.Data.FK_ScoreDefinition_FunderExplanation" />
+        <AssociationConnector Association="SADFM.Data.FK_ScoreDefinition_ProviderExplanation" />
+        <AssociationConnector Association="SADFM.Data.FK_ScoreDefinition_ScaleValue" />
+        <AssociationConnector Association="SADFM.Data.FK_VisitScore_Score" />
+        <AssociationConnector Association="SADFM.Data.FK_MessageRecipient_Message" />
+        <AssociationConnector Association="SADFM.Data.FK_Provider_Parent" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderAccountPermission_Provider" />
+        <AssociationConnector Association="SADFM.Data.ProviderUnit" />
+        <EntityTypeShape EntityType="SADFM.Data.AccountRole" Width="1.5" PointX="7.5" PointY="20.125" />
+        <AssociationConnector Association="SADFM.Data.FK_AccountRole_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_AccountRole_Role" />
+        <EntityTypeShape EntityType="SADFM.Data.ScalePermission" Width="1.5" PointX="13.5" PointY="24.75" />
+        <AssociationConnector Association="SADFM.Data.FK_ScalePermission_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_ScalePermission_ListItem" />
+        <EntityTypeShape EntityType="SADFM.Data.Case" Width="1.5" PointX="10.375" PointY="21.5" />
+        <AssociationConnector Association="SADFM.Data.FK_Case_LastUpdateAccount" />
+        <AssociationConnector Association="SADFM.Data.FK_Case_ICD10" />
+        <AssociationConnector Association="SADFM.Data.FK_ImpairmentGroup_ListItem" />
+        <EntityTypeShape EntityType="SADFM.Data.ProviderServiceType" Width="1.875" PointX="7.5" PointY="23.125" />
+        <AssociationConnector Association="SADFM.Data.FK_LastUpdateAccountId" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderServiceType_City" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderServiceType_Country" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderServiceType_Province" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderServiceType_ServiceType" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderServiceType_Provider" />
+        <AssociationConnector Association="SADFM.Data.FK_ProviderServiceTypeScale_ProviderServiceType" />
+        <EntityTypeShape EntityType="SADFM.Data.Patient" Width="1.5" PointX="1.375" PointY="13.5" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_LastUpdateAccount" />
+        <AssociationConnector Association="SADFM.Data.FK_Case_Patient" />
+        <AssociationConnector Association="SADFM.Data.FK_City_ListItem" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_AdmitFrom" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_Country" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_DischargeTo" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_Gender" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_MedicalScheme" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_Race" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_ResidentialEnvironment" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient_Title" />
+        <AssociationConnector Association="SADFM.Data.FK_Province_ListItem" />
+        <AssociationConnector Association="SADFM.Data.FK_Message_PatientId" />
+        <EntityTypeShape EntityType="SADFM.Data.PatientSupportService" Width="1.5" PointX="18.75" PointY="15.5" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientSupportService_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientSupportService_Provider" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientSupportService_Patient" />
+        <AssociationConnector Association="SADFM.Data.FK_Case_AdmitFrom" />
+        <EntityTypeShape EntityType="SADFM.Data.FunderScheme" Width="1.5" PointX="0.875" PointY="9.125" />
+        <AssociationConnector Association="SADFM.Data.FK_Funder" />
+        <AssociationConnector Association="SADFM.Data.FK_Scheme" />
+        <EntityTypeShape EntityType="SADFM.Data.PatientScale" Width="1.5" PointX="10.25" PointY="17" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientScale_Frequency" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientScale_Scale" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientScale_Patient" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientScale_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientScale_Provider" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientScale_Status" />
+        <EntityTypeShape EntityType="SADFM.Data.ScaleItemHeader" Width="1.5" PointX="0.75" PointY="0.75" />
+        <AssociationConnector Association="SADFM.Data.FK_ScaleItemHeader_ScaleItem" />
+        <EntityTypeShape EntityType="SADFM.Data.PatientImpairmentGroupHistory" Width="1.5" PointX="3.375" PointY="0.75" />
+        <AssociationConnector Association="SADFM.Data.FK_ImpairmentGroup" />
+        <AssociationConnector Association="SADFM.Data.FK_Patient" />
+        <EntityTypeShape EntityType="SADFM.Data.PatientProvider" Width="1.5" PointX="15.625" PointY="12.125" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientProvider_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientProvider_Case" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientProvider_Patient" />
+        <AssociationConnector Association="SADFM.Data.FK_PatientProvider_Provider" />
+        <EntityTypeShape EntityType="SADFM.Data.Visit" Width="1.5" PointX="20.625" PointY="19.375" />
+        <AssociationConnector Association="SADFM.Data.FK_Visit_Account" />
+        <AssociationConnector Association="SADFM.Data.FK_Visit_Case" />
+        <AssociationConnector Association="SADFM.Data.FK_Visit_PatientId" />
+        <AssociationConnector Association="SADFM.Data.FK_VisitAttachment_Visit" />
+        <AssociationConnector Association="SADFM.Data.FK_VisitScore_Visit" />
+        <AssociationConnector Association="SADFM.Data.FK_ProfessionalBody" />
+        <EntityTypeShape EntityType="SADFM.Data.UserFacility" Width="1.5" PointX="0.75" PointY="3.75" />
+        <AssociationConnector Association="SADFM.Data.FK_ReasonForAdmission" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

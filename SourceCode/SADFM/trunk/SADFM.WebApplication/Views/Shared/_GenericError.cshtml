@@ -1,0 +1,10 @@
+﻿@model SADFM.Web.Models.GenericError
+<div class="middle-box text-center animated fadeInDown">
+    <h1>OOPS</h1>
+    <h3 class="font-bold">@Model.Heading</h3>
+    <div class="error-desc">
+        @Model.Body<br />
+        <br />
+        Try again later or go <a href="@Url.Action("Index", "Home")" class="btn btn-primary m-t">Home</a>
+    </div>
+</div>

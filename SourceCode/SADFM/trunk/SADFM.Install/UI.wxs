@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <!--<WixVariable Id="WixUIBannerBmp" Value="My.Banner.bmp" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />-->
+    <UI Id="WixUI_MyUI">
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+      <TextStyle Id="WixUI_Font_Warning_Title" FaceName="Tahoma" Size="12" Red="255"  Bold="yes"/>
+      <TextStyle Id="WixUI_Font_Warning" FaceName="Tahoma" Size="9" />
+
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+      <DialogRef Id="BrowseDlg" />
+      <DialogRef Id="DiskCostDlg" />
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+      <DialogRef Id="PrepareDlg" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ResumeDlg" />
+      <DialogRef Id="WelcomeDlg" />
+      <DialogRef Id="UserExit" />
+
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="ServiceUserCredentialsDlg">1</Publish>
+      <Publish Dialog="PasswordNoMatchDlg" Control="Ok" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="ServiceUserCredentialsDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+      <Publish Dialog="ServiceUserCredentialsDlg" Control="Next" Event="DoAction" Value="RegistrationInfoCustomAction"></Publish>
+      <Publish Dialog ="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="ServiceUserCredentialsDlg">1</Publish>
+      <Publish Dialog="ProgressDlg" Control="Next" Event="NewDialog" Value="ExitDialog">1</Publish>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Property Id="ARPNOMODIFY" Value="1" />
+
+
+      <Dialog Id="PasswordNoMatchDlg" Width="150" Height="60" Title="Error" SystemModal="yes" ErrorDialog="yes">
+        <Control Id="Description" Type="Text" X="25" Y="20" Width="110" Height="15" Transparent="yes" TabSkip="no" NoPrefix="yes" Text="Password does not match" />
+        <Control Id="Ok" Type="PushButton" X="50" Y="38" Width="50" Height="18" Text="Ok">
+          <Publish Event="EndDialog" Value="PasswordNoMatchDlg" Order="999">1</Publish>
+        </Control>
+      </Dialog>
+
+      <Dialog Id="ServiceUserCredentialsDlg" Width="370" Height="270" Title="[ProductName] Setup">
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}User Information" />
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="[ProductName]" />
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="TextLabel1" Type="Text" NoWrap="no" X="20" Y="50" Width="290" Height="40" Text="Set the bare metal settings for this new server" />
+        <Control Id="UserNameLabel" Type="Text"   X="20" Y="75" Width="290" Height="13" Text="User Name:" />
+        <Control Id="UserName" Type="Edit"        X="20" Y="87" Width="220" Height="18" Property="SADFM_IIS" Text="47"/>
+        <Control Id="PassLabel" Type="Text"    X="20" Y="108" Width="290" Height="13" Text="Password:" />
+        <Control Id="Password" Type="Edit" Password="yes"  X="20" Y="120" Width="220" Height="18" Property="SADFM_PASSWORD"/>
+        <Control Id="PassLabelConfirm" Type="Text"    X="20" Y="138" Width="290" Height="13" Text="Confirm Password:" />
+        <Control Id="PasswordConfirm" Type="Edit" Password="yes"  X="20" Y="150" Width="220" Height="18" Property="SADFM_PASSWORD_CONFIRM"/>
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next"/>
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="Back" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+
+      </Dialog>
+
+    </UI>
+
+    <UIRef Id="WixUI_Common" />
+
+    <Binary Id="CustomActionBinary" SourceFile="$(var.SADFM.Install.CustomActions.TargetDir)$(var.SADFM.Install.CustomActions.TargetName).CA.dll"/>
+    <CustomAction Id="RegistrationInfoCustomAction" BinaryKey="CustomActionBinary" DllEntry="VerifyPasswords"  />
+
+  </Fragment>
+</Wix>

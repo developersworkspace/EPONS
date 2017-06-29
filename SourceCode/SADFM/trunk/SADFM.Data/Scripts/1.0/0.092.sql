@@ -1,0 +1,1 @@
+﻿ALTER TABLE [Case] ALTER COLUMN ProviderId uniqueidentifier NULL;

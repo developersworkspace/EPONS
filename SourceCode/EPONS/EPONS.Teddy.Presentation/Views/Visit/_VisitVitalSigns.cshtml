@@ -1,0 +1,63 @@
+﻿@model EPONS.Teddy.Application.Entities.Visit
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.Temperature)
+    </div>
+    <div class="col-md-3">
+        @Html.TextBoxFor(x => x.Temperature, "{0:#.#}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Temperature, null, new { @class = "text-danger" })
+    </div>
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.HeartRate)
+    </div>
+    <div class="col-md-3">
+        @Html.TextBoxFor(x => x.HeartRate, "{0:#.#}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.HeartRate, null, new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.BloodPressureSystolic)
+    </div>
+    <div class="col-md-3">
+        @Html.TextBoxFor(x => x.BloodPressureSystolic, "{0:#.#}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.BloodPressureSystolic, null, new { @class = "text-danger" })
+    </div>
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.BloodPressureDiastolic)
+    </div>
+    <div class="col-md-3">
+        @Html.TextBoxFor(x => x.BloodPressureDiastolic, "{0:#.#}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.BloodPressureDiastolic, null, new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.Glucose)
+    </div>
+    <div class="col-md-3">
+        @Html.TextBoxFor(x => x.Glucose, "{0:#.#}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Glucose, null, new { @class = "text-danger" })
+    </div>
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.PulseOximetry)
+    </div>
+    <div class="col-md-3">
+        @Html.TextBoxFor(x => x.PulseOximetry, "{0:#.#}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.PulseOximetry, null, new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.RespiratoryRate)
+    </div>
+    <div class="col-md-3">
+        @Html.TextBoxFor(x => x.RespiratoryRate, "{0:#.#}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.RespiratoryRate, null, new { @class = "text-danger" })
+    </div>
+</div>
+

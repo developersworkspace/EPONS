@@ -1,0 +1,53 @@
+﻿@model SADFM.Web.Models.PopupEditor
+<div class="modal inmodal" id="popupEditor" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">#</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    @foreach (var field in Model)
+                    { 
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">@field.FieldLabel</label>
+                            <div class="col-lg-10">
+                                @field.FieldHtml
+                                @if (!string.IsNullOrWhiteSpace(field.HelpText))
+                                { 
+                                    <span class="help-block m-b-none">@field.HelpText</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Language</label>
+                        <div class="col-lg-10">
+                            @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Language"), "Language", l => l.Code, l => l.Name)
+                            <span class="help-block m-b-none">The selected language of the user/system.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Label</label>
+                        <div class="col-lg-10">
+                            <input type="text" placeholder="Label name" class="form-control" id="Label">
+                            <span class="help-block m-b-none">The label used in the system, e.g. WelcomeTitle.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Display text</label>
+                        <div class="col-lg-10">
+                            <textarea placeholder="Display text" class="form-control" id="Value"></textarea>
+                            <span class="help-block m-b-none">The text that should be on the screen.  You can re-use other labels, e.g. {WelcomeTitle}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-save">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

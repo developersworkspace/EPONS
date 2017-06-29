@@ -1,0 +1,28 @@
+﻿@model IEnumerable<EPONS.Teddy.Application.ValueObjects.FacilityPermission>
+@{ 
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)ViewData["BaseModel"];
+}
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Facility)</th>
+            <th>@Html.DisplayNameFor(model => model.Permission)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Facility</td>
+                <td>@item.Permission</td>
+                <td>
+                    @if (baseModel.CanRemoveFacilityPermission())
+                    {
+                        <a href="@Url.Action("RemoveFacilityPermission", "User", new { facilityId = item.FacilityId, userId = item.UserId, permissionId = item.PermissionId })" class="btn btn-danger pull-right btn-action">Remove</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,1 @@
+﻿ALTER TABLE [ScalePermission] ADD CONSTRAINT [PK_ScalePermission] PRIMARY KEY (ScalePermissionsId);

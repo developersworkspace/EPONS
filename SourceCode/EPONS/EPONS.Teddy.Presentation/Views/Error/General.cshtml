@@ -1,0 +1,44 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EPONS</title>
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="~/Content/css/animate.css" rel="stylesheet">
+    <link href="~/Content/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+
+    <div class="middle-box text-center animated fadeInDown">
+        <h3 class="font-bold">Sorry, a system error has occurred</h3>
+        
+        <a href="@Url.Action("","")" class="btn btn-success">Goto Home page</a>
+        <br />
+        <a data-toggle="collapse" data-target="#demo">View Details</a>
+        <div id="demo" class="collapse">
+            @Model.Exception.Message
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="~/Content/js/jquery-2.1.1.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+

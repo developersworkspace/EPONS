@@ -1,0 +1,1 @@
+﻿ALTER TABLE [Visit] ADD [ExtraNote] TEXT;

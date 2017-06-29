@@ -1,0 +1,13 @@
+﻿@model EPONS.Teddy.Presentation.ViewModels.Credentials
+
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        @Html.LabelFor(x => x.Username)
+        @Html.TextBoxFor(x => x.Username, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Username, null, new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary block full-width m-b">Reset Password</button>
+    @Html.AntiForgeryToken()
+}

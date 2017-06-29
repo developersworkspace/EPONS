@@ -1,0 +1,416 @@
+﻿@model SADFM.Data.Models.PatientProgressReport
+@{
+    Layout = null;
+    string path = Request.Url.Host + (Request.Url.Port == 80 ? "" : ":" + Request.Url.Port.ToString());
+    Model.Notes = Model.Notes.Where(x => !string.IsNullOrWhiteSpace(x.Body)).ToArray();
+}
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<table width="100%">
+    <tr>
+        <td width="20%">
+            <img src="@Html.Raw("http://" + path + "/Report/DownloadFile?id=" + Model.ReportImageUri + ".jpg")" width="100%" />
+            <img src="@(Model.ProviderImage == null ? Html.Raw(Server.MapPath("/Content/images/noprovider.png")) : Html.Raw("http://" + path + "/Report/DownloadFile?id=" + Model.ProviderImageUri + ".jpg"))" width="100%" />
+        </td>
+        <td width="2%"></td>
+        <td width="50%">
+            <h4>
+                Progress report
+                <br />
+                @Model.StartDate.ToString("dd MMM yyyy") - @Model.EndDate.ToString("dd MMM yyyy")
+            </h4>
+            <h3>@Model.Fullname</h3>
+            <h5>
+                Dob: @Model.DateOfBirth.ToString("dd MMM yyyy") (@Math.Floor((DateTime.Now.Subtract(Model.DateOfBirth).TotalDays / 365)))
+                <br />
+                @Model.Street
+                <br />
+                @Model.City
+                <br />
+                @Model.Country
+                <br />
+                @Model.PostalCode
+            </h5>
+        </td>
+        <td width="25%">
+            <img src="@(Model.ProfileImage == null ? Html.Raw(Server.MapPath("/Content/images/nopatient.png")) : Html.Raw("http://" + path + "/Report/DownloadFile?id=" + Model.ProfileImageUri + ".jpg"))" width="100%" />
+        </td>
+    </tr>
+</table>
+<br />
+<table width="100%">
+    @foreach (var entry in Model.ReferringDoctor.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
+    {
+        <tr>
+            <td width="15%" style="vertical-align: top;">
+                <h4>Referring Doctor</h4>
+            </td>
+            <td width="50%" style="vertical-align: top;">
+                @entry.Name
+                <br />
+                @entry.Email
+                <br />
+                @entry.Contact
+            </td>
+        </tr>
+    }
+
+    @foreach (var entry in Model.TreatingDoctor.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
+    {
+        <tr>
+            <td width="15%" style="vertical-align: top;">
+                <h4>Referring Doctor</h4>
+            </td>
+            <td width="50%" style="vertical-align: top;">
+                @entry.Name
+                <br />
+                @entry.Email
+                <br />
+                @entry.Contact
+            </td>
+        </tr>
+    }
+</table>
+<br />
+<table width="100%">
+    <tr>
+        <td width="80%" style="vertical-align: top;">
+            <h4>Case Manager Notes</h4>
+            @if (Model.Notes.Where(x => x.IsCaseManager).OrderBy(x => x.Timestamp).Count(x => !string.IsNullOrWhiteSpace(x.Body)) == 0)
+            {
+                <h5>No notes to display</h5>
+            }
+        </td>
+    </tr>
+</table>
+<table width="100%">
+
+    @if (Model.Notes.Where(x => x.IsCaseManager).OrderBy(x => x.Timestamp).Count(x => !string.IsNullOrWhiteSpace(x.Body)) != 0)
+    {
+
+        foreach (var entry in Model.Notes.Where(x => x.IsCaseManager).OrderBy(x => x.Timestamp))
+        {
+            <tr>
+                <td width="15%" style="vertical-align: top;">
+                    @entry.Timestamp.ToString("dd MMM yyyy HH:mm")
+                    <br />
+                    @entry.Clinician
+                </td>
+                <td width="60%" style="vertical-align: top;">
+                    @Html.Raw(Server.HtmlDecode(entry.Body))
+                </td>
+            </tr>
+
+        }
+    }
+
+
+
+</table>
+<br />
+<table width="100%">
+    <tr>
+        <td width="80%" style="vertical-align: top;">
+            <h4>Diagnoses</h4>
+        </td>
+    </tr>
+</table>
+<table width="100%">
+    <tr>
+        <td width="30%" style="vertical-align: top;">
+            ICD10
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            Start date
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            End date
+        </td>
+    </tr>
+
+    @foreach (var entry in Model.Diagnosis.OrderBy(x => x.EndDate.HasValue).ThenByDescending(x => x.StartDate))
+    {
+        <tr>
+            <td width="30%" style="@(entry.EndDate.HasValue? "" : "color:red;")vertical-align top;">
+                @(entry.EndDate.HasValue ? Html.Raw(entry.ICD10) : Html.Raw("<b>" + entry.ICD10 + "</b>"))
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @entry.StartDate.ToString("dd MMM yyyy")
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @(entry.EndDate.HasValue ? entry.EndDate.Value.ToString("dd MMM yyyy") : "")
+            </td>
+        </tr>
+    }
+</table>
+<br />
+<table width="100%">
+    <tr>
+        <td width="80%" style="vertical-align: top;">
+            <h4>Assessment Tools</h4>
+        </td>
+    </tr>
+</table>
+<table width="100%">
+    <tr>
+        <td width="15%" style="vertical-align: top;">
+            Provider
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            Start date
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            End date
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            Scale
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            Frequency
+        </td>
+    </tr>
+
+    @foreach (var entry in Model.Careplans.Where(x => !string.IsNullOrWhiteSpace(x.Frequency)).OrderBy(x => x.EndDate.HasValue).ThenByDescending(x => x.StartDate))
+    {
+        <tr>
+            <td width="15%" style="vertical-align: top;">
+                @Html.Raw(entry.Provider)
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @entry.StartDate.ToString("dd MMM yyyy")
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @(entry.EndDate.HasValue ? Html.Raw(entry.EndDate.Value.ToString("dd MMM yyyy")) : Html.Raw(""))
+            </td>
+            <td width="15%" style="@(entry.EndDate.HasValue ? "" : "color:red;")vertical-align: top;">
+                @entry.Name
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @entry.Frequency
+            </td>
+        </tr>
+    }
+</table>
+<br />
+<table width="100%">
+    <tr>
+        <td width="80%" style="vertical-align: top;">
+            <h4>Multidisciplinary Team</h4>
+        </td>
+    </tr>
+</table>
+<table width="100%">
+    <tr>
+        <td width="15%" style="vertical-align: top;">
+            Provider
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            Clinician
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            Role
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            Start date
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            End date
+        </td>
+
+    </tr>
+
+    @foreach (var entry in Model.MDTs.OrderBy(x => x.EndDate.HasValue).ThenByDescending(x => x.StartDate))
+    {
+        <tr>
+            <td width="15%" style="vertical-align: top;">
+                @Html.Raw(entry.Provider)
+            </td>
+            <td width="15%" style="@(entry.EndDate.HasValue ? "" : "color:red;")vertical-align top;">
+                @(entry.EndDate.HasValue ? Html.Raw(entry.Clinician) : Html.Raw("<b>" + entry.Clinician + "</b>"))
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @string.Join(", ", entry.Roles)
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @entry.StartDate.ToString("dd MMM yyyy")
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @(entry.EndDate.HasValue ? entry.EndDate.Value.ToString("dd MMM yyyy") : "")
+            </td>
+        </tr>
+
+    }
+
+
+</table>
+
+<br />
+<table width="100%">
+    <tr>
+        <td width="80%" style="vertical-align: top;">
+            <h4>Support Services</h4>
+        </td>
+    </tr>
+</table>
+<table width="100%">
+    <tr>
+        <td width="15%" style="vertical-align: top;">
+            Service
+        </td>
+        <td width="15%" style="vertical-align: top;">
+            Note
+        </td>
+    </tr>
+
+    @foreach (var entry in Model.SupportServices)
+    {
+        <tr>
+            <td width="15%" style="vertical-align: top;">
+                @Html.Raw(entry.Name)
+            </td>
+            <td width="15%" style="vertical-align: top;">
+                @Html.Raw(entry.Note)
+            </td>
+        </tr>
+
+    }
+
+
+</table>
+
+
+
+
+<br />
+<table width="100%">
+    <tr>
+        <td width="80%" style="vertical-align: top;">
+            <h4>Notes</h4>
+            @if (Model.Notes.Where(x => !x.IsCaseManager).OrderBy(x => x.Timestamp).Count(x => !string.IsNullOrWhiteSpace(x.Body)) == 0)
+            {
+                <h5>No notes to display</h5>
+            }
+        </td>
+    </tr>
+</table>
+<table width="100%">
+
+    @if (Model.Notes.Where(x => !x.IsCaseManager).OrderBy(x => x.Timestamp).Count(x => !string.IsNullOrWhiteSpace(x.Body)) != 0)
+    {
+
+        if (Model.GroupedNotes)
+        {
+            foreach (var entry in Model.Notes.Where(x => !x.IsCaseManager).GroupBy(x => x.Group))
+            {
+
+                <tr>
+                    <td width="15%" style="vertical-align: top;">
+                        <b>@entry.Key</b>
+                    </td>
+                </tr>
+                foreach (var entry1 in entry)
+                {
+                    <tr>
+                        <td width="15%" style="vertical-align: top;">
+                            @entry1.Timestamp.ToString("dd MMM yyyy HH:mm")
+                            <br />
+                            @entry1.Clinician
+                            <br />
+                            @entry1.Group
+                        </td>
+                        <td width="70%" style="vertical-align: top;">
+                            @Html.Raw(Server.HtmlDecode(entry1.Body))
+                        </td>
+
+                    </tr>
+                }
+
+            }
+        }
+        else
+        {
+            foreach (var entry in Model.Notes.Where(x => !x.IsCaseManager))
+            {
+                <tr>
+                    <td width="15%" style="vertical-align: top;">
+                        @entry.Timestamp.ToString("dd MMM yyyy HH:mm")
+                        <br />
+                        @entry.Clinician
+                        <br />
+                        @entry.Group
+                    </td>
+                    <td width="15%" style="vertical-align: top;">
+                        @Html.Raw(Server.HtmlDecode(entry.Body))
+                    </td>
+
+                </tr>
+
+            }
+        }
+    }
+
+
+</table>
+
+
+
+@if (Model.Scales != null)
+{
+    foreach (var entry in Model.Careplans.GroupBy(x => new { x.Name, x.ScaleID }).ToList())
+    {
+        var scaleLine = Model.Scales.FirstOrDefault(x => x.ScaleId == entry.Key.ScaleID && x.GraphType == "AllVisitsLine");
+
+        var scalePolar = Model.Scales.FirstOrDefault(x => x.ScaleId == entry.Key.ScaleID && x.GraphType == "Polar");
+
+        <table width="100%" style="page-break-before: always">
+
+            @if (scaleLine != null || scalePolar != null)
+            {
+
+                <tr width="100%">
+                    <td style="vertical-align: top;">
+                        <h2>@entry.Key.Name</h2>
+                    </td>
+                </tr>
+
+
+
+               if (scaleLine != null)
+                {
+
+                    <tr width="100%" style="vertical-align: top;">
+                        <td width="100%">
+                            <img src=@Html.Raw("http://" + path + "/Report/DownloadFile?id=" + scaleLine.Uri + ".jpg") width="550" />
+                        </td>
+                    </tr>
+
+
+                }
+                if (scalePolar != null)
+                {
+
+
+                    <tr width="100%">
+                        <td width="100%" style="vertical-align: top;">
+                            <img src=@Html.Raw("http://" + path + "/Report/DownloadFile?id=" + scalePolar.Uri + ".jpg") width="550" />
+                        </td>
+                    </tr>
+
+
+                }
+
+
+            }
+
+
+
+        </table>
+
+
+    }
+
+}
+
+
+
+
+

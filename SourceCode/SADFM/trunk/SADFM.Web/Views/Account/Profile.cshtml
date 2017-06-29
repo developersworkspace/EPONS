@@ -1,0 +1,407 @@
+﻿@using SADFM.Web.Shared;
+@model SADFM.Data.Models.Account
+@{
+    ViewBag.Title = Model.FirstSignIn ? "First Login" : "Profile";
+    MvcHtmlString idLabel = Library.GetText("IDLabel");
+    MvcHtmlString passportLabel = Library.GetText("PassportLabel");
+    bool idSelected = Model.IDType == idLabel.ToString();
+
+
+    List<SADFM.Data.Models.TrainingReportItem> trainingReport = SADFM.Data.DataAccess.Account.GetTrainingReport(Model.GetId(), Model.Permissions, UserHelper.SelectedClientId);
+
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-9">
+        <h2>My Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="active">
+                <strong>Complete your profile</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Personal details</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="wrapper wrapper-content">
+                        <div class="row">
+                            <div class="col-xs-5">@Library.GetText("UsernameLabel")</div>
+                            <div class="col-xs-5">@Model.Username</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">@Library.GetText("FirstNameLabel")</div>
+                            <div class="col-xs-5" id="firstName">@Model.FirstName</div>
+                            <div class="col-xs-2"><a href="javascript:showEditor('Set First Name', 'firstName')">@Library.GetText("EditLabel")</a></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">Surname</div>
+                            <div class="col-xs-5" id="surname">@Model.LastName</div>
+                            <div class="col-xs-2"><a href="javascript:showEditor('Set Surname', 'surname')">@Library.GetText("EditLabel")</a></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">@Library.GetText("EmailAddressLabel")</div>
+                            <div class="col-xs-5" id="emailAddress">@Model.EmailAddress</div>
+                            <div class="col-xs-2"><a href="javascript:showEditor('Set Email Address', 'emailAddress')">@Library.GetText("EditLabel")</a></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">@Library.GetText("UpdateProfileMessage")</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">@Library.GetText("TitleLabel")</div>
+                            <div class="col-xs-5">
+                                @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Title"), "Title", l => l.ID, l => l.Name, "chosen-select", selected: Model.TitleId, dataPlaceholder: "Select title")
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">@Library.GetText("RoleLabel")</div>
+                            <div class="col-xs-5">
+                                @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Role").OrderBy(x => x.SortOrder).ToList(), "Role", l => l.ID, l => l.Name, "chosen-select", l => l.Name, dataPlaceholder: "Select role", orderChildrenBy: li => li.SortOrder, multiple: true)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">@Library.GetText("IDSelectMessage")</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <label>
+                                    <input type="radio" value="@idLabel" name="idType" @(Html.Raw(idSelected ? "checked=\"checked\"" : "")) />&nbsp;@idLabel
+                                </label>
+                            </div>
+                            <div class="col-xs-2">
+                                <label>
+                                    <input type="radio" value="@passportLabel" name="idType" @(Html.Raw(!idSelected ? "checked=\"checked\"" : "")) />&nbsp;@Library.GetText("PassportLabel")
+                                </label>
+                            </div>
+                            <div class="col-xs-1">&nbsp;</div>
+                            <div class="col-xs-5">
+                                <input type="text" id="idNumber" class="form-control" placeholder="@(idSelected ? idLabel : passportLabel)" value="@Model.IDNumber" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">@Library.GetText("ContactNumberLabel")</div>
+                            <div class="col-xs-5">
+                                <input type="tel" id="contact" class="form-control" placeholder="@Library.GetText("ContactNumberLabel")" value="@Model.ContactNumber" />
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label>If you intend to claim from medical schemes for services provided, you have to complete the following fields.</label>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-5">
+                                I'm registered with:
+                            </div>
+                            <div class="col-md-7">
+                                <div class="col-xs-2">
+                                    <label>
+                                        <input type="radio" value="" name="professionalBodies" @(Model.ProfessionalBody.HasValue ? "" : "checked") />&nbsp;No Professional Body
+                                    </label>
+                                </div>
+                                @foreach (var item in SADFM.Data.DataAccess.ListItem.GetList("ProfessionalBodies"))
+                                {
+
+                                    <div class="col-xs-2">
+                                        <label>
+                                            <input type="radio" value="@item.GetId()" name="professionalBodies"  @(Model.ProfessionalBody.HasValue? Model.ProfessionalBody.Value == item.GetId()? "checked" : "" : "") />&nbsp;@item.Description
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                My registration number with this body is:
+                            </div>
+                            <div class="col-md-5">
+                                <input type="tel" id="regNumber" class="form-control" placeholder="Registration Number" value="@Model.RegistrationNumber" /> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                My practice number is:
+                            </div>
+                            <div class="col-md-5">
+                                <input type="tel" id="practiceNumber" class="form-control" placeholder="Practice Number" value="@Model.PracticeNumber" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-5">@Library.GetText("ProfilePictureMessage")</div>
+                            <div class="col-xs-5">
+                                <div class="wrapper wrapper-content">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <img src="@Model.Avatar" id="avatar" height="100" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label title="Upload image file" for="inputImage" class="btn btn-primary">
+                                                <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
+                                                Upload Picture
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        &nbsp;
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <button class="btn btn-danger btn-changepassword">
+                                                <i class="fa fa-lock"></i>&nbsp;Change Password
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5"></div>
+                            <div class="col-xs-5" style="text-align: center;">
+                                <button class="btn btn-primary btn-continue" style="width: 100%;">
+                                    Save &amp; Continue
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Training Report</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <table class="table table-striped table-bordered table-hover tblReport">
+                                    <thead>
+                                        <tr>
+                                            <th>Scale</th>
+                                            <th>Grade</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        @foreach (SADFM.Data.Models.TrainingReportItem tri in trainingReport)
+                                        {
+                                            <tr>
+                                                <th>
+                                                    @tri.Scale
+                                                </th>
+                                                <th>
+                                                    @tri.Grade
+                                                </th>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="popupEditor" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">#</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type="text" id="editorValue" style="width: 100%;" />
+                    <input type="hidden" id="returnValue" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-save">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("/Views/Shared/_ChangePassword.cshtml", new SADFM.Web.Models.ChangePasswordModel { AccountID = Model.ID, RequestOldPassword = true, Username = Model.Username })
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+
+            $(".btn-changepassword").click(function () {
+                ShowChangePassword();
+            });
+
+            $(".btn-save").click(function () {
+                $("#" + $("#returnValue").val()).html($("#editorValue").val());
+                $('#popupEditor').modal('hide');
+            });
+
+            $(".chosen-select").chosen({ width: "100%" });
+
+            $('#Role').val([@MvcHtmlString.Create(string.Join(",", Model.AccountRoles.Select(x => string.Format("'{0}'", x.RoleID)).ToArray()))]);
+            $('#Role').trigger("chosen:updated");
+
+            $("input[name=idType]").iCheck({
+                radioClass: 'iradio_square-green'
+            }).on('ifToggled', function (event) {
+                $("#idNumber").attr("placeholder", $("input[name=idType]:checked").val());
+            });
+
+            $("input[name=professionalBodies]").iCheck({
+                radioClass: 'iradio_square-green'
+            }).on('ifToggled', function (event) {
+               
+            });
+
+            $("#inputImage").change(function () {
+                var fileReader = new FileReader(),
+                        files = this.files,
+                        file;
+
+                if (!files.length) {
+                    return;
+                }
+
+                file = files[0];
+
+                if (/^image\/\w+$/.test(file.type)) {
+                    fileReader.readAsDataURL(file);
+                    fileReader.onload = function () {
+                        $("#inputImage").val("");
+
+                        var img = new Image;
+                        img.src = this.result;
+                        //var source = imageToDataUri(img, 200);
+                        var source = img.src;
+
+                        $("#avatar").attr("src", source);
+                    };
+                } else {
+                    showMessage("Please choose an image file.");
+                }
+            });
+
+            $(".btn-continue").click(function () {
+                saveProfile();
+            });
+
+
+        });
+
+        function showEditor(title, oldValue) {
+            $('#popupEditor .modal-title').html(title);
+            $("#editorValue").val($("#" + oldValue).html());
+            $("#returnValue").val(oldValue);
+            $('#popupEditor').modal('show');
+        }
+
+        function imageToDataUri(img, minSize) {
+
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+
+            var MAX_WIDTH = minSize;
+            var MAX_HEIGHT = minSize;
+            var width = img.width;
+            var height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            var dataurl = canvas.toDataURL("image/*");
+            return dataurl;
+        }
+
+        function saveProfile() {
+
+            var AccountRoles = new Array();
+
+            if ($("#Role").val() != null) {
+                for (i = 0; i < $("#Role").val().length; i++) {
+                    AccountRoles.push({
+                        RoleId: $("#Role").val()[i]
+                    });
+                }
+            }
+
+
+            var img = new Image;
+            img.src = $("#avatar").attr('src');
+            var avatar = imageToDataUri(img, 200);
+
+
+            $.ajax({
+                url: "/Account/SaveProfile",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    FirstName: $("#firstName").html(),
+                    LastName: $("#surname").html(),
+                    EmailAddress: $("#emailAddress").html(),
+                    TitleId: $("#Title").val(),
+                    AccountRoles: AccountRoles,
+                    IDType: $("input[name=idType]:checked").val(),
+                    IDNumber: $("#idNumber").val(),
+                    ContactNumber: $("#contact").val(),
+                    Avatar: avatar,
+                    ID: "@Model.ID",
+                    Age: "@Model.Age",
+                    RegistrationNumber: $('#regNumber').val(),
+                    PracticeNumber: $('#practiceNumber').val(),
+                    ProfessionalBody: $('input[name=professionalBodies]:checked').val()
+                },
+                success: function (result) {
+                    if (result.Success) {
+                        window.location = "/";
+                    } else {
+                        toastr.error(result.Message, 'ERROR!');
+                    }
+                },
+                error: function (x1, x2, x3) {
+                    toastr.error(x2, 'ERROR!');
+                }
+            });
+        }
+
+    </script>
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/wizardSteps")
+    <script src="/Scripts/crypto.js"></script>
+}
+
+@section Styles {
+    @Styles.Render("~/plugins/chosenStyles")
+    @Styles.Render("~/plugins/iCheckStyles")
+    @Styles.Render("~/plugins/imagecropperStyles")
+    @Styles.Render("~/plugins/wizardStepsStyles")
+}

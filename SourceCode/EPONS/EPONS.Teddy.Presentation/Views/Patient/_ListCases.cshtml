@@ -1,0 +1,27 @@
+﻿@model IEnumerable<EPONS.Teddy.Application.EntityViews.Case>
+@{
+    var patientId = (Guid)ViewData["PatientId"];
+}
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(model => model.StartDate)</th>
+            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(model => model.EndDate)</th>
+            <th>@Html.DisplayNameFor(model => model.ICD10Code)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cse in Model)
+        {
+            <tr>
+                <td class="hidden-sm hidden-xs">@cse.StartDate.ToString(ConfigurationDefaults.DateFormat)</td>
+                <td class="hidden-sm hidden-xs">@(cse.EndDate.HasValue? cse.EndDate.Value.ToString(ConfigurationDefaults.DateFormat) : null)</td>
+                <td>@(cse.ICD10Code == null? "Unknown" : cse.ICD10Code)</td> 
+                <td>
+                    <a href="@Url.Action("Edit", "Case", new { caseId = cse.Id, patientId = patientId})" class="btn btn-primary pull-right btn-action">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

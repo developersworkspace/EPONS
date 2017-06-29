@@ -1,0 +1,457 @@
+﻿@using EPONS.Teddy.Application.Extensions
+@{
+
+
+
+    IEnumerable<dynamic>
+    visits = Model.Visits;
+
+    string basePath = string.Format(@"{0}\Bin", AppDomain.CurrentDomain.BaseDirectory);
+
+    string patientAvatarPath = "http://placehold.it/150x150";
+    if (Model.Patient.Avatar != null)
+    {
+    patientAvatarPath = EPONS.Teddy.Application.Extensions.BytesExtension.ToBase64Image(Model.Patient.Avatar);
+    }
+
+    string facilityAvatarPath = "http://placehold.it/150x150";
+    if (Model.FacilityImage != null)
+    {
+    facilityAvatarPath = EPONS.Teddy.Application.Extensions.BytesExtension.ToBase64Image(Model.FacilityImage);
+    }
+    string vitalSignsImagePath = null;
+    if (Model.VitalSignsChart != null) {
+    vitalSignsImagePath = EPONS.Teddy.Application.Extensions.BytesExtension.ToBase64Image(Model.VitalSignsChart);
+    }
+
+    }
+    <style>
+        * {
+            font-size: 10;
+        }
+
+        img.logo {
+            width: 80px;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+        .important {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Progress Report</title>
+    </head>
+    <body>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td valign='top'>
+                    <img class="logo" src='@patientAvatarPath' />
+                </td>
+                <td valign='top'>
+                    <h3>Progress Report</h3>
+                    <h4>@Model.StartDate.ToString((string)Model.DateFormat) - @Model.EndDate.ToString((string)Model.DateFormat)</h4>
+                    <h2>@Model.Patient.Firstname @Model.Patient.Lastname</h2>
+                </td>
+                <td valign='top' align='right'>
+                    <img class="logo" src='@basePath\Resources\Images\logo.png' />
+                    &nbsp;
+                    <img class="logo" src='@facilityAvatarPath' />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Date of Birth</b>
+                </td>
+                <td>
+                    @(((DateTime?)Model.Patient.DateOfBirth).HasValue ? ((DateTime?)Model.Patient.DateOfBirth).Value.ToString((string)Model.DateFormat) : null)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Address</b>
+                </td>
+                <td>
+                    @Model.Patient.Street
+                    <br />
+                    @Model.Patient.City
+                    <br />
+                    @Model.Patient.Province
+                    <br />
+                    @Model.Patient.Country
+                    <br />
+                    @Model.Patient.PostalCode
+                </td>
+            </tr>
+        </table>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td colspan="5">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Referring Doctors</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b><u>Name</u></b>
+                </td>
+                <td>
+                    <b><u>Email Address</u></b>
+                </td>
+                <td>
+                    <b><u>Contact Number</u></b>
+                </td>
+                <td>
+                    <b><u>HPCSA Number</u></b>
+                </td>
+                <td>
+                    <b><u>Practice Number</u></b>
+                </td>
+            </tr>
+            @foreach (var ReferringDoctor in Model.ReferringDoctors)
+            {
+            <tr>
+                <td>
+                    @ReferringDoctor.Name
+                </td>
+                <td>
+                    @ReferringDoctor.Email
+                </td>
+                <td>
+                    @ReferringDoctor.ContactNumber
+                </td>
+                <td>
+                    @ReferringDoctor.HPCSANumber
+                </td>
+                <td>
+                    @ReferringDoctor.PracticeName
+                </td>
+            </tr>
+            }
+
+
+        </table>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td colspan="5">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Treating Doctors</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b><u>Name</u></b>
+                </td>
+                <td>
+                    <b><u>Email Address</u></b>
+                </td>
+                <td>
+                    <b><u>Contact Number</u></b>
+                </td>
+                <td>
+                    <b><u>HPCSA Number</u></b>
+                </td>
+                <td>
+                    <b><u>Practice Number</u></b>
+                </td>
+            </tr>
+            @foreach (var ad in Model.AttendingDoctors)
+            {
+            <tr>
+                <td>
+                    @ad.Name
+                </td>
+                <td>
+                    @ad.Email
+                </td>
+                <td>
+                    @ad.ContactNumber
+                </td>
+                <td>
+                    @ad.HPCSANumber
+                </td>
+                <td>
+                    @ad.PracticeName
+                </td>
+            </tr>
+            }
+
+        </table>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td colspan="6">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Episodes of Care</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b><u>Facility</u></b>
+                </td>
+                <td>
+                    <b><u>Onset Date</u></b>
+                </td>
+                <td>
+                    <b><u>Admission Date</u></b>
+                </td>
+                <td>
+                    <b><u>Discharge Date</u></b>
+                </td>
+                <td>
+                    <b><u>ICD10 Code</u></b>
+                </td>
+                <td>
+                    <b><u>Impairment group</u></b>
+                </td>
+            </tr>
+            @foreach (var eoc in Model.EpisodesofCare)
+            {
+            <tr>
+                @if(eoc.DischargeDate.ToString((string)Model.DateTimeFormat) == "0001-01-01 00:00"){
+                <td class='important'>
+                    @eoc.FacilityName
+                </td>
+                }
+                @if(eoc.DischargeDate.ToString((string)Model.DateTimeFormat) != "0001-01-01 00:00"){
+                <td>
+                    @eoc.FacilityName
+                </td>
+                }
+                <td>
+                    @(((DateTime?)eoc.OnsetDate).HasValue ? ((DateTime?)eoc.OnsetDate).Value.ToString((string)Model.DateFormat) : null)
+
+                </td>
+                <td>
+                    @eoc.AdmissionDate.ToString((string)Model.DateTimeFormat)
+                </td>
+                <td>
+                    @if(eoc.DischargeDate.ToString((string)Model.DateTimeFormat) != "0001-01-01 00:00") {@eoc.DischargeDate.ToString((string)Model.DateTimeFormat)}
+                </td>
+                <td>
+                    @eoc.ICD10Code
+                </td>
+                <td>
+                    @eoc.ImpairmentGroup
+                </td>
+            </tr>
+            }
+        </table>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td colspan="3">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Diagnoses</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b><u>ICD10 Code</u></b>
+                </td>
+            </tr>
+            @foreach (var diagnose in Model.Diagnoses)
+            {
+            <tr>
+                <td>
+                    @diagnose.ICD10Code
+                </td>
+            </tr>
+            }
+        </table>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td colspan="2">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 10%">
+                    <b>Case Manager Notes</b>
+                </td>
+                <td style="width: 90%"></td>
+            </tr>
+            @foreach (var visit in Model.ProgressNotes)
+            {
+
+            <tr>
+                <td>
+                    @visit.Timestamp.ToString((string)Model.DateTimeFormat)
+                    <br />
+                    @visit.User
+                    <br />
+                    @visit.DurationOfVisit Minutes
+                </td>
+                <td>
+                    @Raw(visit.ProgressNotes)
+                </td>
+            </tr>
+            }
+        </table>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td colspan="5">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Measurement Tools</b>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <b><u>Frequency</u></b>
+                </td>
+                <td>
+                    <b><u>Start Date</u></b>
+                </td>
+                <td>
+                    <b><u>End Date</u></b>
+                </td>
+            </tr>
+            @foreach (var cp in Model.MeasurementTools)
+            {
+            <tr>
+                <td class='@(((DateTime?)cp.EndDate).HasValue? "" : "important")'>
+                    @cp.Name
+                </td>
+                <td>
+                    @cp.Frequency
+                </td>
+                <td>
+                    @cp.StartDate.ToString((string)Model.DateFormat)
+                </td>
+                <td>
+                    @(((DateTime?)cp.EndDate).HasValue ? ((DateTime?)cp.EndDate).Value.ToString((string)Model.DateFormat) : null)
+                </td>
+            </tr>
+            }
+        </table>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td colspan="5">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Multidisciplinary Team</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b><u>Clinician</u></b>
+                </td>
+                <td>
+                    <b><u>Position</u></b>
+                </td>
+                <td>
+                    <b><u>Start Date</u></b>
+                </td>
+                <td>
+                    <b><u>End Date</u></b>
+                </td>
+                <td>
+                    <b><u>Facility</u></b>
+                </td>
+            </tr>
+            @foreach (var tm in Model.TeamMembers)
+            {
+            <tr>
+                <td class='@(((DateTime?)tm.DeallocationDate).HasValue? "" : "important")'>
+                    @tm.Firstname @tm.Lastname
+                </td>
+                <td>
+                    @tm.Position
+                </td>
+                <td>
+                    @tm.AllocationDate.ToString((string)Model.DateFormat)
+                </td>
+                <td>
+                    @(((DateTime?)tm.DeallocationDate).HasValue ? ((DateTime?)tm.DeallocationDate).Value.ToString((string)Model.DateFormat) : null)
+                </td>
+                <td>
+                    @tm.Facility
+                </td>
+            </tr>
+            }
+        </table>
+        <table border="0" style='width: 100%'>
+            <tr>
+                <td colspan="2">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 25%">
+                    <b>Support Services</b>
+                </td>
+                <td style="width: 75%"></td>
+            </tr>
+            @if(Model.Patient.SupportServices != null){
+            foreach (var supportService in Model.Patient.SupportServices)
+            {
+            <tr>
+                <td>
+                    @supportService.Name
+                </td>
+                <td>
+                    @supportService.Text
+                </td>
+            </tr>
+            }
+
+            }
+
+        </table>
+        @if(Model.Patient.SupportServices == null) {
+        <p><b>No Data Available</b></p>
+        }
+
+        @if (Model.VitalSignsChart != null) {
+        <div style="page-break-before:always">&nbsp;</div>
+        <h3>Vital Signs</h3>
+        <img src="@vitalSignsImagePath" style="width:750px;  height:620px" />
+        }
+
+
+        @foreach (var graph in Model.MeasurementToolChartsRadar)
+        {
+        string imagePath = EPONS.Teddy.Application.Extensions.BytesExtension.ToBase64Image(graph.Value);
+
+        <div style="page-break-before:always">&nbsp;</div>
+        <h3>@graph.Key.Name</h3>
+        <img src="@imagePath" style="width:650px;  height:620px" />
+        }
+        @foreach (var graph in Model.MeasurementToolChartsLine)
+        {
+        string imagePath = EPONS.Teddy.Application.Extensions.BytesExtension.ToBase64Image(graph.Value);
+        <div style="page-break-before:always">&nbsp;</div>
+        <h3>@graph.Key.Name</h3>
+        <img src="@imagePath" style="width:850px;  height:620px" />
+        }
+    </body>
+</html>

@@ -1,0 +1,104 @@
+﻿.panel-heading {
+    height: 55px;
+}
+
+.ibox-tools a.btn {
+    color: white;
+}
+
+.panel-title a.btn {
+    color: white;
+}
+
+.pagination {
+    margin: 0px;
+}
+
+
+    .pagination > .active > a {
+        background: rgba(37, 232, 242, 0.2);
+    }
+
+.panel-title > a {
+    display: block;
+    padding: 10px 15px;
+    margin: -10px -15px;
+}
+
+div.panel-heading > .btn {
+    margin-top: -15px;
+}
+
+.profile {
+    width: 75px;
+}
+
+.footer {
+    position: static;
+}
+
+/*Custom Checkbox and Radio*/
+
+
+.epons-checkbox, .radio-custom {
+    opacity: 0;
+    position: absolute;
+}
+
+.epons-checkbox, .epons-checkbox-label, .epons-radio, .epons-radio-label {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.epons-checkbox-label, .epons-radio-label {
+    position: relative;
+}
+
+.epons-checkbox + .epons-checkbox-label:before, .epons-radio + .epons-radio-label:before {
+    content: '';
+    background: #fff;
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.epons-checkbox:checked + .epons-checkbox-label:before {
+    background: #1ab394;
+}
+
+.epons-radio + .epons-radio-label:before {
+    border-radius: 50%;
+}
+
+.epons-radio:checked + .epons-radio-label:before {
+    background: #1ab394;
+}
+
+
+.epons-checkbox:focus + .epons-checkbox-label, .epons-radio:focus + .epons-radio-label {
+}
+
+/*Custom Checkbox and Radio*/
+
+.validation-summary-errors {
+    color: red;
+}
+
+.panel-heading button, .panel-heading a {
+    margin-right: 5px !important;
+}
+
+
+button.collapsed i.fa-minus {
+    display: none !important;
+}
+
+button:not(.collapsed) i.fa-plus {
+    display: none !important;
+}

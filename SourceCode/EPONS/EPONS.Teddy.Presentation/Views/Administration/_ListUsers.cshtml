@@ -1,0 +1,26 @@
+﻿@model IEnumerable<EPONS.Teddy.Application.EntityViews.User>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Username)</th>
+            <th>@Html.DisplayNameFor(model => model.EmailAddress)</th>
+            <th>@Html.DisplayNameFor(model => model.IsActive)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.EmailAddress</td>
+                <td>@user.IsActive</td>
+                <td>
+                    <a href="@Url.Action("Edit", "User", new { userId = user.Id})" class="btn btn-primary pull-right btn-action">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

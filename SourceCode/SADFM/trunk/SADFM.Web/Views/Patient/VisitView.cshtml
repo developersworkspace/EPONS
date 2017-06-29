@@ -1,0 +1,740 @@
+﻿@using SADFM.Web.Shared;
+@{
+    ViewBag.Title = "Visit View";
+}
+@model SADFM.Data.Models.Visit
+@{
+    var patient = SADFM.Data.DataAccess.Patient.GetById(Model.PatientGUID, lightWeight: true);
+
+    List<SADFM.Data.Models.Scale> scales = Model.GetScales();
+}
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>
+            <img alt="image" class="img-circle" src="@patient.Avatar" id="avatar" data-toggle="tooltip" title="Click to change" width=" 75" height="75">
+            @patient.FirstName&nbsp;@patient.LastName <small>Age @(patient.BirthDate.HasValue ? (Convert.ToInt32(DateTime.Now.Subtract(patient.BirthDate.Value).TotalDays) / (int)365).ToString() : ""),  @patient.Gender, @patient.Race</small>
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a href="/Patient/Details?Patient=@patient.GetId().ToString("N")">Patient</a>
+            </li>
+            <li class="active">
+                <strong>Visits</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+        <h2 class="pull-right">
+            @if (scales.Count(x => x.ScaleName == "APOM") > 0)
+            {
+                <a href="/Report/APOMReport?Visit=@Model.VisitId.ToString("N")" class="btn btn-primary">APOM Report</a>
+            }
+            &nbsp;
+            <a href="/Patient/Details?Patient=@patient.GetId().ToString("N")" class="btn btn-warning">Close</a>
+        </h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="panel blank-panel">
+                    <div class="panel-heading">
+                        <div class="panel-title m-b-md">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Case</h3>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            @Model.CaseName
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Date</h3>
+                                        </div>
+
+                                        <div class="col-lg-3">
+                                            @Model.StartDate
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Duration</h3>
+                                        </div>
+
+                                        <div class="col-lg-5">
+                                            @Model.DurationDisplay
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="panel-options">
+
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-0"><i class="fa fa-comments"> Notes</i></a></li>
+                                <li><a data-toggle="tab" href="#tab-1"><i class="fa fa-stethoscope"></i>Vital Signs</a></li>
+                                @{
+                                    int scaleIndex1 = 2;
+                                    foreach (var sx in scales)
+                                    {
+                                        <li>
+                                            <a data-toggle="tab" href="#tab-@scaleIndex1">
+                                                <i class="fa">
+                                                    <span class="label label-success">
+                                                        @if (sx.ScaleName != "FAM" && sx.ScaleName != "APOM")
+                                                        { <text>&@sx.ScaleName;</text> }
+                                                    </span>&nbsp;@sx.Description
+                                                </i>
+                                            </a>
+                                        </li>
+                                        scaleIndex1++;
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="tab-content">
+                            <div id="tab-0" class="tab-pane active">
+                                @if (!Model.IsPrivate || (Model.AccountId == ViewBag.Account.GetId() && Model.IsPrivate))
+                                {
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Daily Notes</h3>
+                                            @if (Model.AccountId == ViewBag.Account.GetId() && Model.IsPrivate)
+                                            {
+                                                <br />
+                                                <br />
+                                                <div style="background-color:#F0E99D;padding:15px" id="note-options">
+                                                    <i class="fa fa-eye fa-2x"></i>&nbsp; &nbsp;<input type="checkbox" name="IsPrivate" id="IsPrivate" @(Model.IsPrivate ? "checked" : "")><br />
+                                                    <div class="is-private hidden">
+                                                        This note is only visible to '@(ViewBag.Account.FirstName) @(ViewBag.Account.LastName)'
+                                                    </div>
+                                                    <div class="is-not-private hidden">
+                                                        This note is visible to all clinicians.
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <div class="col-lg-10" id="extranotes" style="background-color: white">
+                                            @Html.Raw(HttpUtility.HtmlDecode(Model.ExtraNotes))
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Patient Progress Notes</h3>
+                                    </div>
+
+                                    <div class="col-lg-10" style="background-color: white">
+                                        @Html.Raw(HttpUtility.HtmlDecode(Model.Notes))
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Attachments</h3>
+                                    </div>
+                                </div>
+
+
+                                @foreach (SADFM.Data.Models.Attachment attach in Model.VisitAttachments)
+                                {
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                        </div>
+                                        <div class="col-lg-5">
+
+                                            <a href="data:@attach.MimeType;base64,@attach.Data">@attach.Name</a>
+
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                            <div id="tab-1" class="tab-pane">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Temperature</h3>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        @(Model.Temperature.HasValue ? Model.Temperature.Value + " °C" : "")
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Heart rate</h3>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        @(Model.HeartRate.HasValue ? Model.HeartRate.Value + " / min" : "")
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        Heart rate regular
+                                    </div>
+                                    <div class="col-lg-10">
+                                        @(Model.HeartRateRegular ? "Yes" : "No")
+                                    </div>
+                                </div>
+                                <div class="row" id="vs_hrirreg_row">
+                                    <div class="col-lg-2">
+                                        Explain the irregular heart rate
+                                    </div>
+                                    <div class="col-lg-10">
+                                        @Model.HeartRateNote
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Blood Pressure</h3>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        @(Model.BloodPressureDiastolic.HasValue && Model.BloodPressureSystolic.HasValue ? Model.BloodPressureSystolic.Value + "/" + Model.BloodPressureDiastolic.Value + " mmHg" : "")
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Respiratory rate</h3>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        @(Model.RespiratoryRate.HasValue ? Model.RespiratoryRate.Value + " / min" : "")
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        Respiratory rate regular
+                                    </div>
+                                    <div class="col-lg-10">
+                                        @(Model.RespiratoryRateRegular ? "Yes" : "No")
+                                    </div>
+                                </div>
+                                <div class="row" id="vs_rrirreg_row">
+                                    <div class="col-lg-2">
+                                        Explain the irregular respiratory rate
+                                    </div>
+                                    <div class="col-lg-10">
+                                        @Model.RespiratoryRateNote
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Pulse Oximetry</h3>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        @(Model.PulseOximetry.HasValue ? Model.PulseOximetry.Value + " %" : "")
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        Supplementary oxygen
+                                    </div>
+                                    <div class="col-lg-10">
+                                        @(Model.PulseOximetryRegular ? "Yes" : "No")
+                                    </div>
+                                </div>
+                                <div class="row" id="vs_poirreg_row">
+                                    <div class="col-lg-2">
+                                        Explain the supplementary oxygen
+                                    </div>
+                                    <div class="col-lg-10">
+                                        @Model.PulseOximetryNote
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Glucose</h3>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        @(Model.Glucose.HasValue ? Model.Glucose.Value + " mmol/L" : "")
+                                    </div>
+                                </div>
+                            </div>
+                            @{
+
+                                int scaleIndex2 = 2;
+                                foreach (SADFM.Data.Models.Scale sx in scales)
+                                {
+                                    <div id="tab-@scaleIndex2" class="tab-pane">
+
+                                        @Html.Partial("~/Views/Patient/ScaleView.cshtml", new SADFM.Data.Models.ScaleAndVisit()
+                                   {
+                                       scale = sx,
+                                       visit = Model
+                                   })
+                                    </div>
+                                    scaleIndex2++;
+                                }
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/wizardStepsStyles")
+    @Styles.Render("~/plugins/dataTablesStyles")
+    @Styles.Render("~/plugins/chosenStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/switcheryStyles")
+    @Styles.Render("~/plugins/iCheckStyles")
+    @Styles.Render("~/plugins/summernoteStyles")
+    @Styles.Render("~/plugins/jquery.timepickerStyle")
+    <style>
+        #dropup .chosen-container .chosen-drop {
+            border-bottom: 0;
+            border-top: 1px solid #aaa;
+            top: auto;
+            bottom: 40px;
+        }
+
+        div.radio.i-checks div.iradio_square-green {
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        div.scaleValue0 div.iradio_square-green::before {
+            content: "0";
+            font-weight: bold;
+        }
+
+        div.scaleValue1 div.iradio_square-green::before {
+            content: "1";
+            font-weight: bold;
+        }
+
+        div.scaleValue2 div.iradio_square-green::before {
+            content: "2";
+            font-weight: bold;
+        }
+
+        div.scaleValue3 div.iradio_square-green::before {
+            content: "3";
+            font-weight: bold;
+        }
+
+        div.scaleValue4 div.iradio_square-green::before {
+            content: "4";
+            font-weight: bold;
+        }
+
+        div.scaleValue5 div.iradio_square-green::before {
+            content: "5";
+            font-weight: bold;
+        }
+
+        div.scaleValue6 div.iradio_square-green::before {
+            content: "6";
+            font-weight: bold;
+        }
+
+        div.scaleValue7 div.iradio_square-green::before {
+            content: "7";
+            font-weight: bold;
+        }
+
+        div.scaleValue8 div.iradio_square-green::before {
+            content: "8";
+            font-weight: bold;
+        }
+
+        div.scaleValue9 div.iradio_square-green::before {
+            content: "9";
+            font-weight: bold;
+        }
+
+        div.scaleValue10 div.iradio_square-green::before {
+            content: "10";
+            font-weight: bold;
+        }
+
+        div.scaleValue11 div.iradio_square-green::before {
+            content: "11";
+            font-weight: bold;
+        }
+
+        div.scaleValue12 div.iradio_square-green::before {
+            content: "12";
+            font-weight: bold;
+        }
+
+        div.scaleValue13 div.iradio_square-green::before {
+            content: "13";
+            font-weight: bold;
+        }
+
+        div.scaleValue14 div.iradio_square-green::before {
+            content: "14";
+            font-weight: bold;
+        }
+
+        div.scaleValue15 div.iradio_square-green::before {
+            content: "15";
+            font-weight: bold;
+        }
+
+        div.scaleValue16 div.iradio_square-green::before {
+            content: "16";
+            font-weight: bold;
+        }
+
+        div.scaleValue17 div.iradio_square-green::before {
+            content: "17";
+            font-weight: bold;
+        }
+
+        div.scaleValue18 div.iradio_square-green::before {
+            content: "18";
+            font-weight: bold;
+        }
+
+        div.scaleValue0 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue1 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue2 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue3 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue4 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue5 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue6 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue7 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue8 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue9 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue10 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue11 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue12 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue13 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue14 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue15 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue16 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue17 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue18 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue0 div.iradio_square-green {
+            background-color: #f2f2f2 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue1 div.iradio_square-green {
+            background-color: #FCB0B5 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue2 div.iradio_square-green {
+            background-color: #FCB0B5 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue3 div.iradio_square-green {
+            background-color: #FCB0B5 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue4 div.iradio_square-green {
+            background-color: #FCB0B5 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue5 div.iradio_square-green {
+            background-color: #FFB474 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue6 div.iradio_square-green {
+            background-color: #74D5FF !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue7 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue8 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue9 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue10 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue11 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue12 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue13 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue14 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue15 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue16 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue17 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue18 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        .nav.nav-tabs .active a {
+            background-color: rgba(0,0,0,0) !important;
+        }
+
+        body.modal-open {
+            padding-right: 17px !important;
+        }
+
+        .modal-backdrop.in {
+            margin-right: 16px;
+        }
+
+        div.scaleValue0 {
+            display: none;
+        }
+
+        #extranotes {
+            min-height: 300px;
+        }
+    </style>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/validate")
+    @Scripts.Render("~/plugins/typeahead")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/summernote")
+    @Scripts.Render("~/plugins/jquery.timepicker")
+    <script type="text/javascript">
+
+        var idleTimeTooltip = 0;
+        $(document).ready(function () {
+
+            if ($('#IsPrivate').is(':checked')) {
+                $('#note-options').css('background-color', '#F0E99D');
+                $('#extranotes').css('background-color', '#F0E99D');
+                $('#note-options .is-private').removeClass('hidden');
+                $('#note-options .is-not-private').addClass('hidden');
+            } else {
+                $('#note-options').css('background-color', 'white');
+                $('#extranotes').css('background-color', 'white');
+                $('#note-options .is-private').addClass('hidden');
+                $('#note-options .is-not-private').removeClass('hidden');
+            }
+
+            $('#IsPrivate').change(function () {
+                $.get("/Visit/SetPrivate?isPrivate=" + ($('#IsPrivate').is(':checked') ? true : false) + '&Id=' + '@Model.VisitId', function (data) {
+
+                });
+
+
+                if ($('#IsPrivate').is(':checked')) {
+                    $('#note-options').css('background-color', '#F0E99D');
+                    $('#extranotes').css('background-color', '#F0E99D');
+                    $('#note-options .is-private').removeClass('hidden');
+                    $('#note-options .is-not-private').addClass('hidden');
+                } else {
+                    $('#note-options').css('background-color', 'white');
+                    $('#extranotes').css('background-color', 'white');
+                    $('#note-options .is-private').addClass('hidden');
+                    $('#note-options .is-not-private').removeClass('hidden');
+                }
+            });
+
+            $(".chosen-select").chosen({
+                "width": "100%",
+                disable_search_threshold: 5
+            });
+
+            $('#visitStartDate .input-group.date').datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+            $('#visitStartDate .input-group.date').datepicker('setDate', new Date());
+
+            $('.i-checks').iCheck({
+                radioClass: 'iradio_square-green'
+            });
+
+            $('#timepicker').timepicker({
+                'step': 15,
+                'timeFormat': 'H:i'
+            });
+            $('#timepicker').timepicker('setTime', new Date());
+
+            $('div[data-toggle="tooltip-y"]').mousemove(function () {
+                $('.tooltip-y').html($(this).attr('data-title'));
+                idleTimeTooltip = 0;
+            });
+
+            $('div[data-toggle="tooltip-x"]').mousemove(function () {
+                $('.tooltip-x').html($(this).attr('data-title'));
+                idleTimeTooltip = 0;
+            });
+
+
+            setInterval(function () {
+                idleTimeTooltip = idleTimeTooltip + 1;
+                if (idleTimeTooltip > 3) { // 3 seconds
+                    $('.tooltip-x').html('');
+                    $('.tooltip-y').html('');
+                }
+            }, 1000);
+
+
+            $('.summernote').summernote({
+                toolbar: [
+    ['style', ['bold', 'italic', 'underline', 'clear']],
+    ['fontsize', ['fontsize']],
+    ['color', ['color']],
+    ['para', ['ul', 'ol', 'paragraph']],
+    ['height', ['height']],
+    ['insert', ['picture', 'link']]
+                ]
+            });
+
+
+            $('.i-checks').iCheck({
+                radioClass: 'iradio_square-green'
+            });
+
+
+        });
+
+
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    return sParameterName[1];
+                }
+            }
+        }
+    </script>
+}
+
+
+

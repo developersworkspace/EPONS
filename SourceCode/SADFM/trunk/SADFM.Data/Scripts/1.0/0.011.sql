@@ -1,0 +1,2 @@
+ALTER TABLE Account ADD CONSTRAINT FK_Account_Title FOREIGN KEY (TitleId) REFERENCES ListItem (ListItemId);
+ALTER TABLE Account ADD CONSTRAINT FK_Account_Role FOREIGN KEY (RoleId) REFERENCES ListItem (ListItemId);

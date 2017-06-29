@@ -1,0 +1,62 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Messaging.Index
+@{
+    ViewBag.Title = "List";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Messaging</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Messaging</a>
+            </li>
+            <li class="active">
+                <strong>Index</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                @if (Model.MessagesList.Count == 0)
+                {
+                    <div class="ibox-title">
+                        <h5>You have no unread messages!!</h5>
+                    </div>
+                }
+
+                @foreach (var message in Model.MessagesList)
+                {
+                    <div class="social-feed-box">
+                        <div class="social-avatar">
+                            <a href="" class="pull-left">
+                                <img alt="image" src="@Url.Action("Avatar", "Patient", new { patientId = message.PatientId })">
+                            </a>
+                            <div class="media-body">
+                                <a href="@Url.Action("SendPatient", "Messaging", new { patientId = message.PatientId})">
+                                    @message.PatientDisplayName by @message.SenderDisplayName
+                                </a>
+                                <small class="text-muted">
+                                    @message.Timestamp.ToString(ConfigurationDefaults.DateTimeFormat)
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Content/js/plugins/typeahead/typeahead.js"></script>
+}
+
+
+
+

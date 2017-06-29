@@ -1,0 +1,125 @@
+﻿@using SADFM.Web.Shared;
+@{
+    Layout = null;
+}
+<style>
+    #scrollable-dropdown-menu .tt-dropdown-menu {
+        max-height: 150px;
+        overflow-y: auto;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-6">
+        <h4>Case Information</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <div id="caseStartDate">
+            <div class="input-group date">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input type="text" class="form-control required" placeholder="Start Date">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <select id="TypeID" class="chosen-select" data-placeholder="Chronic or Acute" style="display: none;">
+            <option></option>
+            <option>Chronic</option>
+            <option>Acute</option>
+        </select>
+    </div>
+    <div class="col-lg-4">
+                @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.Provider.GetAllProviders().Where(x => !x.IsGroup).ToList(), "ProviderID", p => p.ID, p => p.Name, "chosen-select", dataPlaceholder: "Select provider")
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div id="scrollable-dropdown-menu">
+            <input class="form-control typeahead" type="text" placeholder="Select primary diagnosis - ICD10" id="txtICD10Name" style="width:100%">
+        </div>
+    </div>
+    <div class="col-lg-4" id="lblICD10Description">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+     @SADFM.Web.Shared.HtmlHelper.DropdownBox(
+     SADFM.Data.DataAccess.ListItem.GetList("ImpairmentClass")
+              .OrderBy(x => Convert.ToInt32(x.Value)).SelectMany(li => li.Children.OrderBy(x => x.Value))
+     .ToList(), "ImpairmentGroupId",
+              l => l.ID, l => l.ListValue + "." + l.Value + " - " + l.ListName + " - " + l.Name, "chosen-select", dataPlaceholder: "Select impairment group")
+    </div>
+    <div class="col-lg-4">
+        <div id="caseEndDate">
+            <div class="input-group date">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input type="text" class="form-control required" placeholder="End Date">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <h4>Current Assessment Tools</h4>
+    </div>
+    <div class="col-lg-4">
+        <button type="button" class="btn btn-primary" id="btn-newcareplan" data-backdrop="static" data-keyboard="false" style="width:100%">
+            <i class="fa fa-plus"></i>&nbsp;Add an Assessment Tool
+        </button>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox-content">
+            <table class="table tblCarePlan" id="tblCarePlan" style="overflow-y: auto">
+                <thead>
+                    <tr>
+                        <th>Scale</th>
+                        <th>Frequency</th>
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal in modal" id="addCareDialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="addscale-title">Add an Assessment Tool</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-5">
+                        @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Scale"), "ScaleID", s => s.ID, s => s.Description, "chosen-select", dataPlaceholder: "Select scale")
+                        <label style="color:red;" class="error">Required</label>
+                    </div>
+                    <div class="col-lg-5">
+                        @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("Frequency").OrderBy(x => x.SortOrder).ToList(), "FrequencyID", f => f.ID, f => f.Description, "chosen-select", dataPlaceholder: "Select frequency")
+                        <label style="color:red;" class="error">Required</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" id="addCareDialogCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="addCareDialogOK">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

@@ -1,0 +1,188 @@
+﻿@model EPONS.Teddy.Application.Entities.Patient
+
+@using (Html.BeginForm("Edit", "Patient"))
+{
+    <h4><u>Personal Details</u></h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Firstname)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.Firstname)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Lastname)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.Lastname)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Title)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.Title)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.DateOfBirth)
+                </div>
+                <div class="col-md-3">
+                    @(Model.DateOfBirth.HasValue? Model.DateOfBirth.Value.ToString(EPONS.Teddy.Presentation.ConfigurationDefaults.DateFormat) : null)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Gender)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.Gender)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Race)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.Race)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.ContactNumber)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.ContactNumber)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.IdentificationNumber)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.IdentificationNumber)
+                </div>
+            </div>
+
+            <h4><u>Address Details</u></h4>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Country)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.Country)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Province)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.Province)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.City)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.City)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Street)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.Street)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.PostalCode)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.PostalCode)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.ResidentialEnvironment)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.ResidentialEnvironment)
+                </div>
+            </div>
+
+            <h4><u>Next of Kin Details</u></h4>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.NameOfNextOfKin)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.NameOfNextOfKin)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.EmailAddressOfNextOfKin)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.EmailAddressOfNextOfKin)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.ContactNumberOfNextOfKin)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.ContactNumberOfNextOfKin)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.RelationshipOfNextOfKin)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.RelationshipOfNextOfKin)
+                </div>
+            </div>
+
+            <h4><u>Medical Scheme Details</u></h4>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.MedicalScheme)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.MedicalScheme)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.MedicalSchemeNumber)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(x => x.MedicalSchemeNumber)
+                </div>
+            </div>
+
+           
+            <br>
+
+            <h3>Support Services</h3>
+            @for (int i = 0; i < Model.SupportServices.Count; i++)
+            {
+                var supportService = Model.SupportServices[i];
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>@supportService.Name</label>
+                    </div>
+                    <div class="col-md-7">
+                        @Html.DisplayFor(x => x.SupportServices[i].Text, new { @class = "form-control" })
+                    </div>
+                </div>
+            }
+
+            @if (Model.SupportServices.Count == 0)
+            {
+                <p>No support services</p>
+            }
+        </div>
+    </div>
+}
+
+
+

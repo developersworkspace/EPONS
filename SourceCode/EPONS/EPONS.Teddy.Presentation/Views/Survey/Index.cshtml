@@ -1,0 +1,123 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Survey.Index
+@{
+    ViewBag.Title = "Survey";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>@Model.Patient.GetTitleLine()</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Survey</a>
+            </li>
+            <li class="active">
+                <strong>Survey - @Model.Survey.Name</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("Edit", "Patient", new { patientId = Model.Patient.Id})" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Survey - @Model.Survey.Name</h5>
+                </div>
+                <div class="ibox-content">
+                    @using (Html.BeginForm("Index", "Survey", new { patientId = Model.Patient.Id, surveyId = Model.Survey.Id }, FormMethod.Post))
+                    {
+                        <div>
+                            @Html.ValidationSummary()
+                            <h5>Questions</h5>
+                            @foreach (var question in Model.Survey.Questions)
+                            {
+                                <p>@question.SortOrder - @question.Text</p>
+
+                                foreach (var option in question.Options)
+                                {
+                                    <div>
+                                        <input id="SurveyOptions_@option.Id.ToString("N")" class="radio-custom" name="SurveyOptions_@question.Id.ToString("N")" value="@option.Id" type="radio">
+                                        <label for="SurveyOptions_@option.Id.ToString("N")" class="radio-custom-label">@option.Text</label>
+                                    </div>
+                                }
+
+                            }
+                            @Html.Partial("~/Views/Shared/_SubmitButton.cshtml")
+                            @Html.HiddenFor(x => x.Survey.Id)
+                            @Html.HiddenFor(x => x.Patient.Id)
+                            @Html.AntiForgeryToken()
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles {
+
+    <style>
+        .radio-custom {
+            opacity: 0;
+            position: absolute;
+        }
+
+        .radio-custom, .radio-custom-label {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .radio-custom-label {
+            position: relative;
+        }
+
+        .radio-custom + .radio-custom-label:before {
+            content: '';
+            background: #fff;
+            border: 2px solid #ddd;
+            display: inline-block;
+            vertical-align: middle;
+            width: 20px;
+            height: 20px;
+            padding: 2px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+
+        .radio-custom + .radio-custom-label:before {
+            border-radius: 50%;
+        }
+
+        .radio-custom:checked + .radio-custom-label:before {
+            background: #1ab394;
+        }
+    </style>
+
+}
+
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+
+
+
+        });
+
+    </script>
+}
+
+
+

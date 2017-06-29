@@ -1,0 +1,397 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Visit.Create
+@{
+    ViewBag.Title = "Create";
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)Model;
+    ViewData["BaseModel"] = baseModel;
+}
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>
+            <form id="uploadAvatarForm" action="@Url.Action("UploadAvatar", "Patient")" method="post" enctype="multipart/form-data">
+                <img title="Double click here to upload a patient photograph" data-toggle="tooltip" src="@Url.Action("Avatar", "Patient", new { patientId = Model.Patient.Id})" onclick="selectAvatar()" class="img-responsive img-circle pull-left profile" alt="Profile Image" />
+                <input type="file" name="avatar" onchange="uploadAvatar()" class="hidden" />
+                <input type="hidden" name="patientId" id="patientId" value="@Model.Patient.Id" />
+            </form>
+            @Model.Patient.GetTitleLine()
+            <small>@Model.Patient.GetSubTitleLine()</small>
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>Visit</a>
+            </li>
+            <li class="active">
+                <strong>Create</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <br>
+
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("Edit", "Patient", new { patientId = Model.Patient.Id})" class="btn btn-warning btn-sm btn-action" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    @using (Html.BeginForm("Create", "Visit", FormMethod.Post, new { id = "createVisit" }))
+                    {
+                        @Html.ValidationSummary()
+                        <div class="panel-group" id="accordion">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <span>Visit Details</span>
+                                    </h4>
+                                    <button data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true" class="btn btn-success btn-sm pull-right">
+                                        <i class="fa fa-minus"></i>
+                                        <i class="fa fa-plus"></i>
+                                        View
+                                    </button>
+                                    <button id="SaveButton" type="submit" class="btn btn-primary btn-sm pull-right" disabled="true"><i class="fa fa-save"></i>&nbsp;Save &amp; Exit</button>
+                                </div>
+                                <div id="collapse1" class="panel-collapse collapse in" aria-expanded="true">
+                                    <div class='panel-body'>
+                                        @Html.Partial("_VisitDetails", Model.Visit)
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <span>Visit Notes</span>
+                                    </h4>
+                                    <button data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true" class="btn btn-success btn-sm pull-right collapsed">
+                                        <i class="fa fa-minus"></i>
+                                        <i class="fa fa-plus"></i>
+                                        View
+                                    </button>
+                                </div>
+                                <div id="collapse2" class="panel-collapse collapse" aria-expanded="true">
+                                    <div class='panel-body'>
+                                        @Html.Partial("_VisitNotes", Model.Visit)
+                                    </div>
+                                </div>
+                            </div>
+                            @*@foreach (var survey in Model.Surveys)
+                                {
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <span>Survey - @survey.Name</span>
+                                            </h4>
+                                            <a href="@Url.Action("Index", "Survey", new { patientId = Model.Patient.Id, surveyId = survey.Id })" class="btn btn-success btn-sm pull-right">View</a>
+                                        </div>
+                                    </div>
+                                }*@
+                            <div class="panel @(Model.GetVitalSigns() == null ? "panel-default" : (Model.GetVitalSigns().IsOverDue() ? "panel-danger" : "panel-default"))">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <span>Measurement Tool - Vital Signs</span>
+                                    </h4>
+                                    <button data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="true" class="btn btn-success btn-sm pull-right collapsed">
+                                        <i class="fa fa-minus"></i>
+                                        <i class="fa fa-plus"></i>
+                                        View
+                                    </button>
+                                </div>
+                                <div id="collapse3" class="panel-collapse collapse" aria-expanded="true">
+                                    <div class='panel-body'>
+                                        @Html.Partial("_VisitVitalSigns", Model.Visit)
+                                    </div>
+                                </div>
+                            </div>
+                            @foreach (var item in Model.MeasurementTools.Where(x => x.IsStandardMeasurementTool()))
+                            {
+
+                                <div class="panel @(item.IsOverDue() ? "panel-danger" : "panel-default")">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <span>Measurement Tool - @item.Name</span>
+                                        </h4>
+                                        <button data-toggle="collapse" data-parent="#accordion" href="#@item.Id" aria-expanded="true" class="btn btn-success btn-sm pull-right collapsed">
+                                            <i class="fa fa-minus"></i>
+                                            <i class="fa fa-plus"></i>
+                                            View
+                                        </button>
+                                    </div>
+                                    <div id="@item.Id" class="panel-collapse collapse" aria-expanded="true">
+                                        <div class='panel-body'>
+                                            @if (Model.CanUseMeasurementTool(item.Id))
+                                            {
+                                                foreach (var scoreItem in item.ScoreItems)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label><abbr data-toggle="tooltip" title="@scoreItem.Description">@scoreItem.Name</abbr></label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="radio-toolbar">
+                                                                @foreach (var scoreValue in scoreItem.ScoreValues.OrderBy(x => x.Value))
+                                                                {
+                                                                    if (scoreItem.HasChildScoreItems())
+                                                                    {
+                                                                        scoreItem.ValueDescription = scoreItem.ValueDescription + scoreValue.Value + ". " + scoreValue.Description + System.Environment.NewLine;
+                                                                        <input type="radio" id="ScoreValues_@scoreValue.Id.ToString("N")" data-scoreitemid="@scoreItem.Id" data-scorevalueid="@scoreValue.Id" data-scorevalue="@scoreValue.Value" name="ScoreValues_@scoreItem.Id.ToString("N")" value="@scoreValue.Id.ToString("N")" @(Model.ScoreValues.Contains(scoreValue.Id) ? "checked" : null) disabled>
+                                                                        <label data-toggle="modal" data-target="#scoreItemModal_@scoreItem.Id" data-scoreitemid="@scoreItem.Id" data-scorevalueid="@scoreValue.Id" data-scorevalue="@scoreValue.Value" for="ScoreValues_@scoreValue.Id.ToString("N")" class="scoreItem_@scoreValue.Value">@scoreValue.Value</label>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        scoreItem.ValueDescription = scoreItem.ValueDescription + scoreValue.Value + ". " + scoreValue.Description + "<br>";
+                                                                        <input type="radio" data-scoreitemid="@scoreItem.Id" data-scorevalueid="@scoreValue.Id" data-scorevalue="@scoreValue.Value" id="ScoreValues_@scoreValue.Id.ToString("N")" name="ScoreValues_@scoreItem.Id.ToString("N")" value="@scoreValue.Id.ToString("N")" @(Model.ScoreValues.Contains(scoreValue.Id) ? "checked" : null)>
+                                                                        <label title="@scoreValue.Description" data-scoreitemid="@scoreItem.Id" data-scorevalueid="@scoreValue.Id" data-scorevalue="@scoreValue.Value" for="ScoreValues_@scoreValue.Id.ToString("N")" class="scoreItem_@scoreValue.Value .tooltips" data-toggle="tooltip" data-trigger="hover">@scoreValue.Value</label>
+                                                                    }
+
+                                                                }
+                                                                <button type="button" class="btn btn-secondary" data-html="true" data-toggle="tooltip" data-placement="top" title="@scoreItem.ValueDescription">Help</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <p>@Model.CanUseMeasurementToolMessage(item.Id)</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                        @Html.AntiForgeryToken()
+                        <div id="subscores">
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    @foreach (var item in Model.MeasurementTools.Where(x => x.IsStandardMeasurementTool()))
+    {
+        foreach (var scoreItem in item.ScoreItems)
+        {
+            if (scoreItem.SubScoreItems.Count > 0)
+            {
+                <div class="modal fade" id="scoreItemModal_@scoreItem.Id" data-scoreitemid="@scoreItem.Id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">@scoreItem.Name</h4>
+                            </div>
+                            <div class="modal-body">
+                                @foreach (var childScoreItem in scoreItem.SubScoreItems)
+                                {
+                                    scoreItem.ValueDescription = "";
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label><abbr data-toggle="tooltip" title="@childScoreItem.Description">@childScoreItem.Name</abbr></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="radio-toolbar">
+                                                @foreach (var scoreValue in childScoreItem.ScoreValues.OrderBy(x => x.Value))
+                                                {
+                                                    scoreItem.ValueDescription = scoreItem.ValueDescription + scoreValue.Value + ". " + scoreValue.Description + "<br>";
+                                                    <input type="radio" data-scoreitemid="@childScoreItem.Id" data-scorevalueid="@scoreValue.Id" data-scorevalue="@scoreValue.Value" id="ScoreValues_@scoreValue.Id.ToString("N")" name="ScoreValues_@childScoreItem.Id.ToString("N")" value="@scoreValue.Id.ToString("N")" @(Model.ScoreValues.Contains(scoreValue.Id) ? "checked" : null)>
+                                                    <label data-scoreitemid="@childScoreItem.Id" data-scorevalueid="@scoreValue.Id" data-scorevalue="@scoreValue.Value" for="ScoreValues_@scoreValue.Id.ToString("N")" class="scoreItem_@scoreValue.Value" title="@scoreValue.Description" data-toggle="tooltip">@scoreValue.Value</label>
+                                                }
+                                                <button type="button" class="btn btn-secondary" data-html="true" data-toggle="tooltip" data-placement="top" title="@scoreItem.ValueDescription">Help</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" onclick="calculateParentScoreItemValue('@scoreItem.Id', '@item.SubScoreAggregationMethod()')" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="calculateParentScoreItemValue('@scoreItem.Id', '@item.SubScoreAggregationMethod()')" data-dismiss="modal">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>
+
+<div id="modalWithYesNo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Validation Errors</h4>
+            </div>
+            <div class="modal-body">
+                <p id="message"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-yes" class="btn btn-default">Yes</button>
+                <button type="button" id="btn-no" class="btn btn-default">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="modalWithOk" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Validation Errors</h4>
+            </div>
+            <div class="modal-body">
+                <p id="message"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-ok" class="btn btn-default">Ok</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section styles {
+    <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/summernote/summernote.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/summernote/summernote-bs3.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/datetimepicker/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/Content/css/visit.css" rel="stylesheet" />
+
+}
+
+@section scripts {
+    <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/plugins/summernote/summernote.min.js"></script>
+    <script src="~/Content/js/plugins/datetimepicker/bootstrap-datetimepicker.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/validate.js/0.11.1/validate.min.js"></script>
+    <script src="~/Content/js/epons-visit-validations.js?id=@DateTime.UtcNow.Ticks"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+
+        })
+        $(document).ready(function () {
+            $(this).find('#ImpairmentGroupId > option').each(function (index, value) {
+                if (this.value === "@Model.Patient.ImpairmentGroupId") {
+                    $(this).attr('selected', true);
+                }
+            })
+
+            $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+
+
+            $('.summernote').summernote({
+                height: 300,
+                toolbar: [
+    ['style', ['bold', 'italic', 'underline', 'clear']],
+    ['fontsize', ['fontsize']],
+    ['color', ['color']],
+    ['para', ['ul', 'ol', 'paragraph']],
+    ['height', ['height']],
+    ['insert', ['picture', 'link']]
+                ]
+            });
+            $("#Timestamp").datetimepicker({ format: 'yyyy/mm/dd hh:ii' });
+
+
+            $('form#createVisit').on('submit', function () {
+                var form = $(this);
+
+                if (form.valid()) {
+
+                    var submitButton = form.find('[type=submit]');
+
+                    form.find('input[type=radio]').removeAttr('disabled');
+
+                    var subscores = '';
+
+                    $('.modal input[type=radio]:checked').each(function () {
+                        var element = $(this);
+
+                        name = element.attr('name');
+                        value = element.val();
+
+                        subscores += '<input type="hidden" name="' + name + '" value="' + value + '">';
+                    });
+
+                    $('#subscores').html(subscores);
+                }
+
+            });
+
+        });
+
+
+
+        function calculateParentScoreItemValue(id, method) {
+
+            selectedElements = $('#scoreItemModal_' + id + ' input[type=radio]:checked');
+            selectedValues = [];
+
+            selectedElements.each(function () {
+                var element = $(this);
+
+                selectedValues.push(parseInt(element.attr('data-scorevalue')));
+            });
+
+            value = 0;
+            if (method == 'minimum') {
+                value = getMinimum(selectedValues);
+            } else if (method == 'median') {
+                value = getMedian(selectedValues);
+            }
+
+
+            value = Math.floor(value);
+
+            $('input[data-scoreitemid=' + id + '][data-scorevalue=' + value + ']').prop("checked", true);
+
+        }
+
+        function getMedian(arr) {
+            arr.sort(function (a, b) { return a - b; });
+
+            var half = Math.floor(arr.length / 2);
+
+            if (arr.length % 2)
+                return arr[half];
+            else
+                return (arr[half - 1] + arr[half]) / 2.0;
+        }
+
+        function getMinimum(arr) {
+            arr.sort(function (a, b) { return a - b; });
+
+            return arr[0];
+        }
+
+        function EnableSubmit() {
+            var button = document.getElementById('SaveButton');
+            button.disabled = false;
+        }
+
+
+    </script>
+}
+

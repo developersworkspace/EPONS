@@ -1,0 +1,139 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Report.ProgressReport
+@{
+    ViewBag.Title = "Progress Report";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Progress Report</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Report</a>
+            </li>
+            <li class="active">
+                <strong>Progress Report</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("Edit", "Patient", new { patientId = Model.PatientId})" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Progress Report Filter</h5>
+                </div>
+                <div class="ibox-content">
+    @using (Html.BeginForm("ProgressReport", "Report", FormMethod.Post, new { id = "formProgressReport" }))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.DisplayNameFor(x => x.StartDate)
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(x => x.StartDate, "{0:yyyy/MM/dd}", new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.StartDate, null, new { @class = "text-danger" })
+            </div>
+            <div class="col-md-3">
+                @Html.DisplayNameFor(x => x.EndDate)
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(x => x.EndDate, "{0:yyyy/MM/dd}", new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.EndDate, null, new { @class = "text-danger" })
+            </div>
+        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div>
+                                    <input id="IncludeRadarChart" class="epons-checkbox" name="IncludeRadarChart" type="checkbox" value="true" checked>
+                                    <label for="IncludeRadarChart" class="epons-checkbox-label">@Html.DisplayNameFor(x => x.IncludeRadarChart)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div>
+                                    <input id="IncludeLineChart" class="epons-checkbox" name="IncludeLineChart" type="checkbox" value="true">
+                                    <label for="IncludeLineChart" class="epons-checkbox-label">@Html.DisplayNameFor(x => x.IncludeLineChart)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-success pull-right" type="submit" formtarget="_blank" onclick="btnPreview_click()">Preview</button>
+                            </div>
+                        </div>
+                                @Html.HiddenFor(x => x.PatientId)
+                                @Html.AntiForgeryToken()
+                                }
+                            </div>
+                        </div>
+                    </div>
+    </div>
+</div>
+
+
+@section styles {
+    <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <style>
+        .epons-checkbox + .epons-checkbox-label:before {
+            background: #D3D3D3;
+        }
+    </style>
+}
+
+@section scripts {
+    <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+
+            $('#StartDate').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'yyyy/mm/dd'
+            });
+
+            $('#EndDate').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'yyyy/mm/dd'
+            });
+
+        });
+
+        function btnDownload_click() {
+            form = $('form#formProgressReport');
+            form.attr('action', '@Url.Action("ProgressReport", "Report")');
+            form.attr('method', 'post');
+            
+            return true;
+        }
+
+        function btnPreview_click() {
+            form = $('form#formProgressReport');
+            form.attr('action', '@Url.Action("ProgressReportPreview", "Report")');
+            form.attr('method', 'post');
+         
+            return true;
+        }
+
+
+
+
+    </script>
+}
+
+
+

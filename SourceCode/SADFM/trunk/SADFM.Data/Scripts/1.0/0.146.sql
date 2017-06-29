@@ -1,0 +1,1 @@
+ALTER TABLE [PatientScale] ADD [LastUpdatedTimestamp] DATE

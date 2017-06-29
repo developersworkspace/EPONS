@@ -1,0 +1,1 @@
+﻿ALTER TABLE [Visit] ALTER COLUMN [VisitDuration] INT NULL;

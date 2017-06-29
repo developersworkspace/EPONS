@@ -1,0 +1,311 @@
+﻿@model SADFM.Web.Models.APOMReportViewModel
+@{
+    Layout = null;
+    string path = Request.Url.Host + (Request.Url.Port == 80 ? "" : ":" + Request.Url.Port.ToString());
+}
+
+<style>
+    .btn {
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 25px;
+        font-weight: 700;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .blue {
+        background-color: blue;
+    }
+
+    .orange {
+        background-color: orange;
+    }
+</style>
+
+<div>
+
+    <div style="width: 18%; float:left">
+        <img src="data:image/png;base64,@Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath("/Content/images/report_logo.png")))" width="100%" />
+    </div>
+
+    <div style="width: 54%; margin-left: 10%; float: left; ">
+        <h4>
+            APOM Report
+            <br />
+            @Model.VisitDate.ToString("dd MMM yyyy")
+        </h4>
+        <h3>@Model.Patient.FirstName @Model.Patient.LastName</h3>
+        <h5>
+            Dob: @Model.Patient.BirthDate.Value.ToString("dd MMM yyyy") (@Math.Floor((DateTime.Now.Subtract(Model.Patient.BirthDate.Value).TotalDays / 365)))
+            <br />
+            @Model.Patient.Street
+            <br />
+            @Model.Patient.City
+            <br />
+            @Model.Patient.Country
+            <br />
+            @Model.Patient.PostalCode
+        </h5>
+    </div>
+    <div style="width: 18%; float: left; ">
+        <img src="@(Model.Patient.Avatar == null ? Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath("/Content/images/nopatient.png"))) :Model.Patient.Avatar)" width="100%" />
+    </div>
+
+</div>
+
+<div style="clear: left"></div>
+
+
+
+
+@foreach (var entry1 in Model.ScaleItems.Where(x => x.Value.Count != 0))
+{
+
+    <div>
+        <div style="width: 15%; display: inline-block;">
+            <h3>@entry1.Key</h3>
+        </div>
+        <div style="width: 70%; display: inline-block;">
+
+        </div>
+    </div>
+    <br />
+
+    foreach (var entry2 in entry1.Value)
+    {
+        <div>
+            <div style="width: 15%; display: inline-block;">
+
+            </div>
+            <div style="width: 30%; display: inline-block;">
+                <h4>@entry2.Key</h4>
+            </div>
+            <div style="width: 40%; display: inline-block;">
+                @entry2.Value
+            </div>
+        </div>
+        <br />
+
+    }
+}
+
+<div id="radarGraph" style="margin: 0 auto"></div>
+
+
+<div style="position:fixed;top: 10px;right: 30px">
+    <button class="btn blue" onclick="PrintPDF()">Download</button>
+    <button class="btn orange" onclick="window.location = '/Patient/VisitView?Patient=@Model.Patient.GetId().ToString("N")&Visit=@Model.VisitId.ToString("N")'">Close</button>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/plugins/HighCharts")
+@Scripts.Render("~/plugins/HighCharts-More")
+@Scripts.Render("~/plugins/html2canvas")
+@Scripts.Render("~/plugins/Canvg")
+@Scripts.Render("~/bundles/bootstrap")
+
+<script src="~/Scripts/plugins/print/jspdf.min.js"></script>
+<script>
+
+
+    $(document).ready(function () {
+        drawRadarAPOM();
+
+        $('#btn-download').button('loading');
+        setTimeout(function () {
+            $('#btn-download').button('reset');
+            // SavePDF();
+        }, 2800);
+
+
+
+        $.extend(
+               {
+                   redirectPost: function (location, args) {
+                       var form = '';
+                       $.each(args, function (key, value) {
+                           value = value.split('"').join('\"')
+                           form += '<input type="hidden" name="' + key + '" value="' + value + '">';
+                       });
+                       $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
+                   }
+               });
+
+    });
+
+
+    function drawRadarAPOM() {
+
+        var data = {
+            "labels": [
+               @Html.Raw(string.Join(",", Model.GraphData.Select(x => string.Format("\"{0}\"", x.Key)).ToList()))
+            ],
+            "data": [
+               {
+                   "title": "Visit",
+                   "points": [
+                      @Html.Raw(string.Join(",", Model.GraphData.Select(x => x.Value).ToList()))
+                   ]
+               }
+            ]
+        }
+
+
+        for (i = 0; i < data.data.length; i++) {
+            var scoreSum = 0;
+            for (j = 0; j < data.data[i].points.length; j++) {
+                scoreSum += data.data[i].points[j];
+            }
+
+            data.data[i].fullTitle = data.data[i].title + ' - Total Score = ' + scoreSum + ' / ' + (data.labels.length * 18);
+        }
+
+        dataSet = new Array();
+        color = new Array("255,37,37", "49,134,155", "0,176,80");
+        for (i = 0; i < data.data.length; i++)
+            if (data.data.length >= 1) {
+                dataSet.unshift({
+                    name: data.data[i].title,
+                    fullTitle: data.data[i].fullTitle,
+                    data: data.data[i].points,
+                    pointPlacement: 'on',
+                    fillColor: "rgba(" + color[i] + ",0.2)",
+                    color: "rgba(" + color[i] + ",1)",
+                    marker: {
+                        symbol: "circle"
+                    }
+                });
+            }
+
+        $('#radarGraph').highcharts({
+
+            chart: {
+                polar: true,
+                type: 'area',
+                height: 800
+            },
+
+            title: {
+                text: null
+            },
+
+            xAxis: {
+                categories: data.labels,
+                tickmarkPlacement: 'on',
+                lineWidth: 0,
+                labels: {
+                    style: {
+                        color: 'red',
+                        fontSize: '15px'
+                    }
+                }
+            },
+
+            yAxis: {
+                gridLineInterpolation: 'polygon',
+                lineWidth: 0,
+                tickInterval: 1,
+                min: 0,
+                ceiling:18 ,
+                max: 18,
+                showFirstLabel: false,
+                showLastLabel: true,
+                labels: {
+                    style: {
+                        color: 'red',
+                        fontSize: '15px'
+                    }
+                }
+            },
+
+            tooltip: {
+                shared: true,
+                pointFormat: '<span style="color:{series.color}">{series.name}: {point.y:,.0f}<br/>'
+            },
+
+            legend: {
+                align: 'left',
+                verticalAlign: 'top',
+                layout: 'horizontal',
+                labelFormatter: function () {
+                    return this.userOptions.fullTitle;
+                },
+                itemStyle: {
+                    font: '13pt Arial'
+                }
+            },
+
+            series: dataSet
+
+        });
+
+
+
+    }
+
+
+
+    function PrintPDF() {
+       
+        var form = '';
+        var count = 0;
+
+        form += '<input type="hidden" name="' + 'id' + '" value="' + '@Request["Visit"]' + '">';
+        form += '<input type="hidden" name="' + 'graph' + '" value="' + GetDataUri($('#radarGraph')) + '">';
+
+        $('<form action="' + "@Url.Action("DownloadAPOMReportFile","Report")" + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
+
+    }
+
+    function SavePDF() {
+
+        setTimeout(function () {
+            try {
+                var form = '';
+                var count = 0;
+
+                form += '<input type="hidden" name="' + 'id' + '" value="' + '@Request["Visit"]' + '">';
+                form += '<input type="hidden" name="' + 'graph' + '" value="' + GetDataUri($('#radarGraph')) + '">';
+                $('<form action="' + "@Url.Action("DownloadAPOMReportFile", "Report")" + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
+            } catch (e) {
+                SavePDF();
+            }
+        }, 2000);
+
+    }
+
+
+
+    function GetDataUri(element) {
+
+        $('#canvas').remove();
+        var canvas = document.createElement('canvas');
+        canvas.id = "canvas";
+        canvas.width = 1224;
+        canvas.height = 768;
+        canvas.style.zIndex = 8;
+        canvas.style.position = "absolute";
+        canvas.style.border = "1px solid";
+        canvas.style.display = "none"
+        document.body.appendChild(canvas);
+        canvg(document.getElementById('canvas'), $(element).find('svg').parent().html());
+
+        var URL = canvas.toDataURL();
+        return URL;
+    }
+
+
+</script>

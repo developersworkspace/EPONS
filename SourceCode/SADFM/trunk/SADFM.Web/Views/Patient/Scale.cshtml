@@ -1,0 +1,147 @@
+﻿@model SADFM.Data.Models.Scale
+@{
+
+    Dictionary<Guid, string> subTooltips = new Dictionary<Guid, string>();
+    if (Model.Value.Equals("Delta") || Model.Value.Equals("APOM"))
+    {
+        subTooltips = SADFM.Data.DataAccess.ListItem.GetListByParentId(SADFM.Data.Models.BaseModel.DecryptId(Model.ScaleID), deep: true).SelectMany(x => x.Children.SelectMany(y => y.Children)).ToDictionary(x => x.GetId(), x => x.Description);
+    }
+
+    bool odd = true;
+
+    Layout = null;
+
+}
+<style>
+    .col-lg-1 {
+        padding: 0px;
+        margin: 0px;
+    }
+</style>
+<form id="@Model.ScaleName" data-id="@Model.GetId()">
+    <div class="row">
+        <div class="col-lg-9">
+            @{
+                if (Model.ScaleName == "APOM")
+                {
+                    <h3>You can do a complete APOM or only part of the APOM. If you do a partial APOM, what you leave out will be reported as 'No data available'.</h3>
+
+                }
+                foreach (SADFM.Data.Models.ScaleScore item in Model.Scores.OrderBy(x => x.SortOrder))
+                {
+
+
+                    if (Model.Value.Equals("Delta") || Model.Value.Equals("APOM"))
+                    {
+
+
+                        <div class="row" onclick="ShowScoring('@Model.Value-@item.GetId().ToString("N")')" id="mainscorerow-@item.GetId().ToString("N")">
+                            <div class="col-lg-3 scale-row" data-toggle="tooltip-x" data-title="@item.Description">
+                                @{
+                        if (item.Name.Contains("("))
+                        {
+
+                            <b>@item.Name.Substring(0, item.Name.IndexOf("(")) </b> @item.Name.Substring(item.Name.IndexOf("("))
+
+                        }
+                        else
+                        {
+                            <text>
+                                @item.Name
+                            </text>
+                        }
+                                }
+
+                            </div>
+                            @foreach (var val in item.ScoreValues.OrderBy(x => Convert.ToInt32(x.Value)).ToList())
+                            {
+                                <div class="pull-left center scaleValue@(Html.Raw(val.Value))" data-toggle="tooltip-x" data-title="@SADFM.Web.Shared.Library.GetScoreDefinition(val.GetId(), false).ToString().Replace("<br>","\n")">
+                                    <div class="radio i-checks">
+
+                                        <label> <input type="radio" value="@val.Value" name="@item.ID" id="@val.ID" disabled /></label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+
+                        <div class="row">
+                            <div class="col-lg-3 scale-row" data-toggle="tooltip-x" data-title="@item.Description">
+                                @item.Name
+                            </div>
+                            @foreach (var val in item.ScoreValues.OrderBy(x => Convert.ToInt32(x.Value)).ToList())
+                            {
+
+                                <div class="pull-left center scaleValue@(Html.Raw(val.Value))" data-toggle="tooltip-x" data-title="@SADFM.Web.Shared.Library.GetScoreDefinition(val.GetId(), false).ToString().Replace("<br>","\n")">
+                                    <div class="radio i-checks">
+                                        <label> <input type="radio" value="@val.Value" name="@item.ID" id="@val.ID" /></label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    }
+                }
+            }
+        </div>
+        <div class="col-lg-3">
+            <h3 class="tooltip-x" style="background-color:white"></h3>
+        </div>
+    </div>
+
+    @{
+
+        foreach (var s in Model.SubScores.Keys)
+        {
+            <div class="modal inmodal" id="popupScoring-@Model.Value-@s.ToString("N")" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none;">
+                <div class="modal-dialog" style="width:85%">
+                    <div class="modal-content animated fadeIn">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <span class="pull-right patient-name">...</span>
+                            <h4 class="modal-title">@Model.Scores.Single(x => x.GetId().ToString("N") == s.ToString("N")).Name</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-9">
+                                    @foreach (var i in Model.SubScores[s])
+                                    {
+                                        <div class="row">
+                                            <div class="col-lg-3 scale-row" data-toggle="tooltip-y" data-selector='.@Model.Value' data-title="@i.Description">
+                                                @i.Name
+                                            </div>
+                                            @foreach (var val in i.ScoreValues.OrderBy(x => Convert.ToInt32(x.Value)))
+                                            {
+                                                <div class="pull-left scaleValue@(Html.Raw(val.Value))" data-toggle="tooltip-y" data-selector='.@Model.Value' data-title="@(subTooltips.ContainsKey(val.GetId())? subTooltips[val.GetId()] :"")">
+                                                    <div class="radio i-checks">
+                                                        <label> <input type="radio" value="@val.Value" name="@i.ID" id="@val.ID" /></label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        odd = !odd;
+                                        <hr style="margin:2px" />
+
+                                    }
+                                </div>
+
+                                <div class="col-lg-3 col-xs-1">
+                                    <h3 class="tooltip-y" style="background-color:white"></h3>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="btn-save-score" onclick="SaveSubScales('@Model.Value','@s.ToString("N")')">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    }
+
+</form>

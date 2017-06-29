@@ -1,0 +1,99 @@
+﻿@model EPONS.Teddy.Application.Entities.TeamMember
+@{
+    var teamMembers = (List<EPONS.Teddy.Application.EntityViews.TeamMember>)ViewData["TeamMembers"];
+
+}
+<div id="allocateTeamMemberModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Allocate Team Members</h4>
+            </div>
+            @using (Html.BeginForm("AllocateTeamMember", "Patient"))
+            {
+                <div class="modal-body">
+                    <p class="text-danger">@TempData["Message_AllocateTeamMember"]</p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.FacilityId)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DropDownListFor(x => x.FacilityId, new SelectList(Model.Facilities, "Id", "Name"), "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.FacilityId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.UserIds)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DropDownListFor(x => x.UserIds, new List<SelectListItem>(), "", new { @class = "form-control", multiple = "true" })
+                            @Html.ValidationMessageFor(x => x.UserIds, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.PatientId)
+                    @Html.AntiForgeryToken()
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Allocate</button>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        @if (TempData["Message_AllocateTeamMember"] != null) {
+            <text>
+        showAllocateTeamMemberModal();
+        </text>
+        }
+
+        $('#FacilityId').change(function () {
+
+            var patientId = $('#PatientId').val();
+            var facilityId = $('#FacilityId').val();
+
+            if (facilityId == null || facilityId == "")
+                return;
+
+            $("#UserIds").parent().load("@Url.Action("FacilityUsers", "Ajax")?patientId=" + patientId + "&facilityId=" + facilityId, function () {
+
+                $("#UserIds").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+            });
+        });
+
+        $('#FacilityId').change();
+    
+    });
+
+    function showAllocateTeamMemberModal() {
+        $('#allocateTeamMemberModal').modal('show');
+    }
+
+    function selectAllUsers() {
+        $('#UserIds option').prop('selected', true);
+        $('#UserIds').trigger('chosen:updated');
+    }
+
+    function deselectAllUsers() {
+        $('#UserIds option').prop('selected', false);
+        $('#UserIds').trigger('chosen:updated');
+    }
+
+
+</script>
+

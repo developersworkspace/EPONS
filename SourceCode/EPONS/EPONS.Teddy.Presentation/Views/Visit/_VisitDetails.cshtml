@@ -1,0 +1,58 @@
+﻿@model EPONS.Teddy.Application.Entities.Visit
+
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.ImpairmentGroupId)
+    </div>
+    <div class="col-md-9">
+@Html.DropDownListFor(x => x.ImpairmentGroupId, new SelectList(Model.ImpairmentGroups, "Id", "Name"), "", new
+{
+    @class = "form-control",
+    value = Model.ImpairmentGroupId == null ? null : Model.ImpairmentGroupId,
+
+})
+@Html.ValidationMessageFor(x => x.ImpairmentGroupId, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.Timestamp)
+    </div>
+    <div class="col-md-9">
+        @Html.TextBoxFor(x => x.Timestamp, "{0:yyyy-MM-dd HH:mm}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Timestamp, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        @Html.DisplayNameFor(x => x.DurationOfVisit)
+    </div>
+    <div class="col-md-9">
+    @{
+        var DurationList = new SelectList(new[] {
+
+                new SelectListItem { Text = "5 Minutes", Value = "5"},
+                new SelectListItem { Text = "10 Minutes", Value = "10"},
+                new SelectListItem { Text = "15 Minutes", Value = "15"},
+                new SelectListItem { Text = "20 Minutes", Value = "20"},
+                new SelectListItem { Text = "25 Minutes", Value = "25"},
+                new SelectListItem { Text = "30 Minutes", Value = "30"},
+                new SelectListItem { Text = "35 Minutes", Value = "35"},
+                new SelectListItem { Text = "40 Minutes", Value = "10"},
+                new SelectListItem { Text = "45 Minutes", Value = "15"},
+                new SelectListItem { Text = "50 Minutes", Value = "20"},
+                new SelectListItem { Text = "55 Minutes", Value = "25"},
+                new SelectListItem { Text = "60 Minutes", Value = "30"},
+       }, "Value", "Text");
+    }
+    @Html.DropDownList("DurationOfVisit", DurationList, "", new
+{
+    @class = "form-control",
+    @onchange = "EnableSubmit()"
+})
+    </div>
+</div>
+@Html.HiddenFor(x => x.PatientId)
+
+

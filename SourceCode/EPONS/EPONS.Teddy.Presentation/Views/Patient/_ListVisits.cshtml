@@ -1,0 +1,45 @@
+﻿@model IEnumerable<EPONS.Teddy.Application.EntityViews.Visit>
+@{
+
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)ViewData["BaseModel"];
+    var patientId = (Guid)ViewData["PatientId"];
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DurationOfVisit)
+        </th>
+        <th class="hidden-sm hidden-xs">
+            @Html.DisplayNameFor(model => model.MeasurementTools)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Timestamp.ToString(ConfigurationDefaults.DateTimeFormat)
+            </td>
+            <td>
+                @item.User
+            </td>
+            <td>
+                <p>@item.DurationOfVisit Min</p>
+            </td>
+            <td class="hidden-sm hidden-xs">
+                @item.MeasurementTools
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Visit", new { visitId = item.Id, patientId = patientId})" class="btn btn-primary pull-right btn-action">View</a>
+            </td>
+        </tr>
+    }
+
+</table>

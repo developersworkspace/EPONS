@@ -1,0 +1,15 @@
+﻿@model System.Data.DataTable
+
+<table class="table table-condensed">
+    @foreach (var row in Model.Rows.Cast<System.Data.DataRow>())
+    {
+        <tr>
+            @foreach (var column in Model.Columns.Cast<System.Data.DataColumn>())
+            {
+                <td>
+                    @row[column.ColumnName]
+                </td>
+            }
+        </tr>
+    }
+</table>

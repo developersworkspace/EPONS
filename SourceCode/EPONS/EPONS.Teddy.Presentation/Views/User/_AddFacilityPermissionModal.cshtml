@@ -1,0 +1,55 @@
+﻿@model EPONS.Teddy.Application.ValueObjects.FacilityPermission
+
+<div id="addFacilityPermissionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Facility Permission</h4>
+            </div>
+            @using (Html.BeginForm("AddFacilityPermission", "User"))
+            {
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.FacilityId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(x => x.FacilityId, new SelectList(Model.Facilities, "Id", "Name"), "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.FacilityId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.PermissionId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(x => x.PermissionId, new SelectList(Model.Permissions, "Id", "Name"), "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.PermissionId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @Html.HiddenFor(x => x.UserId)
+                    @Html.AntiForgeryToken()
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+
+    function showAddFacilityPermissionModal() {
+        $('#addFacilityPermissionModal').modal('show');
+    }
+
+
+</script>
+

@@ -1,0 +1,1 @@
+﻿ALTER TABLE [MessageRecipient] ADD Archived bit;

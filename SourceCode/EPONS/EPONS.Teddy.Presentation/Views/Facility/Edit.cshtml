@@ -1,0 +1,87 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Facility.Edit
+@{
+    ViewBag.Title = "Edit";
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)Model;
+    ViewData["BaseModel"] = baseModel;
+}
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>
+            <form  id="uploadAvatarForm" action="@Url.Action("UploadAvatar", "Facility")" method="post" enctype="multipart/form-data">
+                <img title="Double click here to upload a patient photograph" data-toggle="tooltip" src="@Url.Action("Avatar", "Facility", new { facilityId = Model.Facility.Id })" onclick="selectAvatar()" width="75" />
+                <input type="file" name="avatar" onchange="uploadAvatar()" class="hidden"/>
+                <input type="hidden" name="facilityId" id="facilityId" value="@Model.Facility.Id" />
+                @Html.AntiForgeryToken()
+            </form>
+            Edit Facility
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>Facility</a>
+            </li>
+            <li class="active">
+                <strong>Edit</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    @Html.Partial("_FacilityEdit", Model.Facility)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Measurement Tools</h5>
+                    <div class="ibox-tools">
+                        <button class="btn btn-primary btn-sm" onclick="showAddMeasurementToolModal()">Add Measurement Tool</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    @Html.Partial("_ListMeasurementTools", Model.MeasurementTools)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_AddMeasurementToolModal", new EPONS.Teddy.Presentation.ViewObjects.Modals.AddMeasurementTool()
+{
+    MeasurementTools = new SelectList(Model.MeasurementToolList, "Id", "Name")
+})
+
+@section styles {
+    <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+
+}
+
+@section scripts{
+    <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+        });
+
+        function uploadAvatar() {
+            $('#uploadAvatarForm').submit();
+        }
+
+        function selectAvatar() {
+            $('#uploadAvatarForm [type=file]').click();
+        }
+    </script>
+
+}

@@ -1,0 +1,149 @@
+﻿
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Funder maintenance</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a>Clients</a>
+            </li>
+            <li class="active">
+                <strong>Medical Schemes</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Funder medical schemes</h5>
+                    <div class="ibox-tools">
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Medical Scheme</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Medical Scheme</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/dataTablesStyles")
+    @Styles.Render("~/plugins/chosenStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jeditable")
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/chosen")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+           $('.dataTables-example').dataTable({
+                "aaSorting": [],
+                "bSort": false,
+                "deferLoading": 0,
+                "ajax": {
+                    "url": "/Client/MedicalSchemesList?FunderId=null",
+                    "type": "POST",
+                },
+                "oLanguage": {
+                    "sProcessing": "<img src='/Images/loading.gif' height='25'/>"
+                },
+                "bAutoWidth": false,
+                "sDom": '<"toolbar">frtip',
+                "columns": [
+                    {
+                        "data": null,
+                        orderable: false,
+                        render: function (data, type, full, meta) {
+                            return "<input type='checkbox' class='form-control' value='" + data.MedicalSchemeId + "'" + (data.FunderId == $('#select-funder option:selected').val() ? "checked" : "") + " />"
+                        }
+                    },
+                    {
+                        "data": "FunderName",
+                        orderable: false
+                    },
+                    {
+                        "data": "MedicalScheme",
+                        orderable: false
+                    },
+                    {
+                        "data": "FunderName",
+                        "bVisible": false
+                    }
+                ]
+            });
+
+
+            var funderList = "@Html.Raw(string.Join("", SADFM.Data.DataAccess.ListItem.GetList("Funders").Select(x => string.Format("<option value='{0}'>{1}</option>", x.GetId(), x.Description)).ToList()))";
+
+            $("div.toolbar").html('<select class="form-control" id="select-funder" style="width:50%;padding-bottom: 25px"><option value="" >Select a funder</option>' + funderList + '</select> <button class="btn btn-primary" onclick="Save()" >Save</button>');
+
+            $("select").chosen({
+                "width": "50%",
+                disable_search_threshold: 10
+            });
+
+            $('#select-funder').change(function () {
+                RefreshTable();
+            });
+
+
+        });
+
+
+        function Save() {
+
+
+            if ($('#select-funder option:selected').val() == '') {
+                return;
+            }
+
+            var arr = [];
+
+            $($('.dataTables-example').dataTable().fnGetNodes()).find("input[type=checkbox]:checked").each(function (index) {
+                arr.push($(this).val());
+            });
+
+            $.post("/Client/SaveMedicalSchemeLinks", {
+                FunderId: $('#select-funder option:selected').val(),
+                MedicalSchemes: arr,
+
+            }).done(function (data) {
+
+                if (data.Success == true) {
+                    location.reload();
+                }
+            });
+        }
+
+        function RefreshTable() {
+            $('.dataTables-example').DataTable().ajax.url("/Client/MedicalSchemesList?FunderId=" + $('#select-funder option:selected').val());
+            $('.dataTables-example').DataTable().ajax.reload();
+        }
+    </script>
+}

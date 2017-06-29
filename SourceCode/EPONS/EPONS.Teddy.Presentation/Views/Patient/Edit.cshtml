@@ -1,0 +1,439 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Patient.Edit
+@{
+    ViewBag.Title = "Edit";
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)Model;
+    ViewData["PatientId"] = Model.Patient.Id;
+    ViewData["BaseModel"] = baseModel;
+}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>
+            <form id="uploadAvatarForm" action="@Url.Action("UploadAvatar", "Patient")" method="post" enctype="multipart/form-data">
+                <img title="Double click here to upload a patient photograph" data-toggle="tooltip" data-placement="right" src="@Url.Action("Avatar", "Patient", new { patientId = Model.Patient.Id})" onclick="selectAvatar()" class="img-responsive img-circle pull-left profile" alt="Profile Image" />
+                <input type="file" name="avatar" onchange="uploadAvatar()" class="hidden" />
+                <input type="hidden" name="patientId" id="patientId" value="@Model.Patient.Id" />
+            </form>
+            @Model.Patient.GetTitleLine()
+            <small>@Model.Patient.GetSubTitleLine()</small>
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>Patient</a>
+            </li>
+            <li class="active">
+                <strong>Edit</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <br />
+        <div class="row" style="text-align: center; margin-bottom:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("ProgressReport", "Report", new { patientId = Model.Patient.Id})" class="btn btn-primary btn-sm btn-action" style="width: 90%;"><i class="fa fa-gears"></i>&nbsp;Progress Report</a>
+            </div>
+        </div>
+        <div class="row" style="text-align: center; margin-bottom:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("SendPatient", "Messaging", new { patientId = Model.Patient.Id })" class="btn btn-primary btn-sm" style="width: 90%;"><i class="fa fa-envelope"></i>&nbsp;Messages&nbsp;</a>
+            </div>
+        </div>
+        @if (Model.CanDeletePatient())
+        {
+            <div class="row" style="text-align: center; margin-bottom:15px">
+                <div class="col-xs-12">
+                    <a href="@Url.Action("Delete","Patient", new { patientId = Model.Patient.Id })" class="btn btn-danger btn-sm btn-action" style="width: 90%;"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                </div>
+            </div>
+        }
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("List", "Patient")" class="btn btn-warning btn-sm btn-action" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Patient Details </span>
+                                </h4>
+                                <button class="btn btn-success btn-sm collapsed pull-right" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                            </div>
+                            <div id="collapse1" class="panel-collapse collapse" aria-expanded="true">
+                                <div class='panel-body'>
+                                    @if (Model.CanEditPatient())
+                                    {
+                                        @Html.Partial("_PatientDetails", Model.Patient)
+                                    }
+                                    else
+                                    {
+                                        @Html.Partial("_PatientView", Model.Patient)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Episodes of Care</span>
+                                </h4>
+                                <button class="btn btn-success btn-sm collapsed pull-right" data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="false">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                                @if (Model.CanCreateEpisodeOfCare(Model.EpisodesOfCare))
+                                {
+                                    <button onclick="showCreateEpisodeOfCareModal()" class="btn btn-primary btn-sm pull-right">Create</button>
+                                }
+                            </div>
+                            <div id="collapse2" class="panel-collapse collapse" aria-expanded="false">
+                                <div class="panel-body">
+                                    @Html.Partial("_ListEpisodesOfCare", Model.EpisodesOfCare)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Current Measurement Tools</span>
+                                </h4>
+                                <button class="btn btn-success btn-sm collapsed pull-right" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="false">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                                @if (Model.CanAssignMeasurementTools(Model.EpisodesOfCare))
+                                {
+                                    <button onclick="showAssignMeasurementToolModal()" class="btn btn-primary btn-sm pull-right">Assign Measurement Tool</button>
+                                }
+                            </div>
+                            <div id="collapse3" class="panel-collapse collapse" aria-expanded="false">
+                                <div class='panel-body'>
+                                    @Html.Partial("_ListMeasurementTools", Model.MeasurementTools)
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <span>Cases</span> <button class="btn btn-success collapsed pull-right" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="false">View</button>
+                                    </h4>
+                                   @if (Model.CanCreateCase())
+                                    {
+                                        <a href="@Url.Action("Create", "Case", new { patientId = Model.Patient.Id })" class="btn btn-primary btn-sm pull-right btn-action">Create Case</a>
+                                    }
+                                </div>
+                                <div id="collapse3" class="panel-collapse collapse" aria-expanded="false">
+                                    <div class='panel-body'>
+                                        @Html.Partial("_ListCases", Model.Cases)
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Multi-Disciplinary Team (MDT)</span>
+                                </h4>
+                                <button class="btn btn-success btn-sm collapsed pull-right" data-toggle="collapse" data-parent="#accordion" href="#collapse4" aria-expanded="false">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                                @if (Model.CanAllocateTeamMember(Model.EpisodesOfCare))
+                                {
+                                    <button onclick="showAllocateTeamMemberModal()" class="btn btn-primary btn-sm pull-right">Allocate Team Member</button>
+                                    //if (Model.TeamMembers.Count(x => !x.DeallocationDate.HasValue) > 0)
+                                    //{
+                                    //   <a hrerf="#" class="btn btn-danger btn-sm pull-right">Deallocate All Team Members</a>
+                                    //}
+                                }
+                            </div>
+                            <div id="collapse4" class="panel-collapse collapse" aria-expanded="false">
+                                <div class="panel-body">
+                                    @Html.Partial("_ListTeamMembers", Model.TeamMembers)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Visits</span>
+                                </h4>
+                                <button class="btn btn-success btn-sm collapsed pull-right" data-toggle="collapse" data-parent="#accordion" href="#collapse5" aria-expanded="false">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                                @if (Model.CanCreateVisit(Model.EpisodesOfCare))
+                                {
+                                    <a href="@Url.Action("Create", "Visit", new { patientId = Model.Patient.Id })" class="btn btn-primary btn-sm pull-right btn-action">Create Visit</a>
+                                }
+                            </div>
+                            <div id="collapse5" class="panel-collapse collapse" aria-expanded="false">
+                                <div class='panel-body'>
+                                    @Html.Partial("_ListVisits", Model.Visits)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.CanAssignMeasurementTools(Model.EpisodesOfCare))
+{
+    @Html.Partial("_AssignMeasurementToolModal", new EPONS.Teddy.Presentation.ViewObjects.Modals.AssignMeasurementTool()
+{
+    MeasurementTools = Model.MeasurementToolList,
+    Frequencies = Model.FrequencyList,
+    PatientId = Model.Patient.Id
+})
+}
+
+@if (Model.CanAllocateTeamMember(Model.EpisodesOfCare))
+{
+
+    @Html.Partial("_AllocateTeamMemberModal", Model.TeamMember, new ViewDataDictionary { { "TeamMembers", Model.TeamMembers } })
+}
+
+@Html.Partial("_CreateEpisodeOfCareModal", Model.EpisodeOfCare)
+@Html.Partial("EditEpisodeOfCare", Model.EpisodeOfCare)
+@Html.Partial("_MessageModal", Model.Patient)
+
+@section styles {
+    <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+    <style>
+        img.profile {
+            margin-right: 15px;
+        }
+    </style>
+
+}
+
+@section scripts {
+    <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="~/Content/js/plugins/typeahead/typeahead.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('#CountryId').change(function () {
+
+                var patientId = $('#Id').val();
+                var countryId = $('#CountryId').val();
+
+                $("#ProvinceId").parent().load("@Url.Action("ProvinceCombobox", "Ajax")?patientId=" + patientId + "&countryId=" + countryId, function () {
+
+                    $('#ProvinceId').change(function () {
+
+                        var patientId = $('#Id').val();
+                        var provinceId = $('#ProvinceId').val();
+
+                        $("#CityId").parent().load("@Url.Action("CityCombobox", "Ajax")?patientId=" + patientId + "&provinceId=" + provinceId, function () {
+
+                            $("#CityId").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+                        });
+
+                    });
+
+                    $('#ProvinceId').change();
+
+                    $("#ProvinceId").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+                });
+            });
+
+            $('#CountryId').change();
+
+            $('#DateOfBirth').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'yyyy/mm/dd'
+            });
+
+            $('#deallocateTeamMemberModal #ReasonForAdmissionTimestamp').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'yyyy/mm/dd'
+            });
+
+            $('#deallocateAllTeamMembersModal #ReasonForAdmissionTimestamp').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'yyyy/mm/dd'
+            });
+
+            $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+
+        });
+
+        function uploadAvatar() {
+            $('#uploadAvatarForm').submit();
+        }
+
+            function selectAvatar() {
+                $('#uploadAvatarForm [type=file]').click();
+            }
+            //function showEditEpisodeOfCareModal() {
+            //    $('#editEpisodeOfCareModal').modal('show');
+            //}
+            function showEditEpisodeOfCareModal($this) {
+
+                var id = $this.attr('EpisodeOfCareId');
+
+                $.ajax({
+
+                    url: '/Patient/EditEpisodeOfCareAjax',
+                    type: 'GET',
+                    data: {
+                        'episodeofCareId': id
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        bindSavedDetails(data)
+                        $('#editEpisodeOfCareModal').modal('show');
+                    },
+                    error: function (request, error) {
+                        alert("Request: " + JSON.stringify(request));
+                    }
+                });
+            }
+
+            
+            function showCreateEpisodeOfCareModal() {
+                $('#createEpisodeOfCareModal').modal('show');
+            }
+
+
+
+            function convertFrameworkToClientDate(date) {
+                var dateString = date.substr(6);
+                var currentTime = new Date(parseInt(dateString));
+                var month = currentTime.getMonth() + 1;
+                var day = currentTime.getDate();
+                var year = currentTime.getFullYear();
+                return date = year + "/" + month + "/" + day;
+            }
+
+            function bindSavedDetails(data) {
+
+
+
+
+                $("#editEpisodeOfCareModal").find('#ReasonForAdmissionName').val(data.Name)
+                $("#editEpisodeOfCareModal").find('#ReferringDoctorId').val(data.ReferringDoctorName)
+                $("#editEpisodeOfCareModal").find('#AttendingDoctorId').val(data.ReferringDoctorNumber)
+
+                //$('PrimayDiagnosis').val(data.ReasonForAdmissionId)
+                $("#editEpisodeOfCareModal").find("#AllocationNumber").val(data.AllocationNumber)
+                if (data.ReasonForAdmissionTimestamp != null) {
+                    var date = convertFrameworkToClientDate(data.ReasonForAdmissionTimestamp);
+                    $("#editEpisodeOfCareModal").find('#ReasonForAdmissionTimestamp').val(date)
+                }
+                else
+                {
+                    $("#editEpisodeOfCareModal").find('#ReasonForAdmissionTimestamp').val('')
+
+                }
+
+                $("#editEpisodeOfCareModal").find('#ReferringDoctorId').val(data.ReferringDoctorId)
+                $("#editEpisodeOfCareModal").find('#AttendingDoctorId').val(data.AttendingDoctorId)
+                $("#editEpisodeOfCareModal").find('#EpisodeOfCareId').val(data.EpisodeOfCareId)
+
+                if (data.ReferringDoctorName != null && data.ReferringDoctorName != '') {
+                    $("#editEpisodeOfCareModal").find('#referringCheckbox1').prop('checked', true);
+
+                    $("#ShowHideReferring1").css('display', '')
+                }
+                else {
+                    $("#editEpisodeOfCareModal").find('#referringCheckbox1').prop('checked', false);
+                    $("#ShowHideReferring1").css('display', 'none')
+                }
+                $("#editEpisodeOfCareModal").find('#ReferringDoctor_Name').val(data.ReferringDoctorName)
+                $("#editEpisodeOfCareModal").find('#ReferringDoctor_ContactNumber').val(data.ReferringDoctorNumber)
+                $("#editEpisodeOfCareModal").find('#ReferringDoctor_Email').val(data.ReferringDoctorEmail)
+                $("#editEpisodeOfCareModal").find('#ReferringDoctor_PracticeName').val(data.ReferringDoctorPracticeName)
+                $("#editEpisodeOfCareModal").find('#ReferringDoctor_HPCSANumber').val(data.ReferringDoctorHPCSANumber)
+                if (data.AttendingDoctorName != null && data.AttendingDoctorName != '') {
+                    $("#editEpisodeOfCareModal").find('#attendingCheckbox1').prop('checked', true);
+                    $("#ShowHideAttending1").css('display', '')
+                }
+                else {
+                    $("#editEpisodeOfCareModal").find('#attendingCheckbox1').prop('checked', false);
+                    $("#ShowHideAttending1").css('display', 'none')
+                }
+                $("#editEpisodeOfCareModal").find('#AttendingDoctor_Name').val(data.AttendingDoctorName)
+                $("#editEpisodeOfCareModal").find('#AttendingDoctor_ContactNumber').val(data.AttendingDoctorNumber)
+                $("#editEpisodeOfCareModal").find('#AttendingDoctor_Email').val(data.AttendingDoctorEmail)
+                $("#editEpisodeOfCareModal").find('#AttendingDoctor_PracticeName').val(data.AttendingDoctorPracticeName)
+                $("#editEpisodeOfCareModal").find('#AttendingDoctor_HPCSANumber').val(data.AttendingDoctorHPCSANumber)
+                //$("#editEpisodeOfCareModal").find("#AdmissionTypeId option:contains(" + data.AdmissionTypeId + ")").filter(":selected");
+                $("#editEpisodeOfCareModal").find('#AdmissionTypeId').val(data.AdmissionTypeId)
+                $("#editEpisodeOfCareModal").find('#AdmissionTypeId > option').each(function (index, value) {
+                    if (this.value === data.AdmissionTypeId) {
+                        $(this).attr('selected', true);
+                    }
+                })
+
+                
+                $("#editEpisodeOfCareModal").find('#ImpairmentGroupId > option').each(function (index, value) {
+                    if (this.value === data.ImpairmentGroupId) {
+                        $(this).attr('selected', true);
+                    }
+                })
+
+                if (data.ImpairmentGroupId != null && data.ImpairmentGroupId != '' && data.AdmissionTypeId != null && data.AdmissionTypeId != '' && data) {
+                    $("#ShowDischargeCheckbox").css('display', '')
+                    $("#ShowDischargeLabel").css('display', 'none')
+                    
+                } else {
+                    $("#ShowDischargeCheckbox").css('display', 'none')
+                    $("#ShowDischargeLabel").css('display', '')
+                }
+
+                $("#editEpisodeOfCareModal").find('#DischargeTypeId > option').each(function (index, value) {
+                    if (this.value === data.DischargeTypeId) {
+                        $(this).attr('selected', true);
+                    }
+                })
+
+
+                $("select").trigger("chosen:updated");
+                //$("#editEpisodeOfCareModal").find(".ddlAdmissionTypeId").find('.chosen-results > li').each(function (index, value) {
+                //    if (this.Text === AddmissionTypeText)
+                //        $(this).click();
+                //});
+
+
+                //$("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+            }
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+                $('[data-toggle="popover"]').popover();
+            })
+  
+
+    </script>
+}
+

@@ -1,0 +1,55 @@
+﻿@model System.Data.DataTable
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>EPONS | Database | Query</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h2>SQL Query</h2>
+        <p>Enter your sql query here</p>
+        <form action="@Url.Action("Query", "Database")" method="get">
+            <div class="form-group">
+                <label for="query">SQL Query:</label>
+                <textarea class="form-control" rows="5" name="query" id="query">@Request.QueryString["query"]</textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">RUN</button>
+        </form>
+    </div>
+    @if (Model != null)
+    {
+        <div class="container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        @foreach (var column in Model.Columns)
+                {
+                            <th>@column</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.Rows.Cast<System.Data.DataRow>())
+                {
+                        <tr>
+                            @foreach (var column in Model.Columns)
+                    {
+                                <td>@row[((System.Data.DataColumn)column).ColumnName]</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</body>
+</html>

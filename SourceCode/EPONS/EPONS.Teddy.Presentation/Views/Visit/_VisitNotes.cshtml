@@ -1,0 +1,77 @@
+﻿@model EPONS.Teddy.Application.Entities.Visit
+
+@{
+
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)ViewData["BaseModel"];
+}
+
+
+@if (baseModel.CanEnterNoteToVisit())
+{
+    <div class="row">
+        <div class="col-md-2">
+            <h3>Daily Notes</h3>
+            <span>(Notes you enter here will <b class="text-danger">not</b> be included in the Patient Progress Report for the Case Manager)</span>
+            <br />
+            <br />
+            <div style="background-color:#F0E99D;padding:15px" id="note-options">
+                <i class="fa fa-eye fa-2x"></i>&nbsp; &nbsp;
+                <input id="IsPrivate" class="epons-checkbox" name="IsPrivate" type="checkbox" value="true">
+                <label for="IsPrivate" class="epons-checkbox-label"></label>
+                <br />
+                <div id="privateMessage">
+                    This note is only visible to '@baseModel.User.Firstname @baseModel.User.Lastname'
+                </div>
+                <div id="publicMessage">
+                    This note is visible to all clinicians.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10" id="extranotes">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content no-padding">
+                    @Html.TextAreaFor(x => x.DailyNotes, new { @class = "summernote" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="background-color: black; height: 2px; margin-bottom: 20px; margin-top: 20px">
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <h3>Patient Progress Notes</h3>
+            <span>(Notes you enter here will be used to compile the formal Patient Progress Report for the Case Manager)</span>
+        </div>
+        <div class="col-md-10" id="notes">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content no-padding">
+                    @Html.TextAreaFor(x => x.ProgressNotes, new { @class = "summernote" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <style>
+        input#IsPrivate + label + br + div {
+            display: none;
+        }
+
+        input#IsPrivate:checked + label + br + div {
+            display: block;
+        }
+
+        input#IsPrivate + label + br + div + div {
+            display: block;
+        }
+
+        input#IsPrivate:checked + label + br + div + div {
+            display: none;
+        }
+    </style>
+}
+else
+{
+
+    <p>@baseModel.CanEnterNoteToVisitMessage()</p>
+
+}

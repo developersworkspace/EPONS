@@ -1,0 +1,38 @@
+﻿@using SADFM.Web.Shared;
+@using SADFM.Data;
+@{
+    Layout = "/Views/Shared/_Anonymous.cshtml";
+    ViewBag.PageTitle = Library.GetText("LoginTitle");
+    ViewBag.Title = Library.GetText("WelcomeTitle");
+    ViewBag.Message = Library.GetText("WelcomeMessage");
+}
+<form class="m-t" role="form" method="post" action="@Url.Action("Login", "Account")" onsubmit="Password.value = hex_sha1(PWD.value);">
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="@Library.GetText("UsernameLabel")" required="" name="Username" value="@ViewBag.Username">
+    </div>
+    <div class="form-group">
+        <input type="password" class="form-control" placeholder="@Library.GetText("PasswordLabel")" required="" id="PWD">
+    </div>
+    <button type="submit" name="loginbtn" value="login" class="btn btn-primary block full-width m-b">@Library.GetText("LoginLabel")</button>
+
+    <input type="hidden" name="Security" value="@DataAccess.Security" /><input type="hidden" name="Password" id="Password" />
+</form>
+<a href="/Account/ForgotPassword"><small>@Library.GetText("ForgotPasswordLabel")</small></a>
+
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            setTimeout("preventBack()", 0);
+        });
+
+        function preventBack() {
+            window.history.forward();
+        }
+        window.onunload = function () {
+            null;
+        };
+    </script>
+
+    }

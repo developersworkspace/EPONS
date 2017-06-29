@@ -1,0 +1,155 @@
+﻿@model string
+@using SADFM.Web.Shared;
+@using SADFM.Data;
+@{
+    Layout = null;
+    SADFM.Data.Models.Account currentAccount = UserHelper.GetCurrentAccount();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @section Styles {
+
+        @Styles.Render("~/plugins/selectStyles")
+        @Styles.Render("~/plugins/iCheckStyles")
+        @Styles.Render("~/plugins/imagecropperStyles")
+        @Styles.Render("~/plugins/wizardStepsStyles")
+    }
+    <title>@Library.GetText("ApplicationShortName") | @Library.GetText("LoginTitle")</title>
+
+    <script src="/Scripts/jquery-2.1.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/Scripts/plugins/metisMenu/metisMenu.min.js"></script>
+    <script src="/Scripts/plugins/pace/pace.min.js"></script>
+    <script src="~/Scripts/crypto.js"></script>
+
+    <script src="/Scripts/plugins/toastr/toastr.min.js"></script>
+
+    <script src="/Scripts/plugins/select/bootstrap-select.js"></script>
+    <script src="/Scripts/plugins/select/bootstrap-select.min.js"></script>
+    <script src="/Scripts/plugins/cropper/cropper.min.js"></script>
+    <script src="/Scripts/plugins/staps/jquery.steps.min.js"></script>
+    <script src="/Scripts/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/Scripts/plugins/iCheck/icheck.min.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/Content/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/Content/plugins/cropper/cropper.min.css" rel="stylesheet">
+    <link href="/Content/plugins/select/bootstrap-select.css" rel="stylesheet">
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div><img src="~/Content/images/eponslogo.png" alt="@Library.GetText("ApplicationLongName")" title="@Library.GetText("ApplicationLongName")" width="250" /></div>
+            <h3>@Library.GetText("WelcomeTitle")</h3>
+            @*<p>@Library.GetText("WelcomeMessage")</p>*@
+            <div class="form-group">
+                @Library.GetText("HelloText") &nbsp;  @ViewBag.UserName
+            </div>
+            <div class="form-group" id="providersection">
+                <div class="col-lg-12">
+                    &nbsp;
+                </div>
+                <div class="row">
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-left: 5px">@Library.GetText("MultipleProvidersLabel")</div>
+                    </div>
+                    <div class="col-xs-12">
+                        @SADFM.Web.Shared.HtmlHelper.DropdownBox(
+                                currentAccount.Permissions.Select(p => p.ClientID).Distinct()
+                                         .Select(cid => new { Id = cid, Name = currentAccount.Permissions.First(f => f.ClientID == cid).ClientName }).ToList(),
+                                "Client", l => l.Id.ToString(), l => l.Name, "selectpicker")
+                        <br />
+                        <br />
+                        <button type="button" style="width: 100%" name="enterbtn" value="enter" class="btn btn-primary block full-width m-b" id="btnEnter">@Library.GetText("EnterBtn")</button>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    &nbsp;
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                &nbsp;
+            </div>
+
+            <div class="col-lg-12">
+                &nbsp;
+            </div>
+
+            <p class="m-t"> <small>@Library.GetText("ApplicationLongName") &copy; @DateTime.Today.Year (Version @Utilities.Version)</small> </p>
+        </div>
+    </div>
+
+</body>
+
+</html>
+@section Scripts {
+
+    @Scripts.Render("~/plugins/select")
+    @Scripts.Render("~/plugins/")
+    @Scripts.Render("~/plugins/jeditable")
+    @Scripts.Render("~/plugins/app")
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.selectpicker').selectpicker({
+            style: 'btn-primary',
+            size: 12,
+            multiple: true,
+            count: 2,
+            selectedTextFormat: 'values',
+            width: "100%"
+        });
+
+
+        $('#btnEnter').click(function () {
+            Post("/Account/SetProvider", {
+                providerId: $('#Client').val()
+            },
+            function () {
+                window.location = "@(string.IsNullOrWhiteSpace(Model) ? "/" : Model)";
+            });
+        });
+
+
+
+    });
+
+
+    function Post(url, data, onSuccess) {
+        $.ajax({
+            url: url,
+            data: data,
+            type: "POST",
+            dataType: "json",
+            success: function (result) {
+                if (result.Success) {
+                    onSuccess(result);
+                } else {
+                    toastr.error(result.Message, 'ERROR!');
+                }
+            },
+            error: function (x1, x2, x3) {
+                toastr.error(x2, 'ERROR!');
+            }
+        });
+    }
+</script>
+
+
+
+

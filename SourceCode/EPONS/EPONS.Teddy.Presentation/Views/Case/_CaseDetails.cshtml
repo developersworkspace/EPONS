@@ -1,0 +1,125 @@
+﻿@model EPONS.Teddy.Presentation.ViewModels.Case
+
+@using (Html.BeginForm("Edit", "Case"))
+{
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.ICD10Code)
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(x => x.ICD10Code, new
+       {
+           @class = "typeahead form-control",
+           placeholder = "Select an ICD10 Code",
+           Value = Model.ICD10Code
+       })
+
+            @Html.ValidationMessageFor(x => x.ICD10Code, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.ImpairmentGroupId)
+        </div>
+        <div class="col-md-9">
+            @Html.DropDownListFor(x => x.ImpairmentGroupId, Model.ImpairmentGroups,"", new { @class = "form-control"})
+            @Html.ValidationMessageFor(x => x.ImpairmentGroupId, null, new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.StartDate)
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(x => x.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.StartDate, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.AdmissionStatusId)
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownListFor(x => x.AdmissionStatusId, Model.AdmissionStatuses, "", new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.AdmissionStatusId, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.EndDate)
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(x => x.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.EndDate, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.DisplayNameFor(x => x.ReferringDoctor)
+        </div>
+        <div class="col-md-6">
+            @Html.DisplayNameFor(x => x.TreatingDoctor)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.ReferringDoctor.Firstname)
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(x => x.ReferringDoctor.Firstname, new { @class = "form-control", })
+        </div>
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.TreatingDoctor.Firstname)
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(x => x.TreatingDoctor.Firstname, new { @class = "form-control", })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.ReferringDoctor.Details.ContactNumber)
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(x => x.ReferringDoctor.Details.ContactNumber, new { @class = "form-control", })
+        </div>
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.TreatingDoctor.Details.ContactNumber)
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(x => x.TreatingDoctor.Details.ContactNumber, new { @class = "form-control", })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.ReferringDoctor.Details.EmailAddress)
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(x => x.ReferringDoctor.Details.EmailAddress, new { @class = "form-control", })
+        </div>
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.TreatingDoctor.Details.EmailAddress)
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(x => x.TreatingDoctor.Details.EmailAddress, new { @class = "form-control", })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.ReferringDoctor.PracticeNumber)
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(x => x.ReferringDoctor.PracticeNumber, new { @class = "form-control", })
+        </div>
+        <div class="col-md-3">
+            @Html.DisplayNameFor(x => x.TreatingDoctor.PracticeNumber)
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(x => x.TreatingDoctor.PracticeNumber, new { @class = "form-control", })
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/_SubmitButton.cshtml")
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.PatientId)
+    @Html.AntiForgeryToken()
+}

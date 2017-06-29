@@ -1,0 +1,1 @@
+ALTER TABLE Audit ADD PrimaryKeyId uniqueidentifier NOT NULL;

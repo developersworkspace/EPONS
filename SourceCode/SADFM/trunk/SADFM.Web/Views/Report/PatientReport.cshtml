@@ -1,0 +1,300 @@
+﻿@model SADFM.Web.Models.PatientReport
+@{
+
+    string path = Request.Url.Host + (Request.Url.Port == 80 ? "" : ":" + Request.Url.Port.ToString());
+
+    SADFM.Data.Models.Provider provider = null;
+    SADFM.Data.Models.ProviderServiceType providerServiceType = null;
+
+    SADFM.Data.Models.Patient p = SADFM.Data.DataAccess.Patient.GetById(Guid.ParseExact(Model.PatientId, "N"));
+
+    if (SADFM.Web.Shared.UserHelper.SelectedClientId.HasValue)
+    {
+        provider = SADFM.Data.DataAccess.Provider.GetById(SADFM.Web.Shared.UserHelper.SelectedClientId.Value);
+    }
+
+
+    string providerImage = "";
+    if (provider != null)
+    {
+        providerServiceType = provider.ServiceTypes.FirstOrDefault();
+        providerImage = provider.ProfileImage.Contains("Content") ? Request.Url.GetLeftPart(UriPartial.Authority) + "/" + provider.ProfileImage : string.Format("{0}/Content/ProviderImage/{1}", Request.Url.GetLeftPart(UriPartial.Authority), provider.GetId().ToString("N"));
+    }
+
+
+    Dictionary<Guid, List<SADFM.Data.Models.Visit>> visits = SADFM.Data.DataAccess.Patient.GetAllVisits(p.GetId(), SADFM.Data.Models.BaseModel.DecryptId(Model.ScaleId));
+
+    DateTime minDate = DateTime.Now.AddMonths(-1);
+    DateTime maxDate = DateTime.Now;
+
+    if (Model.SelectedDates != null)
+    {
+        minDate = new DateTime(Model.SelectedDates.Min());
+        maxDate = new DateTime(Model.SelectedDates.Max());
+    }
+
+
+
+    var activeCase = SADFM.Data.DataAccess.Patient.GetActiveCase(p.GetId(), SADFM.Web.Shared.UserHelper.Username);
+    List<SADFM.Data.Models.Case> cases = SADFM.Data.DataAccess.Patient.GetCases(Guid.ParseExact(Model.PatientId, "N")).Where(x => x.StartDate <= minDate || x.EndDate == null).ToList();
+
+    var patientMDT = p.Cases.SelectMany(x => x.Providers).Select(x =>
+                {
+                    return new
+                    {
+
+                        Provider = x.Name,
+                        AssignedDate = x.AssignedTimestamp.ToString("dd MMM yyyy"),
+                        DischargeDate = x.DischargedTimestamp.HasValue ? x.DischargedTimestamp.Value.ToString("dd MMM yyyy") : "",
+                        ID = x.PatientProviderID,
+                        ProviderId = x.ProviderId,
+                        PatientProviderId = x.PatientProviderID,
+                        AccountFullname = x.AccountFullname,
+                        AccountRoles = x.AccountRoles,
+                        CaseId = x.CaseId,
+                        AccountID = x.AccountID
+
+
+                    };
+                }).ToList();
+
+}
+
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<table style="width:100%">
+    <tr>
+        <td style="width:75%">
+            <img src="@providerImage" height="80" />
+            <img src="@Request.Url.GetLeftPart(UriPartial.Authority)/Content/images/report_logo.png" height="80" />
+        </td>
+        @if (provider != null)
+        {
+            <td>
+                @(providerServiceType == null ? "" : providerServiceType.Street)
+                <br />
+                @(providerServiceType == null ? "" : providerServiceType.City)
+                <br />
+                @(providerServiceType == null ? "" : providerServiceType.Province)
+                <br />
+                @(providerServiceType == null ? "" : providerServiceType.Country)
+                <br />
+                @(providerServiceType == null ? "" : providerServiceType.PostalCode)
+            </td>
+        }
+    <tr>
+</table>
+<br />
+<br />
+<table width="100%">
+    <tr>
+        <td style="width:40%">
+            Report date
+        </td>
+        <td>
+            @DateTime.Now.ToString("dd MMM yyyy")
+        </td>
+    </tr>
+    <tr>
+        <td style="width:40%">
+            Patient name
+        </td>
+        <td>
+            @(p.FirstName + " " + p.LastName)
+        </td>
+    </tr>
+    <tr>
+        <td style="width:40%;" valign="top">
+            Patient address
+        </td>
+        <td>
+            @p.Street
+            <br />
+            @p.City
+            <br />
+            @p.Province
+            <br />
+            @p.Country
+            <br />
+            @p.PostalCode
+        </td>
+    </tr>
+
+    <tr>
+        <td style="width:40%;" valign="top">
+            Patient medical scheme
+        </td>
+        <td>
+            @p.MedicalScheme
+        </td>
+    </tr>
+    <tr>
+        <td style="width:40%;" valign="top">
+            Patient medical scheme No
+        </td>
+        <td>
+            @p.MedicalSchemeNo
+        </td>
+    </tr>
+    <tr>
+        <td style="width:40%;" valign="top">
+            Birth date
+        </td>
+        <td>
+            @p.BirthDate.Value.ToString("dd MMM yyyy")
+        </td>
+    </tr>
+    <tr>
+        <td style="width:40%;" valign="top">
+            Gender
+        </td>
+        <td>
+            @p.Gender
+        </td>
+    </tr>
+    <tr>
+        <td style="width:40%;" valign="top">
+            ID number
+        </td>
+        <td>
+            @p.IDNumber
+        </td>
+    </tr>
+    <tr>
+        <td style="width:40%;" valign="top">
+            Race
+        </td>
+        <td>
+            @p.Race
+        </td>
+    </tr>
+    <tr>
+        <td style="width:40%;" valign="top">
+            Title
+        </td>
+        <td>
+            @p.Title
+        </td>
+    </tr>
+
+    <tr>
+        <td style="width:40%;" valign="top">
+            Referring doctor
+        </td>
+        <td>
+            @(activeCase != null ? activeCase.ReferringDoctor : "")
+        </td>
+    </tr>
+</table>
+<br />
+<br />
+<h3><u>MDT</u></h3>
+<table width="100%">
+    <thead>
+        <tr>
+            <th>Provider</th>
+            <th>Individual</th>
+            <th>Roles</th>
+            <th>Allocation date</th>
+            <th>Discharge date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in patientMDT)
+        {
+            <tr>
+                <td>@x.Provider</td>
+                <td>@x.AccountFullname</td>
+                <td>@x.AccountRoles</td>
+                <td>@x.AssignedDate</td>
+                <td>@x.DischargeDate</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+<h3><u>Visits</u></h3>
+<table width="100%">
+    <thead>
+
+        <tr>
+            <th align="left">
+                Visit date
+            </th>
+            <th align="left">
+                Notes
+            </th>
+        </tr>
+    </thead>
+
+    @foreach (Guid g in visits.Keys)
+    {
+        foreach (SADFM.Data.Models.Visit v in visits[g])
+        {
+            <tr>
+                <td valign="top">
+                    @v.VisitDate.ToString("dd MMM yyyy HH:mm")
+                </td>
+                <td>
+                    @Html.Raw(Server.HtmlDecode(v.Notes))
+                </td>
+            </tr>
+        }
+    }
+
+</table>
+
+<div>
+    <h3><u>Graph</u></h3>
+    <img src="@Html.Raw("http://" + path + "/Report/DownloadFile?id=" + Model.Graph + ".jpg")" />
+</div>
+
+    <h3><u>Cases</u></h3>
+    <table width="100%">
+        <thead>
+
+            <tr>
+                <th align="left">
+                    Start date
+                </th>
+                <th align="left">
+                    End date
+                </th>
+                <th align="left">
+                    ICD10
+                </th>
+                <th align="left">
+                    Providers
+                </th>
+                <th align="left">
+                    Impairment Group
+                </th>
+            </tr>
+        </thead>
+
+        @foreach (SADFM.Data.Models.Case c in cases)
+        {
+            <tr>
+                <td valign="top">
+                    @c.StartDate.ToString("dd MMM yyyy")
+                </td>
+                <td valign="top">
+                    @(c.EndDate.HasValue ? c.EndDate.Value.ToString("dd MMM yyyy") : "")
+                </td>
+                <td valign="top">
+                    @c.ICD10 - @c.ICD10Description
+                </td>
+                <td valign="top">
+                    @string.Join(",", c.Providers.Select(x => x.Name))
+                </td>
+                <td valign="top">
+                    @c.ImpairmenGroup
+                </td>
+
+            </tr>
+        }
+
+    </table>
+
+

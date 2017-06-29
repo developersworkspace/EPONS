@@ -1,0 +1,17 @@
+EXEC SetLabel 'en-GB', 'WelcomeTitle', 'Welcome to {ApplicationLongName}';
+EXEC SetLabel 'en-GB', 'WelcomeMessage', 'South African Database for Functional Measures<br/>Use your login credentials to log in';
+EXEC SetLabel 'en-GB', 'LoginLabel', 'Login';
+EXEC SetLabel 'en-GB', 'ForgotPasswordLabel', 'Forgot Password?';
+EXEC SetLabel 'en-GB', 'InvalidLoginText', 'Invalid login credentials';
+EXEC SetLabel 'en-GB', 'FirstNameLabel', 'First Name';
+EXEC SetLabel 'en-GB', 'SurnameLabel', 'Last Name';
+EXEC SetLabel 'en-GB', 'EditLabel', 'Edit';
+EXEC SetLabel 'en-GB', 'EmailAddressLabel', 'Email address';
+EXEC SetLabel 'en-GB', 'UpdateProfileMessage', 'Please update the following details:';
+EXEC SetLabel 'en-GB', 'TitleLabel', 'Title';
+EXEC SetLabel 'en-GB', 'RoleLabel', 'Role';
+EXEC SetLabel 'en-GB', 'IDSelectMessage', 'Identification number.  Please select one:';
+EXEC SetLabel 'en-GB', 'IDLabel', 'ID';
+EXEC SetLabel 'en-GB', 'PassportLabel', 'Passport';
+EXEC SetLabel 'en-GB', 'ProfilePictureMessage', 'Would you like to provide a profile picture?';
+EXEC SetLabel 'en-GB', 'ContactNumberLabel', 'Contact number';

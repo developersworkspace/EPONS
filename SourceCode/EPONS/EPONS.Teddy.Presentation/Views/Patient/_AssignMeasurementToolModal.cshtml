@@ -1,0 +1,62 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Modals.AssignMeasurementTool
+
+<div id="addMeasurementToolModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Assign Measurement Tool</h4>
+            </div>
+            @using (Html.BeginForm("AssignMeasurementTool", "Patient"))
+            {
+                <div class="modal-body">
+                    <p class="text-danger">@TempData["Message_AssignMeasurementTool"]</p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.MeasurementToolId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(x => x.MeasurementToolId, Model.MeasurementTools, "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.MeasurementToolId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.FrequencyId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(x => x.FrequencyId, Model.Frequencies, "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.FrequencyId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @Html.HiddenFor(x => x.PatientId)
+                    @Html.AntiForgeryToken()
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+    @if (TempData["Message_AssignMeasurementTool"] != null) {
+        <text>
+    showAssignMeasurementToolModal();
+    </text>
+    }
+
+    function showAssignMeasurementToolModal() {
+        $('#addMeasurementToolModal').modal('show');
+    }
+</script>

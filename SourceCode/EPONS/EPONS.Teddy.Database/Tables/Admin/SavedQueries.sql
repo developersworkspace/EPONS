@@ -1,0 +1,6 @@
+﻿CREATE TABLE [Admin].[SavedQueries](
+	[QueryId] UNIQUEIDENTIFIER NOT NULL,
+	[Name] VARCHAR(255) NOT NULL,
+	[Query] VARCHAR(MAX) NOT NULL,
+	[CreatedTimestamp] DATETIME NOT NULL
+	)

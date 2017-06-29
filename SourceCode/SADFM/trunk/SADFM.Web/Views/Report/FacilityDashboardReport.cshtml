@@ -1,0 +1,154 @@
+﻿@model SADFM.Web.ViewModels.FacilityDashboardReport
+@{
+    ViewBag.Title = "Facility Dashboard Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    SADFM.Data.Models.Account account = (SADFM.Data.Models.Account)ViewBag.Account;
+
+    if (account == null)
+    {
+        account = SADFM.Web.Shared.UserHelper.GetCurrentAccount();
+    }
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Facility Dashboard Report</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a>Reports</a>
+            </li>
+            <li class="active">
+                <strong>Facility Dashboard Report</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+        <br />
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="/" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@using (Html.BeginForm())
+{
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Report filters</h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        @if (account.AccountType == "SuperAdmin")
+                        {
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    @SADFM.Web.Shared.HtmlHelper.DropdownBox(Model.Facilities, "FacilityId", s => s.GUID.ToString(), s => s.Name, "chosen-select", dataPlaceholder: "Select facility ")
+                                </div>
+                            </div>
+                            <br />
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(model => model.FacilityId)
+                        }
+
+
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div id="startDate">
+                                    <div class="input-group date">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        @Html.TextBoxFor(model => model.StartDate, new { @placeholder = "Report start date", @class = "form-control required" })
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.StartDate)
+                            </div>
+                            <div class="col-xs-4">
+                                <div id="endDate">
+                                    <div class="input-group date">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        @Html.TextBoxFor(model => model.EndDate, new { @placeholder = "Report end date", @class = "form-control required" })
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.EndDate)
+                            </div>
+                            <div class="col-xs-4">
+                                <button type="submit" class="btn btn-success btn-sm" style="width: 90%;">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jeditable")
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/chosen")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(".chosen-select").chosen({
+                "width": "100%",
+                disable_search_threshold: 2
+            });
+
+            $('#endDate .input-group.date').datepicker({
+                format: "dd MM yyyy",
+                autoclose: true,
+                endDate: "+0d"
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+
+            $('#startDate .input-group.date').datepicker({
+                format: "dd MM yyyy",
+                autoclose: true,
+                endDate: "+0d"
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+
+            $('form').on('submit', function (e) {
+                if (!$('[name="FacilityId"]').valid() || $('[name="FacilityId"]').val() == '') {
+                    alert('Please select a Facility');
+                    e.preventDefault();
+                }
+            });
+
+        });
+
+    </script>
+
+    @Scripts.Render("~/plugins/select")
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/dataPicker")
+}
+
+@section Styles {
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/dataTablesStyles")
+    @Styles.Render("~/plugins/chosenStyles")
+    @Styles.Render("~/plugins/selectStyles")
+    @Styles.Render("~/plugins/iCheckStyles")
+    @Styles.Render("~/plugins/imagecropperStyles")
+    @Styles.Render("~/plugins/wizardStepsStyles")
+}

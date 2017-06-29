@@ -1,0 +1,40 @@
+﻿@model SADFM.WebApplication.Models.LoginViewModel
+
+@{
+    Layout = "/Views/Shared/_Anonymous.cshtml";
+}
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new
+{
+    onsubmit = "Password.value = hex_sha1(PWD.value);"
+}))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Username" required="" name="Username" value="@ViewBag.Username">
+    </div>
+    <div class="form-group">
+        <input type="password" class="form-control" placeholder="Password" required="" id="PWD">
+    </div>
+    <button type="submit" name="loginbtn" value="login" class="btn btn-primary block full-width m-b">Login</button>
+    <input type="hidden" name="Password" id="Password" />
+
+        <a href="@Url.Action("ForgotPassword","Account")"><small>Forgot Password</small></a>
+}
+
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            setTimeout("preventBack()", 0);
+        });
+
+        function preventBack() {
+            window.history.forward();
+        }
+        window.onunload = function () {
+            null;
+        };
+    </script>
+
+}

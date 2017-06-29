@@ -1,0 +1,190 @@
+﻿
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Billing Report</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a>Reports</a>
+            </li>
+            <li class="active">
+                <strong>Billing</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-12">
+        &nbsp;
+    </div>
+    <div class="col-lg-12">
+        &nbsp;
+    </div>
+
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Search query</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            End Date
+                        </div>
+                        <div class="col-xs-5">
+                            <div id="endDate">
+                                <div class="input-group date">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control required" placeholder="Report end date">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+                            <button class="btn btn-primary" id="btnGo">Go</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="col-xs-10">
+                        <h5>SADFM Providers/Funders</h5>
+                    </div>
+                    <div class="col-xs-2 pull-right">
+                        <button class="btn btn-xs btn-primary" id="btnDownload">Download</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="billingTable">
+                        <thead>
+                            <tr>
+                                <th>Month End Date</th>
+                                <th>Client Type</th>
+                                <th>Group</th>
+                                <th>Client Name</th>
+                                <th>Scale</th>
+                                <th>Billing Rate</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Month End Date</th>
+                                <th>Client Type</th>
+                                <th>Group</th>
+                                <th>Client Name</th>
+                                <th>Scale</th>
+                                <th>Billing Rate</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jeditable")
+    @Scripts.Render("~/plugins/dataTables")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $('#endDate .input-group.date').datepicker({
+                format: "dd MM yyyy",
+                autoclose: true,
+                endDate: "+0d"
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+            $('#endDate .input-group.date').datepicker('setDate', new Date().getDate() + "-" + (new Date().getMonth() + 1) + "-" + (new Date().getYear() + 1900));
+
+            $('#btnGo').click(function () {
+                $('#billingTable').DataTable().ajax.url("/Report/BillingList?endDate=" + $('#endDate ').children('div').children('input').first().val())
+                $('#billingTable').DataTable().ajax.reload();
+            });
+
+            $('#btnDownload').click(function () {
+                window.location.href = "/Report/DownloadBillingList?endDate=" + $('#endDate ').children('div').children('input').first().val();
+
+
+                var btn = $(this);
+                btn.button('loading');
+                setTimeout(function () {
+                    btn.button('reset');
+                }, 10000);
+
+            });
+
+            $('#billingTable').dataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/Report/BillingList?endDate=" + $('#endDate ').children('div').children('input').first().val(),
+                    "type": "POST"
+                },
+                "order": [[0, "asc"]],
+                "bAutoWidth": false,
+                "oLanguage": {
+                    "sProcessing": "<img src='/Images/loading.gif' height='25'/>"
+                },
+                "columns": [
+                    { "data": "MonthEndDate" },
+                    { "data": "ClientType" },
+                    { "data": "Group" },
+                    { "data": "ClientName" },
+                    { "data": "Scale" },
+                    { "data": "BillingRate" }
+
+                ],
+                @*"dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "../scripts/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
+                },*@
+                "drawCallback": function () {
+
+                }
+            });
+
+        });
+
+
+
+
+    </script>
+
+    @Scripts.Render("~/plugins/select")
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/dataPicker")
+}
+
+@section Styles {
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/dataTablesStyles")
+    @Styles.Render("~/plugins/selectStyles")
+    @Styles.Render("~/plugins/iCheckStyles")
+    @Styles.Render("~/plugins/imagecropperStyles")
+    @Styles.Render("~/plugins/wizardStepsStyles")
+}

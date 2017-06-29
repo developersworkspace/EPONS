@@ -1,0 +1,183 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.User.Edit
+@{
+    ViewBag.Title = "Edit";
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)Model;
+    ViewData["BaseModel"] = baseModel;
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>
+            <img src="@Url.Action("Avatar", "User", new { userId = Model.UserModel.Id})" class="img-responsive img-circle pull-left profile" alt="Profile Image">
+            @Model.UserModel.DisplayName
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>User</a>
+            </li>
+            <li class="active">
+                <strong>Edit</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <br />
+
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("List", "Administration")" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>User Details </span>
+                                </h4>
+                                <button data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true" class="btn btn-success btn-sm pull-right">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                                @if (Model.IsSuperAdmin())
+                                {
+                                    if (Model.UserModel.IsActive)
+                                    {
+                                        <a href="@Url.Action("Impersonate", "User", new { username = Model.UserModel.Username })" class="btn btn-primary btn-sm pull-right">Impersonate</a>
+                                        <a href="@Url.Action("Lock", "User", new { userId = Model.UserModel.Id })" class="btn btn-danger btn-sm pull-right">Lock</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Unlock", "User", new { userId = Model.UserModel.Id })" class="btn btn-danger btn-sm pull-right">Unlock</a>
+                                    }
+                                }
+                            </div>
+                            <div id="collapse1" class="panel-collapse collapse in" aria-expanded="true">
+                                <div class='panel-body'>
+                                    @Html.Partial("_UserDetails", Model.UserModel)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Facility Permissions</span>
+                                </h4>
+                                <button data-toggle="collapse" data-parent="#accordion" href="#collapse2" class="collapsed btn btn-success btn-sm pull-right" aria-expanded="false">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                                @if (baseModel.CanAddFacilityPermission())
+                                {
+                                    <button onclick="showAddFacilityPermissionModal()" class="btn btn-primary btn-sm pull-right">Add Facility Permission</button>
+                                }
+                            </div>
+                            <div id="collapse2" class="panel-collapse collapse" aria-expanded="false">
+                                <div class='panel-body'>
+                                    @Html.Partial("_ListFacilityPermissions", Model.UserModelFacilityPermissions)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Measurement Tool Permissions</span>
+                                </h4>
+                                <button data-toggle="collapse" data-parent="#accordion" href="#collapse3" class="collapsed btn btn-success btn-sm pull-right" aria-expanded="false">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                                @if (baseModel.CanAddFacilityPermission())
+                                {
+                                    <button onclick="showAddMeasurementToolScoreModal()" class="btn btn-primary btn-sm pull-right">Add Measurement Tool Score</button>
+                                }
+                            </div>
+                            <div id="collapse3" class="panel-collapse collapse" aria-expanded="false">
+                                <div class='panel-body'>
+                                    @Html.Partial("_ListMeasurementToolPermissions", Model.UserModel.MeasurementToolScores)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Change Password</span>
+                                </h4>
+                                <button data-toggle="collapse" data-parent="#accordion" href="#collapse4" class="collapsed btn btn-success btn-sm pull-right" aria-expanded="false">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                            </div>
+                            <div id="collapse4" class="panel-collapse collapse" aria-expanded="false">
+                                <div class='panel-body'>
+                                    @Html.Partial("_ChangePassword", new EPONS.Teddy.Presentation.ViewObjects.User.ChangePassword()
+                               {
+                                   UserId = Model.UserModel.Id
+                               })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (baseModel.CanAddFacilityPermission())
+{
+
+    @Html.Partial("_AddFacilityPermissionModal", new EPONS.Teddy.Application.ValueObjects.FacilityPermission()
+{
+    Facilities = Model.Facilities,
+    Permissions = Model.Permissions,
+    UserId = Model.UserModel.Id,
+})
+}
+
+@if (baseModel.CanAddMeasurementToolPermission())
+{
+
+    @Html.Partial("_AddMeasurementToolScoreModal", new EPONS.Teddy.Application.ValueObjects.MeasurementToolScore()
+{
+    MeasurementTools = Model.MeasurementTools,
+    UserId = Model.UserModel.Id,
+})
+}
+
+@section styles {
+    <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+    <style>
+        img.profile {
+            margin-right: 15px;
+        }
+    </style>
+
+}
+
+@section scripts {
+    <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+        });
+
+
+    </script>
+}
+

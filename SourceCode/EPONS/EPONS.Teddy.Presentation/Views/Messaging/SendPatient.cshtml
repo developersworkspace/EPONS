@@ -1,0 +1,140 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Messaging.SendPatient
+@{
+    ViewBag.Title = "Send";
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)Model;
+    ViewData["BaseModel"] = baseModel;
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>
+            <img src="@Url.Action("Avatar", "Patient", new { patientId = Model.Patient.Id })" class="img-responsive img-circle pull-left profile" alt="Profile Image">
+            @Model.Patient.Firstname @Model.Patient.Lastname
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>Messaging</a>
+            </li>
+            <li class="active">
+                <strong>Send</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("Edit", "Patient", new { patientId = Model.Patient.Id})" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="social-feed-box">
+                        <div class="social-avatar">
+                            <a href="" class="pull-left">
+                                <img alt="image" src="@Url.Action("Avatar", "User", new { userId = Model.User.Id })">
+                            </a>
+                            <div class="media-body">
+                                <a href="#">
+                                    @Model.User.DisplayName
+                                </a>
+                                <small class="text-muted">@DateTime.Now.ToString(ConfigurationDefaults.DateTimeFormat)</small>
+                            </div>
+                        </div>
+                        <div class="social-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form action="@Url.Action("SendPatient", "Messaging", new { patientId = Model.Patient.Id })" method="POST">
+                                        <select class="chosen-select form-control" name="UserIds" id="UserIds" multiple data-placeholder="Select users">
+                                            <option>
+                                            <option>
+                                                @foreach (var item in Model.TeamMembers)
+                                                {
+                                                <option value="@item.Id">@item.Fullname</option>
+                                                }
+                                            </select>
+                                            <br />
+                                            <button type="button" onclick="deselectAllUsers()" class="btn btn-warning">Deselect All</button>
+                                            <button type="button" onclick="selectAllUsers()" class="btn btn-primary">Select All</button>
+                                            <br />
+                                            <textarea class="form-control" rows="5" id="Message" name="Message"></textarea>
+                                            <input type="hidden" name="PatientId" id="PatientId" value="@Model.Patient.Id" />
+                                            <br />
+                                            <button type="submit" class="btn btn-success pull-right"><i class="fa fa-send-o"></i>&nbsp; Send</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @foreach (var message in Model.MessagesList)
+                        {
+                            <div class="social-feed-box">
+                                <div class="social-avatar">
+                                    <a href="" class="pull-left">
+                                        <img alt="image" src="@Url.Action("Avatar", "User", new { userId = message.SenderId })">
+                                    </a>
+                                    <div class="media-body">
+                                        <a href="#">
+                                            @message.SenderDisplayName
+                                        </a>
+                                        <small class="text-muted">
+                                            @message.Timestamp.ToString(ConfigurationDefaults.DateTimeFormat)
+                                            <br />
+                                            @string.Join(", ", message.Recipients.Select(x => string.Format("{0} {1}", x.Firstname, x.Lastname)))
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="social-body">
+                                    <p>
+                                        @message.Body
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    @section styles {
+        <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+        <style>
+            img.profile {
+                margin-right: 15px;
+            }
+        </style>
+
+    }
+
+    @section scripts {
+        <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+        <script>
+
+            $(document).ready(function () {
+                $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+
+            });
+
+            function selectAllUsers() {
+                $('#UserIds option').prop('selected', true);
+                $('#UserIds').trigger('chosen:updated');
+            }
+
+            function deselectAllUsers() {
+                $('#UserIds option').prop('selected', false);
+                $('#UserIds').trigger('chosen:updated');
+            }
+        </script>
+    }
+

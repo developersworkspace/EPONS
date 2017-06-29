@@ -1,0 +1,36 @@
+﻿@model EPONS.Teddy.Application.Entities.Patient
+
+
+<div id="createPatientModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("CreateGet", "Patient", FormMethod.Get))
+        {
+        <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create Patient</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            @Html.DisplayNameFor(x => x.IdentificationNumber)
+                            <br />
+                            <small>
+                                Search for a unique patient identification number in the ePONS database, e.g. ID or passport number
+                            </small>
+                        </div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(x => x.IdentificationNumber, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.IdentificationNumber, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Continue</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

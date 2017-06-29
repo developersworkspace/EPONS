@@ -1,0 +1,316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>EPONS.Teddy.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{8866da1c-e2d1-45a7-a902-5a8b39f30f39}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql120DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>EPONS.Teddy.Database</RootNamespace>
+    <AssemblyName>EPONS.Teddy.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Temp|AnyCPU' ">
+    <OutputPath>bin\Temp\</OutputPath>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Data" />
+    <Folder Include="Tables" />
+    <Folder Include="SP" />
+    <Folder Include="ThirdParty" />
+    <Folder Include="Tables\Audit" />
+    <Folder Include="Tables\User" />
+    <Folder Include="Init" />
+    <Folder Include="Procedures" />
+    <Folder Include="Tables\Facility" />
+    <Folder Include="Tables\ValueObjects" />
+    <Folder Include="Tables\Patient" />
+    <Folder Include="Tables\Patient\Triggers" />
+    <Folder Include="Tables\Visit" />
+    <Folder Include="Tables\Message" />
+    <Folder Include="Function" />
+    <Folder Include="Tables\Survey" />
+    <Folder Include="Tables\Admin" />
+    <Folder Include="VersionScripts" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ThirdParty\Elmah.sql" />
+    <Build Include="SP\CreateICD10CodeMap.sql" />
+    <Build Include="Data\ICD10CodeMap.sql" />
+    <None Include="Data\InsertNAP.sql" />
+    <None Include="Data\InsertOTSurvey.sql" />
+    <None Include="Data\InsertNAP.sql" />
+    <Build Include="Tables\Audit\Log.sql" />
+    <None Include="Procedures\AcceptDisclaimer.sql" />
+    <None Include="Procedures\AllocateTeamMember.sql" />
+    <None Include="Procedures\AssignMeasurementTool.sql" />
+    <None Include="Procedures\CreateFacilityMeasurementTool.sql" />
+    <None Include="Procedures\CreateFacility.sql" />
+    <None Include="Procedures\CreateFacilityPermission.sql" />
+    <None Include="Procedures\CreateLogEntry.sql" />
+    <None Include="Procedures\CreateMeasurementToolScore.sql" />
+    <None Include="Procedures\CreatePatient.sql" />
+    <None Include="Procedures\CreateUser.sql" />
+    <None Include="Procedures\CreateVisit.sql" />
+    <None Include="Procedures\CreateVisitScore.sql" />
+    <None Include="Procedures\DeallocateTeamMember.sql" />
+    <None Include="Procedures\DeassignMeasurementTool.sql" />
+    <None Include="Procedures\DeleteFacilityMeasurementTool.sql" />
+    <None Include="Procedures\DeleteFacilityPermission.sql" />
+    <None Include="Procedures\FindCompletedEpisodesOfCare.sql" />
+    <None Include="Procedures\FindCompletedMeasurementToolsByPatientIdAndDateRange.sql" />
+    <None Include="Procedures\FindCurrentUserFacilityByUserId.sql" />
+    <None Include="Procedures\FindFacilityAvatarById.sql" />
+    <None Include="Procedures\FindFacilityById.sql" />
+    <None Include="Procedures\FindMeasurementToolsByFacilityId.sql" />
+    <None Include="Procedures\FindMeasurementToolsByPatientId.sql" />
+    <None Include="Procedures\FindMeasurementToolsByPatientIdAndDateRange.sql" />
+    <None Include="Procedures\FindMeasurementToolsByVisitId.sql" />
+    <None Include="Procedures\FindMeasurementToolScoresByUserId.sql" />
+    <None Include="Procedures\FindMeasurementToolsForVisitByPatientId.sql" />
+    <None Include="Procedures\FindUserByUsernameAndPassword.sql" />
+    <None Include="Tables\ValueObjects\Genders.sql" />
+    <None Include="Tables\ValueObjects\Races.sql" />
+    <None Include="Tables\ValueObjects\Countries.sql" />
+    <None Include="Tables\ValueObjects\Titles.sql" />
+    <None Include="Tables\ValueObjects\Provinces.sql" />
+    <None Include="Tables\ValueObjects\Cities.sql" />
+    <None Include="Tables\ValueObjects\ResidentialEnvironments.sql" />
+    <None Include="Tables\ValueObjects\MedicalSchemes.sql" />
+    <None Include="Tables\Patient\SupportServices.sql" />
+    <None Include="Tables\ValueObjects\SupportServices.sql" />
+    <None Include="Tables\ValueObjects\ProfessionalBodies.sql" />
+    <None Include="Tables\ValueObjects\ImpairmentGroups.sql" />
+    <None Include="Tables\ValueObjects\AdmissionTypes.sql" />
+    <None Include="Tables\ValueObjects\DischargesTypes.sql" />
+    <None Include="Tables\Constraints.sql" />
+    <None Include="Tables\Message\Details.sql" />
+    <None Include="Tables\Message\Recipients.sql" />
+    <None Include="ThirdParty\DropOldTables.sql" />
+    <None Include="Function\SplitString.sql" />
+    <None Include="Tables\Survey\Questions.sql" />
+    <None Include="Tables\Survey\Options.sql" />
+    <None Include="Tables\Survey\Details.sql" />
+    <None Include="Tables\Survey\Results.sql" />
+    <None Include="Tables\ValueObjects\ICD10CodeToIGMap.sql" />
+    <None Include="Procedures\FindCurrentEpisodeOfCare.sql" />
+    <None Include="Tables\Admin\Messages.sql" />
+    <None Include="Procedures\FindAdminMessage.sql" />
+    <None Include="Procedures\CreateAdminMessage.sql" />
+    <None Include="Tables\Admin\SavedQueries.sql" />
+    <None Include="Procedures\FindSavedQueryResultByName.sql" />
+    <None Include="SP\CreateImpairmentGroup.sql" />
+    <None Include="VersionScripts\001.sql" />
+    <None Include="Procedures\ListEpisodesOfCareByPatientId.sql" />
+    <None Include="Procedures\CreateEpisodeOfCare.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Init\001.sql" />
+    <None Include="Tables\User\Details.sql" />
+    <None Include="Tables\User\Credentials.sql" />
+    <None Include="Tables\User\Permissions.sql" />
+    <None Include="Tables\Facility\MeasurementTools.sql" />
+    <None Include="Tables\ValueObjects\Permissions.sql" />
+    <None Include="Tables\ValueObjects\MeasurementTools.sql" />
+    <None Include="Tables\ValueObjects\ICD10Codes.sql" />
+    <None Include="Tables\User\MeasurementToolScores.sql" />
+    <None Include="Tables\Patient\Details.sql" />
+    <None Include="Tables\Patient\Triggers\AuditTrigger.sql" />
+    <None Include="Tables\Audit\PatientImpairmentGroup.sql" />
+    <None Include="Tables\Patient\TeamMembers.sql" />
+    <None Include="Tables\Patient\MeasurementTools.sql" />
+    <None Include="Tables\Facility\Details.sql" />
+    <None Include="Tables\Visit\Details.sql" />
+    <None Include="Tables\Visit\ScoreValues.sql" />
+    <None Include="Tables\Patient\EpisodesOfCare.sql" />
+    <None Include="Tables\ValueObjects\ScoreItems.sql" />
+    <None Include="Tables\ValueObjects\ScoreValues.sql" />
+    <None Include="Tables\ValueObjects\Frequencies.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListFrequencies.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindPatientById.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListGenders.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListRaces.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListCountries.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListTitles.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\SetUserFacility.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListProvinces.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListCitites.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListResidentialEnvironments.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListMedicalSchemes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListSupportServices.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\UpdateUserPassword.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\UpdatePatientSupportService.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\UpdatePatientAvatar.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindPatientAvatarById.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindPatientByIdentificationNumber.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindTeamMembersByPatientId.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindTeamMembersByPatientIdAndDateRange.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindUserAvatarById.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindUserByEmailAddress.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListPermissions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindUserById.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListProfessionalBodies.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListUsers.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListImpairmentGroups.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindUserByUsername.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindUserFacilitiesByUsername.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\UpdatePatient.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\UpdateFacilityAvatar.sql" />
+    <None Include="Procedures\FindUserFacilityPermissionsByUserId.sql" />
+    <None Include="Procedures\FindUserPermissionsByFacilityId.sql" />
+    <None Include="Procedures\FindVisitById.sql" />
+    <None Include="Procedures\FindVisitsByPatientId.sql" />
+    <None Include="Procedures\ListActivePatients.sql" />
+    <None Include="Procedures\FindVisitsByPatientIdAndDateRange.sql" />
+    <None Include="Procedures\FindVisitScoresByVisitId.sql" />
+    <None Include="Procedures\ListFacilityUsersByFacilityId.sql" />
+    <None Include="Procedures\ListPatientsByFacilityId.sql" />
+    <None Include="Procedures\ListAdmissionTypes.sql" />
+    <None Include="Procedures\ListDischargeTypes.sql" />
+    <None Include="Procedures\ListICD10Codes.sql" />
+    <None Include="Procedures\UpdateFacility.sql" />
+    <None Include="Procedures\UnlockUser.sql" />
+    <None Include="Procedures\LockUser.sql" />
+    <None Include="Procedures\SaveUser.sql" />
+    <None Include="Procedures\ListMeasurementTools.sql" />
+    <None Include="Procedures\ListFacilitites.sql" />
+    <None Include="Procedures\GetProcedureLogs.sql" />
+    <None Include="Procedures\ListDischargedPatients.sql" />
+    <None Include="Procedures\ListDeceasedPatients.sql" />
+    <None Include="Procedures\FindMessagesByPatientId.sql" />
+    <None Include="Procedures\FindUnreadMessagesByUserId.sql" />
+    <None Include="Procedures\MarkMessagesAsRead.sql" />
+    <None Include="Procedures\SendMessage.sql" />
+    <None Include="Procedures\SendMessageToRecipient.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindSurveysByPatientId.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\CreateSurveyQuestionResult.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindSurveyById.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tables\ValueObjects\Positions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListPostions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\FindCurrentUserPositionByUserId.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\ListPositions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Procedures\SetUserPosition.sql" />
+  </ItemGroup>
+</Project>

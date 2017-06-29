@@ -1,0 +1,47 @@
+﻿<div class="modal inmodal" id="messageView" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated">
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-3">From</div>
+                        <div class="col-xs-9" id="msgFrom" style="font-weight:bold">From</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">Sent</div>
+                        <div class="col-xs-9" id="msgSent" style="font-weight:bold">Sent</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">Patient</div>
+                        <div class="col-xs-9" id="msgPatient" style="font-weight:bold">Patient</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">To</div>
+                        <div class="col-xs-9" id="msgTo" style="font-weight:bold">To</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">Message</div>
+                    </div>
+                    <br />
+                    <div class="row" style="background:rgba(0, 0, 0, 0);">
+                        <div class="col-xs-5" id="msgBody">Body</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal" id="messageViewClose">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowMessage(data) {
+        $("#messageView #msgSent").html(data.SentTimestampDisplay);
+        $("#messageView #msgPatient").html('<a href="/Patient/Details?Patient=' + data.PatientId + '">' + data.Patient + '</a>');
+        $("#messageView #msgFrom").html(data.From);
+        $("#messageView #msgTo").html(data.RecipientSummary);
+        $("#messageView #msgBody").html(data.Body);
+
+        $("#messageView").modal("show");
+    }
+</script>

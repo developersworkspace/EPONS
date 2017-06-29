@@ -1,0 +1,8 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Modals.AllocateTeamMember
+@{
+    Layout = null;
+}
+
+@Html.DropDownListFor(x => x.UserIds, Model.Users, "", new { @class = "form-control", multiple = "true" })
+<button type="button" onclick="deselectAllUsers()" class="btn btn-warning">Deselect All</button>
+<button type="button" onclick="selectAllUsers()" class="btn btn-primary">Select All</button>

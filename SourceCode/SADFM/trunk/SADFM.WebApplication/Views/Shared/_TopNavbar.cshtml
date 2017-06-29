@@ -1,0 +1,41 @@
+﻿@using SADFM.Infrastructure.Models;
+@using SADFM.WebApplication.Extensions;
+@using SADFM.WebApplication.Helpers;
+@model SADFM.Infrastructure.Models.Account
+@{
+    SADFM.Infrastructure.Models.FacilityPermissions permissions = new SADFM.Infrastructure.Models.FacilityPermissions();
+    int numberOfmessages = 0;
+}
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+            <div role="search" class="navbar-form-custom">
+                <div class="form-group">
+                    
+                </div>
+            </div>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li>
+                <span class="m-r-sm text-muted welcome-message">@permissions.Facility.Name</span>
+            </li>
+            @if (!(permissions.Facility.IsFunder && permissions.Permissions.FirstOrDefault(x => x.Name == "Mass Data User") != null))
+            {
+                <li>
+
+                    <a class="count-info" href="@Url.Action("Inbox", "Messages")">
+                        <i class="fa fa-envelope"></i>@numberOfmessages
+                    </a>
+
+                </li>
+            }
+
+            <li>
+                <a href="@Url.Action("Logout", "Account")">
+                    <i class="fa fa-sign-out"></i>Log out
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

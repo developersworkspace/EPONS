@@ -1,0 +1,272 @@
+﻿@model SADFM.Infrastructure.Models.FacilityDashboardReport
+@{
+    Layout = null;
+}
+<style>
+    * {
+        font-size: small;
+    }
+</style>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<table width="100%">
+    <tr>
+        <td width="20%">
+            <img src="@Model.FacilityImage" width="100%" />
+        </td>
+        <td width="2%"></td>
+        <td width="50%">
+            <h4>
+                @Model.FacilityName
+                <br />
+                Facility Dashboard Report
+                <br />
+                @Model.StartDate.ToString("dd MMM yyyy") - @Model.EndDate.ToString("dd MMM yyyy")
+            </h4>
+        </td>
+    </tr>
+</table>
+<br />
+<h5>Admission and Discharge Detail</h5>
+<table width="100%">
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Active Patients for Period
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.ActivePatients
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Admitted
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Admitted
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Discharged
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Discharged
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Deaths
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Deaths
+        </td>
+    </tr>
+</table>
+
+<br />
+<h5>Length of Stay Detail</h5>
+<table width="100%">
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Average Length of Stay
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.AverageLOS
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            LOS 1 - 7 days
+            <br />
+            1 Week
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.AverageLOSWeek1
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            LOS 8 - 14 days
+            <br />
+            2 Weeks
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.AverageLOSWeek2
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            LOS 15 - 21 days
+            <br />
+            3 Weeks
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.AverageLOSWeek3
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            LOS 22 - 28 days
+            <br />
+            4 Weeks
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.AverageLOSWeek4
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            LOS > 28 days
+            <br />
+            More than a month
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.AverageLOSMoreThanAMonth
+        </td>
+    </tr>
+</table>
+
+<br />
+<div style="page-break-before:always">&nbsp;</div>
+<h5>Gender / Race Detail</h5>
+<table width="100%">
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Males
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Males
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Females
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Females
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            White
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.White
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Black
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Black
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Coloured
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Coloured
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Asian
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Asian
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Other
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Other
+        </td>
+    </tr>
+</table>
+<br />
+<h5>Age Detail</h5>
+<table width="100%">
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Average Age
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.AverageAge
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age 1 - 10
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age1To10
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age 11 - 20
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age11To20
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age 21 - 30
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age21To30
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age 31 - 40
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age31To40
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age 41 - 50
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age41To50
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age 51 - 60
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age51To60
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age 61 - 70
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age61To70
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age 71 - 80
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age71To80
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" style="vertical-align: top;">
+            Age > 80
+        </td>
+        <td width="50%" style="vertical-align: top;">
+            @Model.Age81AndOlder
+        </td>
+    </tr>
+</table>

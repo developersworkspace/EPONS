@@ -1,0 +1,1541 @@
+﻿@model SADFM.Data.Models.ViewModels.VisitViewModel
+@using SADFM.Web.Shared;
+@{
+    ViewBag.Title = "Patients";
+    ViewBag.Account = Model.account;
+
+    List<SADFM.Data.Models.Permission> perms = SADFM.Web.Shared.UserHelper.GetActivePermissions(ViewBag.Account);
+
+    SADFM.Data.Models.Case patientCase = Model.patient.Cases.FirstOrDefault(x => x.isActive);
+
+
+    string selectedIg = "";
+    string selectedICD10 = "";
+    string selectedICD10Description = "";
+    string icd10Edit = "";
+
+    if (patientCase != null)
+    {
+        selectedIg = patientCase.ImpairmentGroupId;
+        selectedICD10 = patientCase.ICD10;
+        selectedICD10Description = patientCase.ICD10Description;
+        icd10Edit = string.Format("{0}{1}", selectedICD10, selectedICD10 == "Unknown" ? string.Empty : string.Concat(" - ", selectedICD10Description));
+    }
+
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+
+    <div class="col-lg-10">
+        <h2>
+            <img alt="image" class="img-circle" src="@Model.patient.Avatar" id="avatar" data-toggle="tooltip" title="Click to change" width=" 75" height="75">
+            @Model.patient.FirstName&nbsp;@Model.patient.LastName <small>Age @(Model.patient.BirthDate.HasValue ? (Convert.ToInt32(DateTime.Now.Subtract(Model.patient.BirthDate.Value).TotalDays) / (int)365).ToString() : ""),  @Model.patient.Gender, @Model.patient.Race</small>
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a href="/Patient/Details?Patient=@Model.patient.GetId().ToString("N")">Patient</a>
+            </li>
+            <li class="active">
+                <strong>Visits</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+        <h2 class="pull-right"><button onclick="$('#CloseVisitModal').modal('show')" class="btn btn-warning">Close</button></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="panel blank-panel">
+                    <div class="panel-heading">
+                        <div class="panel-title m-b-md">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Case</h3>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            @if (Model.patient.Cases != null)
+                                            {
+
+                                                @SADFM.Web.Shared.HtmlHelper.DropdownBox(Model.patient.Cases, "CaseID", c => c.CaseId, c => c.ICD10 + " - " + c.ICD10Description, "chosen-select", dataPlaceholder: "Select a case (optional)");
+                                            }
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Date</h3>
+                                        </div>
+
+                                        <div class="col-lg-3">
+                                            <div id="visitStartDate">
+                                                <div class="input-group date">
+                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                    <input type="text" class="form-control required" placeholder="Date">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-2">
+                                            <input id="timepicker" type="text" class="time ui-timepicker-input form-control" style="width: 100%" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-options">
+
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-0"><i class="fa fa-comments"></i>Notes</a></li>
+                                @if (!(UserHelper.SelectedClientType.Equals("Funder") && perms.FirstOrDefault(x => x.PermissionDescription == "Case Manager") != null))
+                                {
+
+
+                                    <li>
+                                        <a data-toggle="tab" href="#tab-1" @if (Model.requiresVitalSigns) { <text> style="background-color:rgba(255,0,0,0.4)" class="overdue" </text>             }><i class="fa fa-stethoscope"></i>Vital Signs</a>
+                                    </li>
+
+                                    int scaleIndex1 = 2;
+                                    foreach (var sx in Model.patient.Scales.Where(x => x.Code != "IgnoredScale").GroupBy(x => x.ScaleName).Select(x => x.First()).ToList().OrderBy(x => x.SortOrder))
+                                    {
+
+                                        <li>
+                                            <a data-toggle="tab" href="#tab-@scaleIndex1" @if (sx.IsOverdue) { <text> style="background-color:rgba(255,0,0,0.4)" class="overdue" </text>                                 }>
+                                                <i class="fa"></i><span class="label label-success">
+                                                    @if (sx.ScaleName != "FAM" && sx.ScaleName != "APOM")
+                                                    { <text>&@sx.ScaleName;</text> }
+                                                </span>&nbsp;@sx.Description
+                                            </a>
+                                        </li>
+                                        scaleIndex1++;
+                                    }
+
+
+                                }
+                                <li><a data-toggle="tab" href="#tab-100"><i class="fa fa-user-md"></i>Save &amp; Exit</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="tab-content">
+                            <div id="tab-0" class="tab-pane active">
+                                @if (Model.account.ProfessionalBody.HasValue)
+                                {
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Daily Notes</h3>
+                                            <span>(Notes you enter here will <b class="text-danger">not</b> be included in the Patient Progress Report for the Case Manager)</span>
+                                            <br />
+                                            <br />
+                                            <div style="background-color:#F0E99D;padding:15px" id="note-options">
+                                                <i class="fa fa-eye fa-2x"></i>&nbsp; &nbsp;<input type="checkbox" name="IsPrivate" id="IsPrivate"><br />
+                                                <div class="is-private hidden">
+                                                    This note is only visible to '@(ViewBag.Account.FirstName) @(ViewBag.Account.LastName)'
+                                                </div>
+                                                <div class="is-not-private hidden">
+                                                    This note is visible to all clinicians.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-10" id="extranotes">
+                                            <div class="ibox float-e-margins">
+
+                                                <div class="ibox-content no-padding">
+
+                                                    <div class="summernote">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="background-color: black; height: 2px; margin-bottom: 20px; margin-top: 20px">
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Patient Progress Notes</h3>
+                                            <span>(Notes you enter here will be used to compile the formal Patient Progress Report for the Case Manager)</span>
+
+                                        </div>
+
+                                        <div class="col-lg-10" id="notes">
+                                            <div class="ibox float-e-margins">
+
+                                                <div class="ibox-content no-padding">
+
+                                                    <div class="summernote">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-lg-10">
+                                                <h3>Attachments</h3>
+                                            </div>
+
+                                            <div class="col-lg-2">
+                                                <label title="Upload attachments" for="inputFile" class="btn btn-primary" style="width: 100%">
+                                                    <input type="file" name="file" id="inputFile" class="hide">
+                                                    <i class="fa fa-plus"></i>Add
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div id="files">
+                                        </div>
+
+                                    </div>
+
+                                    <br />
+
+                                }
+                                else
+                                {
+                                    <div>
+                                        <i class="fa fa-lock fa-5x"></i>
+                                    </div>
+                                }
+                            </div>
+                            @if (!(UserHelper.SelectedClientType.Equals("Funder") && perms.FirstOrDefault(x => x.PermissionDescription == "Case Manager") != null))
+                            {
+                                <div id="tab-1" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Temperature</h3>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" type="number" id="vs_temp" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            &deg;C
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Heart rate</h3>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" type="number" id="vs_hr" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            /min
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Heart rate regular
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <input type="radio" name="vs_hrnorm" value="true" checked="checked" />Yes /
+                                            <input type="radio" name="vs_hrnorm" value="false" />No
+                                        </div>
+                                    </div>
+                                    <div class="row" id="vs_hrirreg_row" style="display: none">
+                                        <div class="col-lg-2">
+                                            Explain the irregular heart rate
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <input type="text" id="vs_hrirreg" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Blood Pressure</h3>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" type="number" id="vs_bp_sys" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            /
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" type="number" id="vs_bp_dia" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            mmHg
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Respiratory rate</h3>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" type="number" id="vs_rr" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            /min
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Respiratory rate regular
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <input type="radio" name="vs_rrnorm" value="true" checked="checked" />Yes /
+                                            <input type="radio" name="vs_rrnorm" value="false" />No
+                                        </div>
+                                    </div>
+                                    <div class="row" id="vs_rrirreg_row" style="display: none">
+                                        <div class="col-lg-2">
+                                            Explain the irregular respiratory rate
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <input type="text" id="vs_rrirreg" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Pulse Oximetry</h3>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" type="number" id="vs_po" max="100" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            %
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Supplementary oxygen
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <input type="radio" name="vs_ponorm" value="true" />Yes /
+                                            <input type="radio" name="vs_ponorm" value="false" checked="checked" />No
+                                        </div>
+                                    </div>
+                                    <div class="row" id="vs_poirreg_row" style="display: none">
+                                        <div class="col-lg-2">
+                                            Explain the supplementary oxygen
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <input type="text" id="vs_poirreg" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <h3>Glucose</h3>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" type="number" id="vs_gl" step="0.1" onkeypress="validate(event, this)" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            mmol/L  (UK)  (mg/dL = US)
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                int scaleIndex2 = 2;
+                                foreach (var sx in Model.patient.Scales.Where(x => x.Code != "IgnoredScale").GroupBy(x => x.ScaleName).Select(x => x.First()).ToList().OrderBy(x => x.SortOrder))
+                                {
+
+                                    <div id="tab-@scaleIndex2" class="tab-pane">
+
+                                        @if (SADFM.Data.DataAccess.Client.GetScalesOfProvider(SADFM.Web.Shared.UserHelper.SelectedClientId.Value).Contains(SADFM.Data.Models.BaseModel.DecryptId(sx.ScaleID)))
+                                        {
+
+                                            if (SADFM.Data.DataAccess.Account.AllowScale(ViewBag.Account.GetId(), sx.ScaleID) || sx.ScaleName.Equals("FAM"))
+                                            {
+                                                //@Html.Partial("~/Views/Patient/Scale.cshtml", sx);
+
+                                                <div class="dynamic-view" data-loaded="false" id="@sx.GetId().ToString("N")" data-url="@Url.Action("Scale", "Patient", new { PatientScaleId = sx.GetId(), PatientId = Model.patient.GetId() })" style="height: 100vh">
+                                                    <div class="spinner-loader">
+                                                        Loading…
+                                                    </div>
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                <h1>This scale is locked until you pass your exams for the scale.  Please complete your exams and try again.</h1>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <h1>Your provider does not have access to this scale. Please discuss with your administrator.</h1>
+                                        }
+                                    </div>
+                                    scaleIndex2++;
+                                }
+
+
+                            }
+
+                            <div id="tab-100" class="tab-pane">
+                                <!--
+                                  <div class="row">
+                                     <div class="col-lg-2">
+                                         <h3>Duration</h3>
+                                     </div>
+                                     <div class="col-lg-3" id="dropup">
+
+                                         <select id="DurationID" class="chosen-select" data-placeholder="Select a duration" style="display: none;">
+                                             <option></option>
+
+                                             @for (int t = 1; t < 11; t++)
+                                             {
+                                                 <option value="@t">
+                                                     @t minutes
+                                                 </option>
+                                             }
+
+                                             @for (int t = 1; t < 97; t++)
+                                             {
+
+                                                 int minutesTotal = t * 15;
+                                                 int hours = Convert.ToInt32(Math.Floor((double)minutesTotal / 60));
+                                                 int minutes = minutesTotal - (hours * 60);
+
+                                                 if (hours > 0)
+                                                 {
+                                                     <option value="@minutesTotal">
+                                                         @hours Hours @if (minutes > 0)
+                                                         {<text>@minutes minutes</text>}
+                                                     </option>
+                                                 }
+                                                 else
+                                                 {
+                                                     <option value="@minutesTotal">@minutes minutes</option>
+                                                 }
+                                             }
+
+                                         </select>
+                                     </div>
+                                 </div>
+                                 -->
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>ICD10</h3>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input class="form-control typeahead" type="text" placeholder="Select primary diagnosis - ICD10" id="txtICD10Name" style="width:100%">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>Impairment Group</h3>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        @SADFM.Web.Shared.HtmlHelper.DropdownBox(
+     SADFM.Web.Shared.Constants.ImpairmentClassList, "ImpairmentGroupId",
+     l => l.ID, l => l.ListValue + "." + l.Value + " - " + l.ListName + " - " + l.Name, "chosen-select", dataPlaceholder: "Select impairment group", selected: selectedIg)
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3>My next action</h3>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input type="radio" id="radReview" name="adminAction" checked="checked">&nbsp;I want to see @Model.patient.FirstName @Model.patient.LastName again. <br />
+                                        <input type="radio" id="radDischarge" name="adminAction">&nbsp;I discharge myself from @Model.patient.FirstName @Model.patient.LastName's care. Please archive my clinical notes.
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h3 id="lblNextAction">Review Date</h3>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div id="nextActionDate">
+                                            <div class="input-group date">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                <input type="text" class="form-control required" placeholder="Date">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-3" style="margin-top:15px">
+                                        <button class="btn btn-primary" id="btn-save" style="width: 100%">Save &amp; Exit</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="NoCaseSelectedModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">No case selected</h4>
+            </div>
+            <div class="modal-body">
+                <p>You have not selected a case for this visit so you will discharge this patient from your care for all open cases.  Press Cancel if you want to go back to select a specific case.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btn-closeallcases">Ok</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="CloseVisitModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Are you sure you want to close this visit?</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    If you close this visit without saving, your data will be lost. <br />
+                    Click CANCEL to close without saving. <br />
+                    Click SAVE to save your data.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-warning" href="/Patient/Details?Patient=@Model.patient.GetId().ToString("N")">Cancel</a>
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="SelectAdminTab()">Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Styles {
+    @Styles.Render("~/plugins/wizardStepsStyles")
+    @Styles.Render("~/plugins/dataTablesStyles")
+    @Styles.Render("~/plugins/chosenStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/switcheryStyles")
+    @Styles.Render("~/plugins/iCheckStyles")
+    @Styles.Render("~/plugins/summernoteStyles")
+    @Styles.Render("~/plugins/jquery.timepickerStyle")
+
+    <link href="~/Content/spinner.css" rel="stylesheet" />
+
+    <style>
+        #dropup .chosen-container .chosen-drop {
+            border-bottom: 0;
+            border-top: 1px solid #aaa;
+            top: auto;
+            bottom: 40px;
+        }
+
+        div.radio.i-checks div.iradio_square-green {
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        div.scaleValue0 div.iradio_square-green::before {
+            content: "0";
+            font-weight: bold;
+        }
+
+        div.scaleValue1 div.iradio_square-green::before {
+            content: "1";
+            font-weight: bold;
+        }
+
+        div.scaleValue2 div.iradio_square-green::before {
+            content: "2";
+            font-weight: bold;
+        }
+
+        div.scaleValue3 div.iradio_square-green::before {
+            content: "3";
+            font-weight: bold;
+        }
+
+        div.scaleValue4 div.iradio_square-green::before {
+            content: "4";
+            font-weight: bold;
+        }
+
+        div.scaleValue5 div.iradio_square-green::before {
+            content: "5";
+            font-weight: bold;
+        }
+
+        div.scaleValue6 div.iradio_square-green::before {
+            content: "6";
+            font-weight: bold;
+        }
+
+        div.scaleValue7 div.iradio_square-green::before {
+            content: "7";
+            font-weight: bold;
+        }
+
+        div.scaleValue8 div.iradio_square-green::before {
+            content: "8";
+            font-weight: bold;
+        }
+
+        div.scaleValue9 div.iradio_square-green::before {
+            content: "9";
+            font-weight: bold;
+        }
+
+        div.scaleValue10 div.iradio_square-green::before {
+            content: "10";
+            font-weight: bold;
+        }
+
+        div.scaleValue11 div.iradio_square-green::before {
+            content: "11";
+            font-weight: bold;
+        }
+
+        div.scaleValue12 div.iradio_square-green::before {
+            content: "12";
+            font-weight: bold;
+        }
+
+        div.scaleValue13 div.iradio_square-green::before {
+            content: "13";
+            font-weight: bold;
+        }
+
+        div.scaleValue14 div.iradio_square-green::before {
+            content: "14";
+            font-weight: bold;
+        }
+
+        div.scaleValue15 div.iradio_square-green::before {
+            content: "15";
+            font-weight: bold;
+        }
+
+        div.scaleValue16 div.iradio_square-green::before {
+            content: "16";
+            font-weight: bold;
+        }
+
+        div.scaleValue17 div.iradio_square-green::before {
+            content: "17";
+            font-weight: bold;
+        }
+
+        div.scaleValue18 div.iradio_square-green::before {
+            content: "18";
+            font-weight: bold;
+        }
+
+        div.scaleValue0 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue1 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue2 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue3 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue4 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue5 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue6 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue7 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue8 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue9 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue10 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue11 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue12 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue13 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue14 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue15 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue16 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue17 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue18 div.iradio_square-green.checked::before {
+            content: "";
+        }
+
+        div.scaleValue0 div.iradio_square-green {
+            background-color: #f2f2f2 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue1 div.iradio_square-green {
+            background-color: #FCB0B5 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue2 div.iradio_square-green {
+            background-color: #FCB0B5 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue3 div.iradio_square-green {
+            background-color: #FCB0B5 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue4 div.iradio_square-green {
+            background-color: #FCB0B5 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue5 div.iradio_square-green {
+            background-color: #FFB474 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue6 div.iradio_square-green {
+            background-color: #74D5FF !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue7 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue8 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue9 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue10 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue11 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue12 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue13 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue14 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue15 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue16 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue17 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        div.scaleValue18 div.iradio_square-green {
+            background-color: #ADE174 !important;
+            border-radius: 50% !important;
+        }
+
+        .nav.nav-tabs .active a {
+            background-color: rgba(0,0,0,0) !important;
+        }
+
+        body.modal-open {
+            padding-right: 17px !important;
+        }
+
+        .modal-backdrop.in {
+            margin-right: 16px;
+        }
+
+        div.scaleValue0 {
+            display: none;
+        }
+
+        .note-editable {
+            min-height: 300px;
+        }
+    </style>
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/validate")
+    @Scripts.Render("~/plugins/typeahead")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/summernote")
+    @Scripts.Render("~/plugins/jquery.timepicker")
+    @Scripts.Render("~/app/casetypeahead")
+    <script type="text/javascript">
+
+        var attachmentData = null;
+        var attachmentType = null;
+        var idleTimeTooltip = 0;
+        $(document).ready(function () {
+
+
+            setTimeout(LoadScaleView, 1000);
+            initCaseTypeAhead();
+
+
+
+            $('#IsPrivate').change(function () {
+                if ($('#IsPrivate').is(':checked')) {
+                    $('#note-options').css('background-color', '#F0E99D');
+                    $('#extranotes .note-editable').css('background-color', '#F0E99D');
+                    $('#note-options .is-private').removeClass('hidden');
+                    $('#note-options .is-not-private').addClass('hidden');
+                } else {
+                    $('#note-options').css('background-color', 'white');
+                    $('#extranotes .note-editable').css('background-color', 'white');
+                    $('#note-options .is-private').addClass('hidden');
+                    $('#note-options .is-not-private').removeClass('hidden');
+                }
+            });
+
+            $('#IsPrivate').change();
+
+            $('#txtICD10Name').focus(function () {
+                if ($('#txtICD10Name').val() == 'Unknown') {
+                    $('#txtICD10Name').val('');
+                }
+            });
+
+            $('#txtICD10Name').blur(function () {
+                if ($('#txtICD10Name').val() == '') {
+                    $('#txtICD10Name').val('Unknown');
+                }
+            });
+
+            $("input[name=adminAction]").change(function () {
+                action = $("input[name=adminAction]:checked")[0].id.substring(3);
+                if (action == "Discharge")
+                    $("#btn-save").html("Save and Discharge");
+                else
+                    $("#btn-save").html("Save");
+                $("#lblNextAction").html(action + " Date");
+            });
+
+            $("#vs_temp").blur(function () {
+                $("#vs_temp").css("background-color", "");
+                if ($("#vs_temp").val() == "")
+                    return;
+                var flt = parseFloat($("#vs_temp").val());
+                if (!isNaN(flt))
+                    $("#vs_temp").val(flt.toFixed(1));
+                if (isNaN(flt) || flt > 42 || flt < 34) {
+                    alert(
+                        isNaN(flt) ? "Enter a valid temperature" :
+                        ($("#vs_temp").val() + " is an unusually " + (flt < 34 ? "low" : "high") + " temperature.  Please verify temperature"));
+                    if (flt < 34)
+                        $("#vs_temp").css("background-color", "lightblue");
+                    else
+                        $("#vs_temp").css("background-color", "salmon");
+                    return;
+                }
+            });
+
+
+            $("#vs_hr").blur(function () {
+                $("#vs_hr").css("background-color", "");
+                if ($("#vs_hr").val() == "")
+                    return;
+                var flt = parseFloat($("#vs_hr").val());
+                if (!isNaN(flt))
+                    $("#vs_hr").val(flt.toFixed(0));
+                if (isNaN(flt) || flt > 120) {
+                    alert(
+                        isNaN(flt) ? "Enter a heart rate" :
+                        ($("#vs_hr").val() + " is an unusually high heart rate.  Please verify heart rate"));
+                    $("#vs_hr").css("background-color", "salmon");
+                    return;
+                }
+            });
+            $('input[name=vs_hrnorm]').change(
+                function () {
+                    $("#vs_hrirreg_row").css("display", $('input[name=vs_hrnorm]:checked').val() == "false" ? "" : "none");
+                }
+            );
+
+            $("#vs_bp_sys").blur(function () {
+                $("#vs_bp_sys").css("background-color", "");
+                if ($("#vs_bp_sys").val() == "")
+                    return;
+                var flt = parseFloat($("#vs_bp_sys").val());
+                if (!isNaN(flt))
+                    $("#vs_bp_sys").val(flt.toFixed(0));
+                if (isNaN(flt) || flt > 250) {
+                    alert(
+                        isNaN(flt) ? "Enter a valid systolic BP" :
+                        ($("#vs_bp_sys").val() + " is an unusually high systolic BP.  Please verify blood pressure"));
+                    $("#vs_bp_sys").css("background-color", "salmon");
+                    return;
+                }
+            });
+            $("#vs_bp_dia").blur(function () {
+                $("#vs_bp_dia").css("background-color", "");
+                var flt = parseFloat($("#vs_bp_dia").val());
+                var sys = parseFloat($("#vs_bp_sys").val());
+                if (!isNaN(flt) && isNaN(sys)) {
+                    alert("Cannot enter diastolic value without systolic value");
+                    return;
+                }
+                if (!isNaN(flt))
+                    $("#vs_bp_dia").val(flt.toFixed(0));
+                if (isNaN(flt) || flt > sys) {
+                    alert(
+                        isNaN(flt) ? "Enter a valid diastolic BP" :
+                        "The diastolic BP cannot be higher than the systolic BP.  Please verify blood pressure");
+                    $("#vs_bp_dia").val("");
+                    $("#vs_bp_dia").css("background-color", "salmon");
+                    return;
+                }
+                $("#vs_bp_dia").val(flt.toFixed(0));
+            });
+            $("#vs_rr").blur(function () {
+                $("#vs_rr").css("background-color", "");
+                if ($("#vs_rr").val() == "")
+                    return;
+                var flt = parseFloat($("#vs_rr").val());
+                if (!isNaN(flt))
+                    $("#vs_rr").val(flt.toFixed(0));
+                if (isNaN(flt) || flt > 60 || flt < 4) {
+                    alert(
+                        isNaN(flt) ? "Enter a respiratory rate" :
+                        ($("#vs_rr").val() + " is an unusually " + (flt < 4 ? "slow" : "fast") + " respiratory rate.  Please verify respiratory rate"));
+                    if (flt < 4)
+                        $("#vs_rr").css("background-color", "lightblue");
+                    else
+                        $("#vs_rr").css("background-color", "salmon");
+                    return;
+                }
+            });
+            $('input[name=vs_rrnorm]').change(
+                function () {
+                    $("#vs_rrirreg_row").css("display", $('input[name=vs_rrnorm]:checked').val() == "false" ? "" : "none");
+                }
+            );
+            $("#vs_po").blur(function () {
+                $("#vs_po").css("background-color", "");
+                if ($("#vs_po").val() == "")
+                    return;
+                var flt = parseFloat($("#vs_po").val());
+                if (!isNaN(flt))
+                    $("#vs_po").val(flt.toFixed(0));
+                if (isNaN(flt) || flt < 94) {
+                    alert(
+                        isNaN(flt) ? "Enter a pulse oximetry" :
+                        ($("#vs_po").val() + " is an unusually low pulse oximetry.  Please verify pulse oximetry"));
+                    $("#vs_po").css("background-color", "salmon");
+                    return;
+                }
+
+                if (flt > 100) {
+                    alert(("Pulse Oximetry cannot be over 100%"));
+                    $("#vs_po").val('');
+                }
+            });
+            $('input[name=vs_ponorm]').change(
+                function () {
+                    $("#vs_poirreg_row").css("display", $('input[name=vs_ponorm]:checked').val() == "false" ? "none" : "");
+                }
+            );
+            $("#vs_gl").blur(function () {
+                $("#vs_gl").css("background-color", "");
+                if ($("#vs_gl").val() == "")
+                    return;
+                var flt = parseFloat($("#vs_gl").val());
+                if (isNaN(flt)) {
+                    alert("Enter glucose");
+                    $("#vs_gl").css("background-color", "salmon");
+                    return;
+                }
+                $("#vs_gl").val(flt.toFixed(1));
+                if (flt > 5.5)
+                    $("#vs_gl").css("background-color", "salmon");
+                if (flt < 3.5)
+                    $("#vs_gl").css("background-color", "lightblue");
+            });
+
+            $(".chosen-select").chosen({
+                "width": "100%",
+                disable_search_threshold: 5
+            });
+
+            $('.summernote').summernote({
+                toolbar: [
+    ['style', ['bold', 'italic', 'underline', 'clear']],
+    ['fontsize', ['fontsize']],
+    ['color', ['color']],
+    ['para', ['ul', 'ol', 'paragraph']],
+    ['height', ['height']],
+    ['insert', ['picture', 'link']]
+                ]
+            });
+
+            $("#CaseID").change(function () {
+                $('#txtICD10Name').val($("#CaseID option:selected").text());
+                //$("#CaseID").text()
+
+            });
+
+
+
+            $('#visitStartDate .input-group.date').datepicker({
+                format: "dd MM yyyy",
+                autoclose: true,
+                endDate: "+0d"
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+            $('#visitStartDate .input-group.date').datepicker('setDate', new Date().getDate() + "-" + (new Date().getMonth() + 1) + "-" + (new Date().getYear() + 1900));
+
+            $("#nextActionDate .input-group.date").datepicker({
+                format: "dd MM yyyy",
+                autoclose: true,
+                startDate: "+0d"
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+            $('.i-checks').iCheck({
+                radioClass: 'iradio_square-green'
+            });
+
+            $('#timepicker').timepicker({
+                'step': 15,
+                'timeFormat': 'H:i'
+            });
+
+
+
+            $('#timepicker').timepicker('setTime', new Date());
+
+            /*
+            $('div[data-toggle="tooltip"]').tooltip({
+                animated: 'fade',
+                placement: 'bottom',
+            });
+            */
+
+            $('div[data-toggle="tooltip-y"]').mousemove(function () {
+                var selector = $(this).attr('data-selector');
+
+                $(selector).html($(this).attr('data-title'));
+                idleTimeTooltip = 0;
+            });
+
+            $('div[data-toggle="tooltip-x"]').mousemove(function () {
+                $('.tooltip-x').html($(this).attr('data-title'));
+                idleTimeTooltip = 0;
+            });
+
+
+            setInterval(function () {
+                idleTimeTooltip = idleTimeTooltip + 1;
+                if (idleTimeTooltip > 3) { // 3 seconds
+                    $('.tooltip-x').html('');
+                    $('.tooltip-y').html('');
+                }
+            }, 1000);
+
+
+
+
+            $("#inputFile").change(function () {
+                var fileReader = new FileReader(),
+                        files = this.files,
+                        file;
+
+                if (!files.length) {
+                    return;
+                }
+
+                file = files[0];
+
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+
+                    $('#files').append('<div class="row"><div class="col-lg-3"><label class="filename" id="filename" file-data="' + this.result.toString() + '">' + file.name + '</label></div><div class="col-lg-3"><button class="btn btn-danger btndelete"><i class="fa fa-close"></i></button></div></div>');
+                    $('.btndelete').click(function () {
+                        $(this).parent().parent().remove();
+                    });
+                    $("#inputFile").val(null);
+                };
+
+            });
+
+
+            //Main tab
+            $('#btn-save').click(function (event) {
+
+                /*
+                if ($("#DurationID").val() == "") {
+                    alert("Please select a duration.")
+                    return;
+                }
+
+                */
+
+                if ($('#radDischarge').is(':checked')) {
+                    //if ($('#txtICD10Name').val() == "") {
+                    //    alert("Please select a ICD 10 code");
+                    //    return;
+                    //}
+
+                    if ($('#nextActionDate').children('div').children('input').first().val() == "") {
+                        alert("Please select a discharge date");
+                        return;
+                    }
+                }
+
+
+                if ($('#vs_bp_sys').val() != "" ? ($("#vs_bp_sys").val() == "" || $("#vs_bp_dia").val() == "") : $('#vs_bp_dia').val() != "" ? ($("#vs_bp_sys").val() == "" || $("#vs_bp_dia").val() == "") : false) {
+                    alert('Both values need for blood pressure');
+                    return;
+                }
+
+
+                var array = new Array();
+
+                $("form input[type=radio]:checked, .modal input[type=radio]:checked").each(function () { array.push(this.id); });
+
+                var attachments = new Array();
+                $(".filename").each(function () {
+
+                    var data = $(this).attr('file-data').split(';base64,')[1];
+                    var type = $(this).attr('file-data').split(';base64,')[0].substring(5);
+                    var name = $(this).html();
+                    attachments.push({
+                        Data: data,
+                        MimeType: type,
+                        Name: name
+                    });
+                });
+
+                var model = {
+                    ScalesValuesIds: array,
+                    StartDate: $('#visitStartDate').children('div').children('input').first().val() + " " + $('#timepicker').val(),
+                    CaseID: $("#CaseID").val(),
+                    //Duration: $("#DurationID").val(),
+                    Notes: $('#notes .summernote').summernote().code().toString().HTMLEncode(),
+                    ExtraNotes: $('#extranotes .summernote').summernote().code().toString().HTMLEncode(),
+                    PatientGUID: "@Model.patient.GetId().ToString()",
+                    VisitAttachments: attachments,
+                    TemperatureString: $('#vs_temp').val(),
+                    HeartRate: $('#vs_hr').val(),
+                    BloodPressureSystolic: $('#vs_bp_sys').val(),
+                    BloodPressureDiastolic: $('#vs_bp_dia').val(),
+                    PulseOximetry: $('#vs_po').val(),
+                    GlucoseString: $('#vs_gl').val(),
+                    DischargeDate: $('#radDischarge').is(':checked') ? $('#nextActionDate').children('div').children('input').first().val() : null,
+                    ICD10: $('#txtICD10Name').val(),
+                    ImpairmentGroupId: $('#ImpairmentGroupId option:selected').val(),
+                    HeartRateRegular: $('input[name=vs_hrnorm]:checked').val(),
+                    HeartRateNote: $('#vs_hrirreg').val(),
+                    RespiratoryRateRegular: $('input[name=vs_rrnorm]:checked').val(),
+                    RespiratoryRateNote: $('#vs_rrirreg').val(),
+                    PulseOximetryRegular: $('input[name=vs_ponorm]:checked').val(),
+                    PulseOximetryNote: $('#vs_poirreg').val(),
+                    RespiratoryRate: $('#vs_rr').val(),
+                    IsPrivate: $('#IsPrivate').is(":checked") ? true : false
+
+                }
+
+
+                $('#btn-save').attr('disabled', 'disabled');
+                $("html").css("opacity", 0.4);
+                Post("/Patient/AddVisit", model,
+                               function () {
+                                   window.location = "/Patient/Details?Patient=" + getUrlParameter('Patient');
+                                   $("html").css("opacity", 0.4);
+                               }, function (result) {
+
+                                   $('#btn-save').removeAttr('disabled');
+                                   $("html").css("opacity", 1);
+
+                                   if (result.Type == 0) {
+                                       $('#NoCaseSelectedModal').modal('show');
+                                   } else {
+                                       alert(result.Message);
+                                   }
+                               });
+
+
+            });
+
+            $('#btn-closeallcases').click(function (event) {
+
+                /*
+                if ($("#DurationID").val() == "") {
+                    alert("Please select a duration.")
+                    return;
+                }
+                */
+                if ($('#radDischarge').is(':checked')) {
+                    //if ($('#txtICD10Name').val() == "") {
+                    //    alert("Please select a ICD 10 code");
+                    //    return;
+                    //}
+
+                    if ($('#nextActionDate').children('div').children('input').first().val() == "") {
+                        alert("Please select a discharge date");
+                        return;
+                    }
+                }
+
+
+                if ($('#vs_bp_sys').val() != "" ? ($("#vs_bp_sys").val() == "" || $("#vs_bp_dia").val() == "") : $('#vs_bp_dia').val() != "" ? ($("#vs_bp_sys").val() == "" || $("#vs_bp_dia").val() == "") : false) {
+                    alert('Both values need for blood pressure');
+                    return;
+                }
+
+
+                var array = new Array();
+
+                $("form input[type=radio]:checked, .modal input[type=radio]:checked").each(function () { array.push(this.id); });
+
+                var attachments = new Array();
+                $(".filename").each(function () {
+
+                    var data = $(this).attr('file-data').split(';base64,')[1];
+                    var type = $(this).attr('file-data').split(';base64,')[0].substring(5);
+                    var name = $(this).html();
+                    attachments.push({
+                        Data: data,
+                        MimeType: type,
+                        Name: name
+                    });
+                });
+
+                var model = {
+                    ScalesValuesIds: array,
+                    StartDate: $('#visitStartDate').children('div').children('input').first().val() + " " + $('#timepicker').val(),
+                    CaseID: $("#CaseID").val(),
+                    //Duration: $("#DurationID").val(),
+                    Notes: $('.summernote').summernote().code().toString().HTMLEncode(),
+                    PatientId: "@Model.patient.GetId().ToString()",
+                    VisitAttachments: attachments,
+                    TemperatureString: $('#vs_temp').val(),
+                    HeartRate: $('#vs_hr').val(),
+                    BloodPressureSystolic: $('#vs_bp_sys').val(),
+                    BloodPressureDiastolic: $('#vs_bp_dia').val(),
+                    PulseOximetry: $('#vs_po').val(),
+                    GlucoseString: $('#vs_gl').val(),
+                    DischargeDate: $('#radDischarge').is(':checked') ? $('#nextActionDate').children('div').children('input').first().val() : null,
+                    ICD10: $('#txtICD10Name').val(),
+                    ImpairmentGroupId: $('#ImpairmentGroupId option:selected').val(),
+                    HeartRateRegular: $('input[name=vs_hrnorm]:checked').val(),
+                    HeartRateNote: $('#vs_hrirreg').val(),
+                    RespiratoryRateRegular: $('input[name=vs_rrnorm]:checked').val(),
+                    RespiratoryRateNote: $('#vs_rrirreg').val(),
+                    PulseOximetryRegular: $('input[name=vs_ponorm]:checked').val(),
+                    PulseOximetryNote: $('#vs_poirreg').val(),
+                    RespiratoryRate: $('#vs_rr').val(),
+                    AllCases: true,
+                    IsPrivate: $('#IsPrivate').is(":checked") ? true : false
+
+                }
+
+
+                $('#btn-save').attr('disabled', 'disabled');
+                $("html").css("opacity", 0.4);
+                Post("/Patient/AddVisit", model,
+                               function () {
+                                   window.location = "/Patient/Details?Patient=" + getUrlParameter('Patient');
+                                   $("html").css("opacity", 0.4);
+                               }, function (result) {
+
+                                   $('#btn-save').removeAttr('disabled');
+                                   $("html").css("opacity", 1);
+
+
+                                   alert(result.Message);
+
+
+                               });
+
+
+            });
+
+            $(".note-editable").blur(function () {
+
+                if ($(".note-editable table, .note-editable img").innerWidth() >= 600) {
+                    alert("This will not render correct in the patient report");
+                }
+
+
+            });
+
+
+            $('#visitStartDate .input-group.date').on('changeDate', function () {
+                setTimeLimit();
+            });
+
+            setTimeLimit();
+
+            $('.patient-name').html("<h5 style='margin-right:20px'><i>@Model.patient.FirstName @Model.patient.LastName</i></h5>");
+
+
+            $('#radDischarge').click(function () {
+                $('#nextActionDate .input-group.date').datepicker("setDate", new Date());
+
+            });
+        });
+
+        String.prototype.HTMLEncode = function (str) {
+            var result = "";
+            var str = (arguments.length === 1) ? str : this;
+            for (var i = 0; i < str.length; i++) {
+                var chrcode = str.charCodeAt(i);
+                result += (chrcode > 128 || chrcode == 60 || chrcode == 62) ? "&#" + chrcode + ";" : str.substr(i, 1)
+            }
+            return result;
+        }
+
+        function validate(event, input) {
+            if (input.value.toString().indexOf('.') > 0) {
+
+
+                if (input.value.toString().length - input.value.toString().indexOf('.') >= 2) {
+                    event.preventDefault();
+                }
+            }
+        }
+
+        function LoadScaleView() {
+            $('.dynamic-view').each(function () {
+
+                if ($(this).attr('data-loaded') == 'false') {
+
+                    var element = $(this);
+
+                    element.load(element.attr('data-url'), null, function () {
+
+                        $('.i-checks').iCheck({
+                            radioClass: 'iradio_square-green'
+                        });
+
+                        $('div[data-toggle="tooltip-y"]').mousemove(function () {
+                            $('.tooltip-y').html($(this).attr('data-title'));
+                            idleTimeTooltip = 0;
+                        });
+
+                        $('div[data-toggle="tooltip-x"]').mousemove(function () {
+                            $('.tooltip-x').html($(this).attr('data-title'));
+                            idleTimeTooltip = 0;
+                        });
+
+                        $('.patient-name').html("<h5 style='margin-right:20px'><i>@Model.patient.FirstName @Model.patient.LastName</i></h5>");
+
+                        element.attr('data-loaded', 'true');
+                        $('.modal-backdrop').css('height', 1600);
+
+                        $('div.scaleValue0 input[type=radio][value=0]').iCheck('check');
+                        $('div.scaleValue0 input[type=radio][value=0]').iCheck('update');
+
+                    });
+                }
+
+
+
+            });
+
+
+        }
+
+        function SelectAdminTab() {
+            $('a[href=#tab-100]').tab('show');
+        };
+
+        function ShowScoring(id) {
+            $('#popupScoring-' + id).modal('show');
+            $('.modal-backdrop').css('height', 1600);
+        }
+
+        function SaveSubScales(scale, id) {
+
+            var value = 50;
+
+
+            if (scale == 'APOM') {
+
+                var array = [];
+
+                $('#popupScoring-' + scale + '-' + id + ' input[type=radio]:checked').each(function (index) {
+
+                    var tempValue = parseInt($(this).val());
+
+                    array.push(tempValue);
+                });
+
+
+                value = getMedian(array);
+
+            } else {
+
+
+                $('#popupScoring-' + scale + '-' + id + ' input[type=radio]:checked').each(function (index) {
+
+                    var tempValue = parseInt($(this).val());
+
+                    if (tempValue <= value) {
+                        value = tempValue;
+                    }
+                });
+            }
+
+
+
+            $('#mainscorerow-' + id + ' input[type=radio][value=' + value + ']').iCheck('check');
+            $('#mainscorerow-' + id + ' input[type=radio][value=' + value + ']').iCheck('update');
+            $('.iradio_square-green.disabled.checked').removeClass('disabled')
+
+            $('#popupScoring-' + scale + '-' + id).modal('hide');
+        }
+
+        function setTimeLimit() {
+            var d = $('#visitStartDate .input-group.date').datepicker('getDate');
+            if (d.getMonth() == new Date().getMonth() && d.getYear() == new Date().getYear() && d.getDate() == new Date().getDate()) {
+
+                $('#timepicker').timepicker('option', {
+                    'maxTime': new Date().getHours() + ":" + new Date().getMinutes()
+                });
+            } else {
+                $('#timepicker').timepicker('option', {
+                    'maxTime': null
+                });
+            }
+        }
+
+        function getMedian(array) {
+
+            array = removeElementsWithValue(array, 0);
+
+            array.sort(function (a, b) { return a - b; });
+
+            var half = Math.floor(array.length / 2);
+
+            if (array.length % 2)
+                return array[half];
+            else
+                return Math.ceil((array[half - 1] + array[half]) / 2.0);
+
+
+        }
+
+        function removeElementsWithValue(arr, val) {
+            var i = arr.length;
+            while (i--) {
+                if (arr[i] === val) {
+                    arr.splice(i, 1);
+                }
+            }
+            return arr;
+        }
+
+
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    return sParameterName[1];
+                }
+            }
+        }
+
+    </script>
+}
+

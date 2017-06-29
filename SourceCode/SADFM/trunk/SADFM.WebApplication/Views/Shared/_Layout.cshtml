@@ -1,0 +1,126 @@
+﻿@using SADFM.Infrastructure.Models;
+@using SADFM.WebApplication.Extensions;
+@{
+    if (ViewBag.Account == null)
+    {
+        ViewBag.Account = new Account("Yoda","123","info@returntrue.co.za","Return", "True", null); 
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPONS | @ViewBag.Title</title>
+    <!-- Add local styles, mostly for plugins css file -->
+    @if (IsSectionDefined("Styles"))
+    {@RenderSection("Styles", required: false)}
+
+    <!-- Primary Inspinia style -->
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/css/style.css" rel="stylesheet" />
+    <link href="~/Content/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/plugins/toastr/toastr.min.css" rel="stylesheet" />
+    <link href="~/Content/plugins/jAlert/jAlert-v2-min.css" rel="stylesheet" />
+</head>
+<body>
+
+    @*<!-- Skin configuration box -->
+        @Html.Partial("_SkinConfig")*@
+
+    <!-- Wrapper-->
+    <!-- PageClass give you ability to specify custom style for specific view based on action -->
+    <div id="wrapper" class="@Html.PageClass()">
+
+        <!-- Navigation -->
+        @Html.Partial("_Navigation", (SADFM.Infrastructure.Models.Account)ViewBag.Account)
+
+        <!-- Page wraper -->
+        <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
+
+            <!-- Top Navbar -->
+            @Html.Partial("_TopNavbar", (SADFM.Infrastructure.Models.Account)ViewBag.Account)
+
+            <!-- Main view  -->
+            @RenderBody()
+
+            <!-- Footer -->
+            @Html.Partial("_Footer")
+
+        </div>
+        <!-- End page wrapper-->
+
+    </div>
+    <!-- End wrapper-->
+
+    <div class="modal inmodal" id="layoutDialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">#</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal" id="layoutDialogCancel">Cancel</button>
+                    <button type="button" class="btn" id="layoutDialogOK">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section for main scripts render -->
+    <script src="~/Content/js/jquery-2.1.1.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/Content/js/plugins/metisMenu/metisMenu.min.js"></script>
+    <script src="~/Content/js/plugins/pace/pace.min.js"></script>
+    <script src="~/Content/js/app/inspinia.min.js"></script>
+
+    @*<!-- Skin config script - only for demo purpose-->
+        @Scripts.Render("~/bundles/skinConfig")*@
+    <script src="~/Content/js/app/app.js"></script>
+    <script src="~/Content/js/app/date.js"></script>
+    <script src="~/Content/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/Content/js/plugins/jquery-validation/jquery.validate.unobtrusive.min.js"></script>
+    <!-- Handler for local scripts -->
+    @RenderSection("scripts", required: false)
+
+    <script>
+
+
+
+        var idleTime = 0;
+        $(document).ready(function () {
+
+
+
+            var idleInterval = setInterval(timerIncrement, 60000);
+
+            $(this).mousemove(function (e) {
+                idleTime = 0;
+            });
+            $(this).keypress(function (e) {
+                idleTime = 0;
+            });
+        });
+
+        function timerIncrement() {
+            idleTime = idleTime + 1;
+            if (idleTime > 9) { // 10 minutes
+                window.location = '/Account/Logout';
+            }
+        }
+
+
+        $("#top-search").keypress(function (event) {
+            if (event.which == 13) {
+                window.location = '/Patient/PatientList?q=' + $('#top-search').val();
+            }
+        });
+    </script>
+</body>
+</html>

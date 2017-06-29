@@ -1,0 +1,17 @@
+<div id="wrapper" *ngIf="isLoading == false">
+  <app-nav></app-nav>
+  <div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header">
+          User Edit
+          <button class="btn btn-success pull-right" *ngIf="user?.IsActive" (click)="lock()"><i class="fa fa-unlock no-margin"></i></button>
+          <button class="btn btn-danger pull-right" *ngIf="!user?.IsActive" (click)="unlock()"><i class="fa fa-lock no-margin"></i></button>
+        </h1>
+
+      </div>
+    </div>
+    <app-user-details [user]="user"></app-user-details>
+    <app-user-facility-permissions [user]="user" [facilityPermissions]="facilityPermissions"></app-user-facility-permissions>
+  </div>
+</div>

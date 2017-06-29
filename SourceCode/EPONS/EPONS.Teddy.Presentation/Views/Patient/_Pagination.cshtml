@@ -1,0 +1,35 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Pagination
+<ul class="pagination pagination-lg pull-right">
+    @if (Model.NumberOfPages > 10)
+    {
+        if (Model.PageNumber > Model.MaxNumberOfPagesOnPagination)
+        {
+            <li class="@(1 == Model.PageNumber? "active" : null)">
+                <a href="@Url.Action("List","Patient", new { pageNumber = 1, query = Request["query"], type = Request["type"]})"><<</a>
+            </li>
+        }
+
+        for (int i = Model.PageNumber < Model.MaxNumberOfPagesOnPagination ? 0 : Model.PageNumber - Model.MaxNumberOfPagesOnPagination; i < ((Model.NumberOfPages > (Model.PageNumber + Model.MaxNumberOfPagesOnPagination)) ? (Model.PageNumber + Model.MaxNumberOfPagesOnPagination) : Model.PageNumber); i++)
+        {
+            <li class="@((i + 1) == Model.PageNumber? "active" : null)">
+                <a href="@Url.Action("List","Patient", new { pageNumber = i + 1, query = Request["query"], type = Request["type"]})">@(i + 1)</a>
+            </li>
+        }
+        if (Model.PageNumber != Model.NumberOfPages)
+        {
+            <li class="@(Model.NumberOfPages == Model.PageNumber? "active" : null)">
+                <a href="@Url.Action("List","Patient", new { pageNumber = Model.NumberOfPages, query = Request["query"], type = Request["type"]})">>></a>
+            </li>
+        }
+    }
+    else
+    {
+        for (int i = 0; i < Model.NumberOfPages; i++)
+        {
+            <li class="@((i + 1) == Model.PageNumber? "active" : null)">
+                <a href="@Url.Action("List","Patient", new { pageNumber = i + 1, query = Request["query"], type = Request["type"]})">@(i + 1)</a>
+            </li>
+        }
+    }
+</ul>
+

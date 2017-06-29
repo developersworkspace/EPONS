@@ -1,0 +1,55 @@
+﻿@model IEnumerable<EPONS.Teddy.Application.EntityViews.TeamMember>
+@{ 
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)ViewData["BaseModel"];
+    var patientId = (Guid)ViewData["PatientId"];
+    }
+
+    <table class="table">
+        <tr>
+            <th class="hidden-sm hidden-xs">
+                @Html.DisplayNameFor(model => model.Facility)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fullname)
+            </th>
+            <th class="hidden-sm hidden-xs">
+                @Html.DisplayNameFor(model => model.Permission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AllocationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeallocationDate)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="hidden-sm hidden-xs">
+                    @(item.Facility == null ? "No Facility" : item.Facility)
+                </td>
+                <td>
+                    @item.Fullname
+                </td>
+                <td class="hidden-sm hidden-xs">
+                    @item.Permission
+                </td>
+                <td>
+                    @item.AllocationDate.ToString(ConfigurationDefaults.DateFormat)
+                </td>
+                <td>
+                    @(item.DeallocationDate.HasValue ? item.DeallocationDate.Value.ToString(ConfigurationDefaults.DateFormat) : null)
+                </td>
+                <td>
+                    @if ((baseModel.CanDeAllocateTeamMember() || baseModel.User.Id == item.Id) && !item.DeallocationDate.HasValue)
+                {
+                        <a href="@Url.Action("DeallocateTeamMember","Patient", new { patientId = patientId, userId = item.Id})" class="btn btn-danger btn-action">Deallocate</a>
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+

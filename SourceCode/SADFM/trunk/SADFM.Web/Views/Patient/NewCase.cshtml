@@ -1,0 +1,488 @@
+﻿@model SADFM.Data.Models.Patient
+@using SADFM.Web.Shared;
+@{
+    ViewBag.Account = UserHelper.GetCurrentAccount();
+    List<SADFM.Data.Models.Permission> perms = UserHelper.GetActivePermissions(ViewBag.Account);
+}
+<style>
+    tbody tr {
+        cursor: pointer;
+    }
+
+    .tblProvidersView tbody tr:hover {
+        background-color: #ffff99 !important;
+    }
+
+    .smalldrop .chosen-container .chosen-drop .chosen-results {
+        height: 100px;
+    }
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>
+            <img alt="image" class="img-circle" src="@Model.Avatar" id="avatar" width="75" height="75">
+            @Model.FirstName&nbsp;@Model.LastName <small>Age @(Model.BirthDate.HasValue ? (Convert.ToInt32(DateTime.Now.Subtract(Model.BirthDate.Value).TotalDays) / (int)365).ToString() : ""),  @Model.Gender, @Model.Race</small>
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href='@Url.Action("Index", "Home")'>Home</a>
+            </li>
+            <li>
+                <a href='/Patient/Details?Patient=@Model.GetId().ToString("N")'>Patient</a>
+            </li>
+            <li class="active">
+                <strong>Case</strong>
+            </li>
+        </ol>
+    </div>
+   
+    <div class="col-lg-2">
+        <h2 class="pull-right"><a href="/Patient/Details?Patient=@Model.GetId().ToString("N")" class="btn btn-warning">Close</a></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <input type="hidden" id="patientId" value="@Model.ID">
+                <input type="hidden" id="caseId" value="">
+
+                <!--Edit Start-->
+                <div class="ibox-content" id="edit-i-box">
+                    <!--Personal details-->
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h3>Case details</h3>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-lg-3">
+                                    <label>ICD 10</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div id="scrollable-dropdown-menu">
+                                        <input class="form-control typeahead" type="text" placeholder="Select primary diagnosis - ICD10" id="txtICD10Name" style="width:100%" value="Unknown">
+                                    </div>
+                                </div>
+                                <div class="col-lg-0" id="lblICD10Description">
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <label>Onset Date</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div id="caseStartDate" data-toggle="tooltip" data-placement="top" data-original-title="Date of illness / incident / accident / injury">
+                                        <div class="input-group date">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            <input type="text" class="form-control required" placeholder="Onset Date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label>Impairment Group <small>*Optional</small></label>
+                                </div>
+                                <div class="col-lg-3">
+                                    @SADFM.Web.Shared.HtmlHelper.DropdownBox(
+                                    SADFM.Data.DataAccess.ListItem.GetList("ImpairmentClass")
+              .OrderBy(x => x.SortOrder).SelectMany(li => li.Children.OrderBy(x => x.SortOrder))
+     .ToList(), "ImpairmentGroupId",
+              l => l.ID, l => l.ListValue + "." + l.Value + " - " + l.ListName + " - " + l.Name, "chosen-select", dataPlaceholder: "Select impairment group")
+                                </div>
+                                <div class="col-lg-3" style="display:none">
+                                    <label>End date</label>
+                                </div>
+                                <div class="col-lg-3" style="display:none">
+                                    <div id="caseEndDate">
+                                        <div class="input-group date">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            <input type="text" class="form-control required" placeholder="End date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label>Admission Status</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Data.DataAccess.ListItem.GetList("AdmissionStatus", deep: false), "AdmissionStatusID", l => l.ID, l => l.Description, "chosen-select", dataPlaceholder: "Admission status")
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label>Referring doctor</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="text" class="form-control" id="txt-referringdoctor" value="" />
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Treating doctor</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="text" class="form-control" id="txt-treatingdoctor" value="" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label>Referring doctor contact</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="text" class="form-control" id="txt-referringdoctorcontact" value="" />
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Treating doctor contact</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="text" class="form-control" id="txt-treatingdoctorcontact" value="" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label>Referring doctor email</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="text" class="form-control" id="txt-referringdoctoremail" value="" />
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Treating doctor email</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="text" class="form-control" id="txt-treatingdoctoremail" value="" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label>Referring doctor practice number</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="text" class="form-control" id="txt-referringdoctorpracticenumber" value="" />
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Treating doctor practice number</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type="text" class="form-control" id="txt-treatingdoctorpracticenumber" value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Edit End-->
+                <!-- Providers -->
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4 class="pull-right"><button class="btn btn-success" id="btn-save-new-details">Save &amp; Exit</button></h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h3>Current Assessment Tools</h3>
+                        </div>
+                        @if (perms.FirstOrDefault(x => x.PermissionDescription == "Case Manager") != null)
+                        {
+                            <div class="col-lg-3">
+                                <button type="button" class="btn btn-danger" id="btn-deletecareplan" data-backdrop="static" data-keyboard="false" style="width: 100%">
+                                    <i class="fa fa-minus"></i>&nbsp;Discontinue an Assessment Tool
+                                </button>
+                            </div>
+                            <div class="col-lg-3 pull-right">
+                                <button type="button" class="btn btn-primary" id="btn-newcareplan" data-backdrop="static" data-keyboard="false" style="width: 100%">
+                                    <i class="fa fa-plus"></i>&nbsp;Add an Assessment Tool
+                                </button>
+                            </div>
+
+                        }
+                    </div>
+                    <table class="table table-striped table-bordered table-hover tblCarePlansView">
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Minimum frequency</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (perms.FirstOrDefault(x => x.PermissionDescription == "Case Manager") != null)
+{
+
+    <div class="modal in modal" id="addCareDialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="addscale-title">Add an Assessment Tool</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-5">
+                            @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Web.Shared.Constants.ScalesList.ToList(), "ScaleID", s => s.ID, s => s.Description, "chosen-select", dataPlaceholder: "Select task")
+                            <label style="color: red;" class="error">Required</label>
+                        </div>
+                        <div class="col-lg-5">
+                            @SADFM.Web.Shared.HtmlHelper.DropdownBox(SADFM.Web.Shared.Constants.FrequencyList.OrderBy(x => x.SortOrder).ToList(), "FrequencyID", f => f.ID, f => f.Description, "chosen-select", dataPlaceholder: "Select frequency")
+                            <label style="color: red;" class="error">Required</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" id="addCareDialogCancel">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="addCareDialogSave">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Styles {
+    @Styles.Render("~/plugins/wizardStepsStyles")
+    @Styles.Render("~/plugins/dataTablesStyles")
+    @Styles.Render("~/plugins/chosenStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/switcheryStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/validate")
+    @Scripts.Render("~/plugins/typeahead")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/app/casetypeahead")
+    @Scripts.Render("~/app/case")
+    <script>
+        var tableProvider;
+        $(document).ready(function () {
+
+            initCaseTypeAhead();
+            initCase();
+            
+
+            $('#txtICD10Name').focus();
+            $('#txtICD10Name').val('');
+
+            $('#caseStartDate .input-group.date').datepicker({
+                format: "dd M yyyy",
+                autoclose: true,
+                endDate: new Date()
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('#txtICD10Name').focus(function () {
+                if ($('#txtICD10Name').val() == 'Unknown') {
+                    $('#txtICD10Name').val('');
+                }
+            });
+
+            $('#txtICD10Name').blur(function () {
+                if ($('#txtICD10Name').val() == '') {
+                    $('#txtICD10Name').val('Unknown');
+                }
+            });
+
+            $('#caseEndDate .input-group.date').datepicker({
+                format: "dd M yyyy",
+                autoclose: true,
+                endDate: new Date()
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+            $('#assignDate .input-group.date').datepicker({
+                format: "dd M yyyy",
+                autoclose: true,
+                endDate: new Date()
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+            $('#dischargeDate .input-group.date').datepicker({
+                format: "dd M yyyy",
+                autoclose: true,
+                endDate: new Date(),
+            }).on("show", function (e) {
+                $("div.datepicker").css("z-index", 1000000);
+            });
+
+            $(".chosen-select").chosen({
+                "width": "100%",
+                disable_search_threshold: 5
+            });
+
+
+            $('#caseStartDate .input-group.date').on('changeDate', function () {
+                $('#caseEndDate .input-group.date').datepicker('setStartDate', $('#caseStartDate .input-group.date').datepicker('getDate'));
+            });
+
+            $('#caseStartDate .input-group.date').datepicker('setStartDate', new Date('@Model.BirthDate.Value.ToString("yyyy/MM/dd")'));
+
+            $('#btn-save-new-details').click(function () {
+
+                if ($('#caseStartDate').children('div').children('input').first().val() == "") {
+                    alert('Please enter an onset date');
+                    return;
+                }
+
+                if ($('#txtICD10Name').val() == '') {
+                    alert('Please enter an ICD 10 Code');
+                    return;
+                }
+
+
+                var model = {
+                    ICD10ID: $('#txtICD10Name').val(),
+                    StartDate: $('#caseStartDate').children('div').children('input').first().val(),
+                    EndDate: $('#caseEndDate').children('div').children('input').first().val(),
+                    ImpairmentGroupId: $('#ImpairmentGroupId').val(),
+                    PatientId: $('#patientId').val(),
+                    CaseId: $('#caseId').val(),
+                    ReferringDoctor: $('#txt-referringdoctor').val(),
+                    ReferringDoctorContact: $('#txt-referringdoctorcontact').val(),
+                    ReferringDoctorEmail: $('#txt-referringdoctoremail').val(),
+                    ReferringDoctorPracticeNumber: $('#txt-referringdoctorpracticenumber').val(),
+                    TreatingDoctor: $('#txt-treatingdoctor').val(),
+                    TreatingDoctorContact: $('#txt-treatingdoctorcontact').val(),
+                    TreatingDoctorEmail: $('#txt-treatingdoctoremail').val(),
+                    TreatingDoctorPracticeNumber: $('#txt-treatingdoctorpracticenumber').val(),
+                    AdmissionStatusId: $('#AdmissionStatusID').val()
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/Patient/NewCase",
+                    data: model,
+                    success: function (data) {
+                        if (data.Success)
+                            window.location = "/Patient/Case?Case=" + data.Id + '&popup=true';
+                        else
+                            toastr.error(data.Error);
+                    },
+                    dataType: "json",
+                    error: function () {
+                    },
+                    dataType: "json",
+                    error: function () {
+                        toastr.error("Cannot create case");
+                    }
+                });
+
+            });
+
+            $('.tblCarePlansView').dataTable({
+                "processing": true,
+                "serverSide": true,
+                "bFilter": false,
+                "oLanguage": {
+                    "sProcessing": "<img src='/Images/loading.gif' height='25'/>"
+                },
+                "ajax": {
+                    "url": "/Patient/GetPatient",
+                    "type": "POST",
+                    "data": {
+                        PatientId: '@Model.GetId().ToString("N")'
+                    }
+                },
+                "order": [[0, "asc"]],
+                "bAutoWidth": false,
+                "columns": [
+                    { "data": "Name" },
+                    { "data": "Frequency" }
+                ]
+            });
+
+
+            $('.tblCarePlansView tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                    $('.tblCarePlansView').find('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+
+            $('#btn-deletecareplan').click(function () {
+
+                var data = $('.tblCarePlansView').DataTable().row('.selected').data();
+
+                Post("/Patient/RemoveScale", { patientId: '@Model.GetId().ToString("N")', scaleId: data.ScaleId },
+                              function () {
+                                  $('.tblCarePlansView').DataTable().draw(false);
+                              });
+            });
+
+            $('#btn-newcareplan').click(function () {
+
+                $('#ScaleID option').css('display', 'block');
+
+                var selectedScales = $('.tblCarePlansView').DataTable().rows().data()
+                for (i = 0; i < selectedScales.length; i++) {
+                    $('#ScaleID option[value="' + selectedScales[i].ScaleId + '"]').css('display', 'none');
+                }
+
+                $('#ScaleID').trigger("chosen:updated");
+
+
+                $('#ScaleID').val('');
+                $('#FrequencyID').val('');
+
+                $('#addCareDialog').modal('show');
+
+            });
+
+            $('#addCareDialogSave').unbind();
+            $('#addCareDialogSave').click(function () {
+
+                Post("/Patient/AddScale", { patientId: '@Model.ID', scaleId: $('#ScaleID').val(), frequencyId: $('#FrequencyID').val() },
+                             function () {
+                                 $('.tblCarePlansView').DataTable().draw(false);
+                             });
+
+                $('#addCareDialog').modal('hide');
+            });
+
+
+
+        });
+
+
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    return sParameterName[1];
+                }
+            }
+        }
+    </script>
+}

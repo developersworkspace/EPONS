@@ -1,0 +1,124 @@
+﻿@using SADFM.Web.Shared;
+@{
+    if (ViewBag.Account == null)
+    {
+        ViewBag.Account = UserHelper.GetCurrentAccount();
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Library.GetText("ApplicationShortName") | @ViewBag.Title</title>
+    <!-- Add local styles, mostly for plugins css file -->
+    @if (IsSectionDefined("Styles"))
+    {@RenderSection("Styles", required: false)}
+
+    <!-- Primary Inspinia style -->
+    @Styles.Render("~/font-awesome/css")
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/plugins/toastrStyles")
+    @Styles.Render("~/plugins/jAlertStyles")
+</head>
+<body>
+
+    @*<!-- Skin configuration box -->
+        @Html.Partial("_SkinConfig")*@
+
+    <!-- Wrapper-->
+    <!-- PageClass give you ability to specify custom style for specific view based on action -->
+    <div id="wrapper" class="@Html.PageClass()">
+
+        <!-- Navigation -->
+        @Html.Partial("_Navigation", (SADFM.Data.Models.Account)ViewBag.Account)
+
+        <!-- Page wraper -->
+        <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
+
+            <!-- Top Navbar -->
+            @Html.Partial("_TopNavbar", (SADFM.Data.Models.Account)ViewBag.Account)
+
+            <!-- Main view  -->
+            @RenderBody()
+
+            <!-- Footer -->
+            @Html.Partial("_Footer")
+
+        </div>
+        <!-- End page wrapper-->
+
+    </div>
+    <!-- End wrapper-->
+
+    <div class="modal inmodal" id="layoutDialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">#</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal" id="layoutDialogCancel">Cancel</button>
+                    <button type="button" class="btn" id="layoutDialogOK">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section for main scripts render -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/plugins/slimScroll")
+    @Scripts.Render("~/bundles/inspinia")
+    @Scripts.Render("~/plugins/toastr")
+    @Scripts.Render("~/bundles/jAlert")
+
+    @*<!-- Skin config script - only for demo purpose-->
+        @Scripts.Render("~/bundles/skinConfig")*@
+
+    <script type="text/javascript" src="/Scripts/app/app.js"></script>
+    <script type="text/javascript" src="/Scripts/app/date.js"></script>
+    <script src="~/Scripts/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/Scripts/plugins/jquery-validation/jquery.validate.unobtrusive.min.js"></script>
+    <!-- Handler for local scripts -->
+    @RenderSection("scripts", required: false)
+
+    <script>
+
+
+
+        var idleTime = 0;
+        $(document).ready(function () {
+
+
+
+            var idleInterval = setInterval(timerIncrement, 60000);
+
+            $(this).mousemove(function (e) {
+                idleTime = 0;
+            });
+            $(this).keypress(function (e) {
+                idleTime = 0;
+            });
+        });
+
+        function timerIncrement() {
+            idleTime = idleTime + 1;
+            if (idleTime > 9) { // 10 minutes
+                window.location = '/Account/Logout';
+            }
+        }
+
+
+        $("#top-search").keypress(function (event) {
+            if (event.which == 13) {
+                window.location = '/Patient/PatientList?q=' + $('#top-search').val();
+            }
+        });
+    </script>
+</body>
+</html>

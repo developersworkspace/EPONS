@@ -1,0 +1,151 @@
+﻿@model SADFM.Data.Models.ScaleAndVisit
+@{
+    List<SADFM.Data.Models.Score> scores = SADFM.Data.DataAccess.Patient.GetScores(Model.visit.VisitId);
+    Dictionary<Guid, List<SADFM.Data.Models.ScaleScore>> subScores = null;
+    Dictionary<string, Dictionary<string, string>> scaleItems = new Dictionary<string, Dictionary<string, string>>();
+
+    if (Model.scale.ScaleName == "APOM")
+    {
+
+        SADFM.Data.Models.Visit visit = SADFM.Data.DataAccess.Patient.GetVisitById(Model.visit.VisitId);
+
+        var scaleValues = visit.ScalesValuesIds.Select(x => SADFM.Data.DataAccess.ListItem.GetById(SADFM.Data.Models.BaseModel.DecryptId(x))).ToList();
+        scaleValues = scaleValues.Where(x => x.FullListName.StartsWith("Scale/APOM")).ToList();
+
+        var list1 = SADFM.Data.DataAccess.ListItem.GetList("Scale/APOM");
+
+        foreach (var i in list1.OrderBy(x => x.SortOrder))
+        {
+
+            scaleItems.Add(i.Name, new Dictionary<string, string>());
+
+            var list2 = SADFM.Data.DataAccess.ListItem.GetListByParentId(i.GetId());
+
+            foreach (var j in list2.Where(x => x.Value == null).OrderBy(x => x.SortOrder))
+            {
+                var list3 = SADFM.Data.DataAccess.ListItem.GetListByParentId(j.GetId());
+
+                var item = scaleValues.SingleOrDefault(x => list3.Count(y => y.GetId() == x.GetId()) > 0);
+
+                if (item == null || item.Value == "0")
+                {
+                    continue;
+                }
+
+                scaleItems[i.Name].Add(j.Name, item.Description);
+            }
+        }
+    }
+}
+
+
+<form id="@Model.scale.ScaleName" data-id="@Model.scale.ID">
+
+    <div class="row">
+        <div class="col-lg-9">
+            @{
+                if (Model.scale.ScaleName == "Delta" || Model.scale.ScaleName == "APOM")
+                {
+                    subScores = SADFM.Data.DataAccess.ListItem.GetScaleSubScores(SADFM.Data.Models.BaseModel.DecryptId(Model.scale.ScaleID));
+                }
+
+
+                List<SADFM.Data.Models.ListItem> list = SADFM.Data.DataAccess.ListItem.GetList(string.Concat("Scale,", Model.scale.ScaleName)).OrderBy(x => x.SortOrder).ToList();
+                foreach (SADFM.Data.Models.ListItem item in list)
+                {
+
+                    List<SADFM.Data.Models.ListItem> values = SADFM.Data.DataAccess.ListItem.GetListByParentId(item.GetId(), orderBy: "Value", filter: li => li.Value != null).OrderBy(x => Convert.ToInt32(x.Value)).ToList();
+
+                    <hr />
+                    <div class="row">
+                        <div class="col-lg-3" data-toggle="tooltip-x" data-title="@item.Description">
+                            @item.Name
+
+                            @if (Model.scale.ScaleName == "Delta")
+                            {
+                                <br />
+                                <ul>
+                                    @foreach (var entry in subScores[item.GetId()])
+                                    {
+                                        if (entry.ScoreValues.Select(x => x.GetId()).Intersect(scores.Select(x => x.ScoreID)).Any())
+                                        {
+                                            <li>@entry.Name</li>
+                                        }
+                                    }
+                                </ul>
+                            }
+
+
+                        </div>
+
+                        @for (int i = 0; i < values.Count; i++)
+                        {
+
+                            if (scores.FirstOrDefault(x => x.ScoreID == values[i].GetId()) != null)
+                            {
+                                <div class="pull-left center scaleValue@(Html.Raw(values[i].Value))" data-toggle="tooltip-x" data-title="@SADFM.Web.Shared.Library.GetScoreDefinition(values[i].GetId(), false)">
+                                    <div class="radio i-checks ">
+                                        <label>
+                                            <input type="radio" value="@values[i].Value" name="@item.GetId()" id="@values[i].GetId()">
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                 <div class="pull-left center scaleValue@(Html.Raw(values[i].Value))" data-toggle="tooltip-x" data-title="@SADFM.Web.Shared.Library.GetScoreDefinition(values[i].GetId(), false)">
+                                    <div class="radio i-checks" style="visibility: hidden">
+                                        <label>
+                                            <input type="radio" value="@values[i].Value" name="@item.GetId()" id="@values[i].GetId()">
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            }
+
+        </div>
+        <div class="col-lg-3">
+            <h3 class="tooltip-x" style="background-color:white"></h3>
+        </div>
+    </div>
+</form>
+<hr />
+
+@if (Model.scale.ScaleName == "APOM")
+{
+    foreach (var entry1 in scaleItems.Where(x => x.Value.Count != 0))
+    {
+
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>@entry1.Key</h3>
+            </div>
+            <div class="col-lg-3">
+
+            </div>
+        </div>
+        <br />
+
+        foreach (var entry2 in entry1.Value)
+        {
+            <div class="row">
+                <div class="col-lg-3">
+
+                </div>
+                <div class="col-lg-3">
+                    <h4>@entry2.Key</h4>
+                </div>
+                <div class="col-lg-3">
+                    @entry2.Value
+                </div>
+            </div>
+            <br />
+
+        }
+    }
+
+
+} 

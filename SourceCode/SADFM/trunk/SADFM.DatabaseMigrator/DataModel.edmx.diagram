@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5d904469f24642dd901697785e51f442" Name="Diagram1" ZoomLevel="52">
+        <EntityTypeShape EntityType="SADFMModel.Account" Width="1.5" PointX="5.25" PointY="19.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.AccountRole" Width="1.5" PointX="7.5" PointY="30.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.Audit" Width="1.5" PointX="10.5" PointY="30" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.Case" Width="1.5" PointX="10.5" PointY="22.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.FunderAccountPermission" Width="1.5" PointX="7.5" PointY="27.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.FunderScheme" Width="1.5" PointX="5.25" PointY="45.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.ListItem" Width="1.5" PointX="3" PointY="30.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.ListItemLabel" Width="1.5" PointX="5.25" PointY="48.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.Message" Width="1.5" PointX="7.5" PointY="22.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.MessageRecipient" Width="1.5" PointX="12.75" PointY="23.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.Patient" Width="1.5" PointX="13.5" PointY="26.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.PatientImpairmentGroupHistory" Width="1.5" PointX="15.75" PointY="33.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.PatientProvider" Width="1.5" PointX="6" PointY="35" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.PatientScale" Width="1.5" PointX="8.25" PointY="34.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.PatientSupportService" Width="1.5" PointX="18.75" PointY="30.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.Provider" Width="1.5" PointX="0.75" PointY="34.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.ProviderAccountPermission" Width="1.5" PointX="5.25" PointY="31.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.ProviderServiceType" Width="1.5" PointX="5.25" PointY="39.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.ProviderServiceTypeScale" Width="1.5" PointX="10.5" PointY="38.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.ScaleItemHeader" Width="1.5" PointX="5.25" PointY="50.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.ScalePermission" Width="1.5" PointX="10.5" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.ScoreDefinition" Width="1.5" PointX="5.25" PointY="53.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.Session" Width="1.5" PointX="7.5" PointY="58.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.Visit" Width="1.5" PointX="15.75" PointY="24.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.VisitAttachment" Width="1.5" PointX="18" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="SADFMModel.VisitScore" Width="1.5" PointX="18" PointY="34" IsExpanded="true" />
+        <AssociationConnector Association="SADFMModel.FK_Account_AccountType" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Account_Language" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Account_LastUpdateAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Account_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Account_Title" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_AccountRole_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Audit_AccountId" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Case_LastUpdateAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_FunderAccountPermission_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_LastUpdateAccountId" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ListItem_LastUpdateAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Message_FromAccountId" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_MessageRecipient_RecipientAccountId" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_LastUpdateAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientProvider_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientScale_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientSupportService_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProfessionalBody" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Provider_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderAccountPermission_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ScalePermission_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Session_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Visit_Account" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_AccountRole_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Audit_ChangeType" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Case_AdmitFrom" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Case_ICD10" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Case_Patient" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ImpairmentGroup_ListItem" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientProvider_Case" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Visit_Case" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_FunderAccountPermission_Funder" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_FunderAccountPermission_Permission" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Funder" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Scheme" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_City_ListItem" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ImpairmentGroup" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ListItem_Parent" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ListItem_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ListItemLabel_Language" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ListItemLabel_ListItem" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_AdmitFrom" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_DischargeTo" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_Gender" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_MedicalScheme" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_Race" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_ResidentialEnvironment" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient_Title" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientScale_Frequency" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientScale_Scale" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientScale_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientSupportService_Provider" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Provider_AcuityType" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderAccountPermission_Permission" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderServiceType_City" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderServiceType_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderServiceType_Province" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderServiceType_ServiceType" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderServiceTypeScale_Scale" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Province_ListItem" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ScaleItemHeader_ScaleItem" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ScalePermission_ListItem" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ScoreDefinition_FunderExplanation" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ScoreDefinition_ProviderExplanation" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ScoreDefinition_ScaleValue" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_VisitScore_Score" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Message_PatientId" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_MessageRecipient_Message" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Patient" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientProvider_Patient" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientScale_Patient" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientSupportService_Patient" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Visit_PatientId" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientProvider_Provider" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_PatientScale_Provider" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_Provider_Parent" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderAccountPermission_Provider" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderServiceType_Provider" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_ProviderServiceTypeScale_ProviderServiceType" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_VisitAttachment_Visit" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.FK_VisitScore_Visit" ManuallyRouted="false" />
+        <AssociationConnector Association="SADFMModel.ProviderUnit" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

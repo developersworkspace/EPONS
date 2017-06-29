@@ -1,0 +1,5 @@
+﻿ALTER TABLE [Account] 
+DROP CONSTRAINT FK_Account_Role;
+
+ALTER TABLE [Account]
+DROP COLUMN [RoleId];

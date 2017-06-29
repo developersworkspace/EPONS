@@ -1,0 +1,108 @@
+﻿@model SADFM.Web.Models.ManageUserViewModel
+@using SADFM.Web.Shared;
+@using SADFM.Data;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @section Styles {
+
+        @Styles.Render("~/plugins/selectStyles")
+        @Styles.Render("~/plugins/iCheckStyles")
+        @Styles.Render("~/plugins/imagecropperStyles")
+        @Styles.Render("~/plugins/wizardStepsStyles")
+    }
+    <title>@Library.GetText("ApplicationShortName") | @Library.GetText("LoginTitle")</title>
+
+    <script src="/Scripts/jquery-2.1.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/Scripts/plugins/metisMenu/metisMenu.min.js"></script>
+    <script src="/Scripts/plugins/pace/pace.min.js"></script>
+    <script src="~/Scripts/crypto.js"></script>
+
+    <script src="/Scripts/plugins/toastr/toastr.min.js"></script>
+
+    <script src="/Scripts/plugins/select/bootstrap-select.js"></script>
+    <script src="/Scripts/plugins/select/bootstrap-select.min.js"></script>
+    <script src="/Scripts/plugins/cropper/cropper.min.js"></script>
+    <script src="/Scripts/plugins/staps/jquery.steps.min.js"></script>
+    <script src="/Scripts/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/Scripts/plugins/iCheck/icheck.min.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/Content/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/Content/plugins/cropper/cropper.min.css" rel="stylesheet">
+    <link href="/Content/plugins/select/bootstrap-select.css" rel="stylesheet">
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.selectpicker').selectpicker({
+                style: 'btn-primary',
+                size: 12,
+                multiple: true,
+                count: 2,
+                selectedTextFormat: 'values',
+            });
+
+
+
+        });
+    </script>
+    @section Scripts {
+
+        @Scripts.Render("~/plugins/select")
+        @Scripts.Render("~/plugins/")
+        @Scripts.Render("~/plugins/jeditable")
+    }
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div><img src="~/Content/images/eponslogo.png" alt="@Library.GetText("ApplicationLongName")" title="@Library.GetText("ApplicationLongName")" width="250" /></div>
+            <h3>@Library.GetText("WelcomeTitle")</h3>
+            @*<p>@Library.GetText("WelcomeMessage")</p>*@
+            <form class="m-t" role="form" method="post" action="/Account/ResetPassword" onsubmit="HiddenNewPassword.value = hex_sha1(NewPassword.value);">
+                <div class="form-group">
+                    @ViewBag.UserName &nbsp;  @Library.GetText("ResetPasswordLabel")
+                </div>
+              
+                <div class="form-group">
+                    <input type="password" class="form-control" name="newpassword" placeholder="@Library.GetText("NewPasswordLabel")" required="" id="NewPassword">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="confirmnewpassword" placeholder="@Library.GetText("ConfirmPasswordLabel")" required="" id="PWD">
+                </div>
+             
+                <div class="col-lg-12">
+                    &nbsp;
+                </div>
+                <button type="submit" name="continuebtn" value="continue" class="btn btn-primary block full-width m-b">@Library.GetText("ContinueBtn")</button>
+                <input type="hidden" name="multiple" value='@ViewBag.MultipleProviders' />
+                <input type="hidden" name="hdnusername" value='@ViewBag.UserName' /><input type="hidden" name="HiddenNewPassword" id="HiddenNewPassword" />
+                <input type="hidden" name="accountid" value='@ViewBag.AccountId' />
+            </form>
+
+            <p class="m-t"> <small>@Library.GetText("ApplicationLongName") &copy; @DateTime.Today.Year (Version @Utilities.Version)</small> </p>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+
+
+

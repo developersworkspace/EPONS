@@ -1,0 +1,39 @@
+﻿@using SADFM.Web.Shared;
+@model SADFM.Data.Models.Account
+@{
+    List<SADFM.Data.Models.Permission> perms = UserHelper.GetActivePermissions(UserHelper.GetCurrentAccount());
+    MvcHtmlString unreadMessagesTopLabel = Model.UnreadMessageCount > 0 ? new MvcHtmlString(string.Format("<span class=\"label label-warning\">{0}</span>", Model.UnreadMessageCount)) : null;
+}
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+            <div role="search" class="navbar-form-custom">
+                <div class="form-group">
+                    
+                </div>
+            </div>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li>
+                <span class="m-r-sm text-muted welcome-message">@UserHelper.GetClientName()</span>
+            </li>
+            @if (SADFM.Web.Shared.UserHelper.SelectedClientType == null || !(SADFM.Web.Shared.UserHelper.SelectedClientType.Equals("Funder") && perms.FirstOrDefault(x => x.PermissionDescription == "Mass Data User") != null))
+            {
+                <li>
+
+                    <a class="count-info" href="@Url.Action("Inbox", "Messages")">
+                        <i class="fa fa-envelope"></i>@unreadMessagesTopLabel
+                    </a>
+
+                </li>
+            }
+
+            <li>
+                <a href="@Url.Action("Logout", "Account")">
+                    <i class="fa fa-sign-out"></i>Log out
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

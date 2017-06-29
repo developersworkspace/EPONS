@@ -1,0 +1,96 @@
+﻿@model EPONS.Teddy.Application.Entities.User
+
+
+@using (Html.BeginForm("Edit", "User"))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Firstname)
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(x => x.Firstname, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Firstname, null, new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.Lastname)
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(x => x.Lastname, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Lastname, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.TitleId)
+                </div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(x => x.TitleId, new SelectList(Model.Titles, "Id", "Name"), "", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.TitleId, null, new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.EmailAddress)
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.ContactNumber)
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(x => x.ContactNumber, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.ContactNumber, null, new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.IdentificationNumber)
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(x => x.IdentificationNumber, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.IdentificationNumber, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.ProfessionalBodyId)
+                </div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(x => x.ProfessionalBodyId, new SelectList(Model.ProfessionalBodies, "Id", "Name"), "", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.ProfessionalBodyId, null, new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.ProfessionalBodyRegistrationNumber)
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(x => x.ProfessionalBodyRegistrationNumber, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.ProfessionalBodyRegistrationNumber, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.PracticeNumber)
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(x => x.PracticeNumber, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.PracticeNumber, null, new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayNameFor(x => x.PositionId)
+                </div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(x => x.PositionId, new SelectList(Model.Positions, "Id", "Name"), "", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.PositionId, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            @Html.Partial("~/Views/Shared/_SubmitButton.cshtml")
+        </div>
+    </div>
+    @Html.HiddenFor(x => x.Id)
+    @Html.AntiForgeryToken()
+}
+
+
+

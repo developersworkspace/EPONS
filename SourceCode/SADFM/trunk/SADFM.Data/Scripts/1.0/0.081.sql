@@ -1,0 +1,1 @@
+﻿ALTER TABLE Provider ADD MonthlyRate decimal(7);

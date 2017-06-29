@@ -1,0 +1,422 @@
+﻿@model EPONS.Teddy.Application.Entities.EpisodeOfCare
+@{
+
+}
+<style type="text/css">
+    .display {
+    }
+</style>
+<script src="~/scripts/momeny.min.js"></script>
+<div id="editEpisodeOfCareModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Episode of Care</h4>
+            </div>
+            @using (Html.BeginForm("EditEpisodeOfCare", "Patient"))
+            {
+                <div class="modal-body">
+                    <p class="text-danger">@TempData["Message_CreateEpisodeOfCare"]</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.ReasonForAdmissionName)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(x => x.ReasonForAdmissionName, new
+                       {
+                           @class = "typeahead form-control",
+                           placeholder = "Select an ICD10 Code",
+                           Value = Model.ReasonForAdmissionName == null ? "" : Model.ReasonForAdmissionName
+                       })
+
+                            @Html.ValidationMessageFor(x => x.ReasonForAdmissionName, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.ReasonForAdmissionTimestamp)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(x => x.ReasonForAdmissionTimestamp, "{0:yyyy-MM-dd HH:mm}", new
+                       {
+                           @class = "form-control",
+                           value = Model.ReasonForAdmissionTimestamp == null ? null : Model.ReasonForAdmissionTimestamp
+                       })
+                            @Html.ValidationMessageFor(x => x.ReasonForAdmissionTimestamp, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.AllocationNumber)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(x => x.AllocationNumber, new
+                       {
+                           @class = "form-control",
+                           value = Model.AllocationNumber == null ? "" : Model.AllocationNumber
+
+
+                       })
+                            @Html.ValidationMessageFor(x => x.AllocationNumber, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.ImpairmentGroupId) (optional on admission, required on discharge)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DropDownListFor(x => x.ImpairmentGroupId, new SelectList(Model.ImpairmentGroups, "Id", "Name"), "", new
+                       {
+                           @class = "form-control",
+                           value = Model.ImpairmentGroupId == null ? null : Model.ImpairmentGroupId
+                       })
+                            @Html.ValidationMessageFor(x => x.ImpairmentGroupId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.AdmissionTypeId)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 ddlAdmissionTypeId">
+                            @Html.DropDownListFor(x => x.AdmissionTypeId, new SelectList(Model.AdmissionTypes, "Id", "Name"), "", new
+                       {
+                           @class = "form-control",
+                           value = Model.AdmissionTypeId == null ? null : Model.AdmissionTypeId
+                       })
+                            @Html.ValidationMessageFor(x => x.AdmissionTypeId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <table>
+                        <tr>
+                            <td><h4>Referring Doctor</h4></td>
+                            <td><input type="checkbox" id="referringCheckbox1"></td>
+                        </tr>
+                    </table>
+                    @*<h4>Referring Doctor</h4>
+                        <input type="checkbox" id="referringCheckbox">*@
+                    <section id="ShowHideReferring1" class="display:none">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorName)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.Name, new
+                           {
+                               @class = "form-control",
+                               value = Model.ReferringDoctor == null ? "" : Model.ReferringDoctor.Name
+                           })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorNumber)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.ContactNumber, new
+                           {
+                               @class = "form-control",
+                               value = Model.ReferringDoctor == null ? "" : Model.ReferringDoctor.ContactNumber
+                           })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorEmail)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.Email, new
+                           {
+                               @class = "form-control",
+                               value = Model.ReferringDoctor == null ? "" : Model.ReferringDoctor.Email
+
+                           })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorPracticeName)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.PracticeName, new
+                           {
+                               @class = "form-control",
+
+                               value = Model.ReferringDoctor == null ? "" : Model.ReferringDoctor.PracticeName
+                           })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.ReferringDoctorHPCSANumber)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.ReferringDoctor.HPCSANumber, new
+                           {
+                               @class = "form-control",
+                               value = Model.ReferringDoctor == null ? "" : Model.ReferringDoctor.HPCSANumber
+                           })
+                            </div>
+                        </div>
+
+                    </section>
+                    <br />
+                    <table>
+                        <tr>
+                            <td><h4>Treating Doctor</h4></td>
+                            <td><input type="checkbox" id="attendingCheckbox1"></td>
+                        </tr>
+                    </table>
+                    @*<h4>Attending Doctor</h4>
+                        <input type="checkbox" id="attendingCheckbox">*@
+                    <section id="ShowHideAttending1" style="display:none">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctorName)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.Name, new
+                           {
+                               @class = "form-control",
+                               value = Model.AttendingDoctor == null ? "" : Model.AttendingDoctor.Name
+
+                           })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctorNumber)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.ContactNumber, new
+                           {
+                               @class = "form-control",
+                               value = Model.AttendingDoctor == null ? "" : Model.AttendingDoctor.ContactNumber
+                           })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctorEmail)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.Email, new
+                           {
+                               @class = "form-control",
+                               value = Model.AttendingDoctor == null ? "" : Model.AttendingDoctor.Email
+
+                           })
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctorPracticeName)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.PracticeName, new
+                           {
+                               @class = "form-control",
+
+                               value = Model.AttendingDoctor == null ? "" : Model.AttendingDoctor.PracticeName
+                           })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.AttendingDoctorHPCSANumber)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.AttendingDoctor.HPCSANumber, new
+                           {
+                               @class = "form-control",
+                               value = Model.AttendingDoctor == null ? "" : Model.AttendingDoctor.HPCSANumber
+                           })
+                            </div>
+                        </div>
+
+                        @Html.HiddenFor(x => x.EpisodeOfCareId)   
+                        @Html.HiddenFor(x => x.ReferringDoctorId)
+                        @Html.HiddenFor(x => x.AttendingDoctorId)
+                    </section>
+                    <section id="ShowDischargeLabel" style="display:none">
+                        <table>
+                            <tr>
+                                <td><h4>Before you can discharge this patient, you have to complete the ICD10 and Impairment Group</h4></td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="ShowDischargeCheckbox" style="display:none">
+                        <table>
+                            <tr>
+                                <td><h4>Discharge Patient</h4></td>
+                                <td><input type="checkbox" id="DischargeCheckbox1"></td>
+                            </tr>
+                        </table>
+                    </section>
+                    @*<h4>Attending Doctor</h4>
+        <input type="checkbox" id="attendingCheckbox">*@
+                    <section id="ShowHideDischarge1" style="display:none">
+                            <div class="row">
+                            <div class="col-md-12">
+                                @Html.DisplayNameFor(x => x.DischargeTypeId)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(x => x.DischargeTypeId, new SelectList(Model.DischargeTypes, "Id", "Name"), "", new
+                           {
+                               @class = "form-control",
+                               @onchange = "EnableSubmit()",
+                               value = Model.DischargeTypeId == null ? null : Model.DischargeTypeId
+
+                           })
+                                @Html.ValidationMessageFor(x => x.DischargeTypeId, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        
+                        </section>
+                        @Html.HiddenFor(x => x.PatientId)
+                        @Html.HiddenFor(x => x.FacilityId)
+                        @Html.AntiForgeryToken()
+
+
+
+</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="SaveButton"  hidden="false" type="submit" class="btn btn-primary">Update</button>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
+
+@*<script>
+        $(function () {
+            $('#referringCheckbox').change(function () {
+                $('#ShowHideReferring').toggle($(this).is(':checked'));
+            });
+            $('#attendingCheckbox').change(function () {
+                $('#ShowHideAttending').toggle($(this).is(':checked'));
+            });
+        });
+    </script>*@
+
+<script>
+
+    $(document).ready(function () {
+        $('#ShowHideReferring1').toggle($(this).is(':checked'));
+        $('#ShowHideAttending1').toggle($(this).is(':checked'));
+        $('#ShowHideDischarge1').toggle($(this).is(':checked'));
+        $('#referringCheckbox1').change(function () {
+            $('#ShowHideReferring1').toggle($(this).is(':checked'));
+        });
+
+        $('#attendingCheckbox1').change(function () {
+            $('#ShowHideAttending1').toggle($(this).is(':checked'));
+        });
+
+        $('#DischargeCheckbox1').change(function () {
+            $('#ShowHideDischarge1').toggle($(this).is(':checked'));
+            document.getElementById('SaveButton').disabled = !!this.checked;
+        });
+
+
+        @if (TempData["Message_CreateEpisodeOfCare"] != null) {
+            <text>
+        showEditEpisodeOfCareModal();
+        </text>
+        }
+
+        $('#editEpisodeOfCareModal #ReasonForAdmissionTimestamp').datepicker({
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            format: 'yyyy/mm/dd',
+            immediateUpdates: true
+        });
+
+        $('#editEpisodeOfCareModal input.typeahead').typeahead({
+            ajax: '@Url.Action("SearchICD10Codes", "Ajax")'
+        });
+
+        $('#ShowDischargeCheckbox')
+
+    });
+
+
+    function showEditEpisodeOfCareModal() {
+        $('#ShowHideReferring1').toggle($(this).is(':checked'));
+        $('#ShowHideAttending1').toggle($(this).is(':checked'));
+        $('#ShowHideDischarge1').toggle($(this).is(':checked'));
+        $('#editEpisodeOfCareModal').modal('show');
+    }
+
+    function EnableValidator() {
+        var dropdown1 = document.getElementById('DropDownList1');
+        var a = dropdown1.options[dropdown1.selectedIndex];
+
+        if (a.text == "ValidateYes1") {
+            document.getElementById("RequiredFieldValidator1").enabled = true;
+        } else {
+            document.getElementById("RequiredFieldValidator1").enabled = false;
+        }
+    };
+    function EnableSubmit() {
+        var button = document.getElementById('SaveButton');
+        button.disabled = false;
+    }
+
+
+</script>
+
+
+

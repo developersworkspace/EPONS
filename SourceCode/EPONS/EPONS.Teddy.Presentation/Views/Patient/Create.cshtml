@@ -1,0 +1,129 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Patient.Create
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>
+            <form id="uploadAvatarForm" action="@Url.Action("UploadAvatar", "Patient")" method="post" enctype="multipart/form-data">
+                <img title="Double click here to upload a patient photograph" data-toggle="tooltip" src="@Url.Action("Avatar", "Patient", new { patientId = Model.Patient.Id})" onclick="selectAvatar()" class="img-responsive img-circle pull-left profile" alt="Profile Image" />
+                <input type="file" name="avatar" onchange="uploadAvatar()" class="hidden" />
+                <input type="hidden" name="patientId" id="patientId" value="@Model.Patient.Id" />
+            </form>
+            Create Patient
+        </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>Patient</a>
+            </li>
+            <li class="active">
+                <strong>Create</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span>Patient Details </span>
+                                </h4>
+                                <button data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true" class="btn btn-success btn-sm pull-right">
+                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
+                                    View
+                                </button>
+                            </div>
+                            <div id="collapse1" class="panel-collapse collapse in" aria-expanded="true">
+                                <div class='panel-body'>
+                                    @Html.Partial("_PatientCreate", Model.Patient)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_MessageModal")
+
+
+@section styles {
+    <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
+    <style>
+        img.profile {
+            margin-right: 15px;
+        }
+    </style>
+
+}
+
+@section scripts {
+    <script src="~/Content/js/plugins/ajax-loader/ajax-loader.js"></script>
+    <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('#CountryId').change(function () {
+
+                var patientId = $('#Id').val();
+                var countryId = $('#CountryId').val();
+
+                $("#ProvinceId").parent().load("@Url.Action("ProvinceCombobox", "Ajax")?patientId=" + patientId + "&countryId=" + countryId, function () {
+
+                    $('#ProvinceId').change(function () {
+
+                        var patientId = $('#Id').val();
+                        var provinceId = $('#ProvinceId').val();
+
+                        $("#CityId").parent().load("@Url.Action("CityCombobox", "Ajax")?patientId=" + patientId + "&provinceId=" + provinceId, function () {
+
+                            $("#CityId").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+                        });
+
+                    });
+
+                    $('#ProvinceId').change();
+
+                    $("#ProvinceId").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+                });
+            });
+
+            $('#CountryId').change();
+
+            $('#DateOfBirth').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'yyyy/mm/dd',
+                immediateUpdates: true
+            });
+
+            $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
+
+        });
+
+    </script>
+}
+
+
+
+
+

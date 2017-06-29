@@ -1,0 +1,94 @@
+﻿
+
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.1', 'F05.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.2', 'F19.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.3', 'F19.3'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.4', 'F05.8'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.5', 'F10.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.6', 'F11.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.7', 'F12.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.8', 'F13.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.9', 'F14.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.10', 'F15.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.11', 'F16.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.12', 'F18.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.1.13', 'F19.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.2.1', 'F01.1'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.2.2', 'F02.4'
+---- EXEC[dbo].[CreateICD10CodeMap] '18.1.2.3', '-'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.2.4', 'F02.3'
+--EXEC[dbo].[CreateICD10CodeMap] '18.1.2.5', 'F30.9'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.1', 'F10.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.2', 'F15.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.3', 'F12.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.4', 'F14.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.5', 'F16.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.6', 'F11.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.7', 'F16.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.8', 'F13.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.9', 'F19.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.10', 'F19.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.11', 'F15.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.12', 'F17.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.2.13', 'F18.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.1 ', 'F34.1'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.2.1', 'F32.3'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.2.2', 'F32.2'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.3.1', 'F31.5'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.3.2', 'F32.3'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.3.3', 'F30.1'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.3.4', 'F30.2'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.3.5', 'F31.6'
+--EXEC[dbo].[CreateICD10CodeMap] '18.3.3.6', 'F31.6'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4', 'F41.9'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4.1', 'F41.1'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4.2', 'F40.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4.3', 'F40.1'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4.4', 'F40.2'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4.5', 'F40.1'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4.6', 'F42.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4.7', 'F43.1'
+--EXEC[dbo].[CreateICD10CodeMap] '18.4.8', 'F43.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.5.1', 'F50.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.5.2', 'F50.2'
+--EXEC[dbo].[CreateICD10CodeMap] '18.5.3', 'F50.4'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.1', 'F20.2'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.2', 'F20.1'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.3', 'F20.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.4', 'F20.5'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.5', 'F20.3'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.6', 'F20.8'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.7', 'F25.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.8', 'F22.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.9', 'F23.8'
+--EXEC[dbo].[CreateICD10CodeMap] '18.6.10', 'F23.9'
+--EXEC[dbo].[CreateICD10CodeMap] '18.7.1', 'F90.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.7.2', 'F91.9'
+--EXEC[dbo].[CreateICD10CodeMap] '18.7.3', 'F91.3'
+--EXEC[dbo].[CreateICD10CodeMap] '18.7.4', 'F91.8'
+--EXEC[dbo].[CreateICD10CodeMap] '18.8.1', 'F45.0'
+--EXEC[dbo].[CreateICD10CodeMap] '18.8.2', 'F44.6'
+---- EXEC[dbo].[CreateICD10CodeMap] '18.9', '-'
+--EXEC[dbo].[CreateICD10CodeMap] '18.10.1', 'F60.3'
+--EXEC[dbo].[CreateICD10CodeMap] '18.10.2', 'F65.0'
+---- EXEC[dbo].[CreateICD10CodeMap] '18.11', '-'
+
+
+--Could not find Impairment Group Code (18.1.1.5)
+--Could not find Impairment Group Code (18.1.1.6)
+--Could not find Impairment Group Code (18.1.1.7)
+--Could not find Impairment Group Code (18.1.1.8)
+--Could not find Impairment Group Code (18.1.1.9)
+--Could not find Impairment Group Code (18.1.1.10)
+--Could not find Impairment Group Code (18.1.1.11)
+--Could not find Impairment Group Code (18.1.1.12)
+--Could not find Impairment Group Code (18.1.1.13)
+--Could not find Impairment Group Code (18.1.2.5)
+--Could not find Impairment Group Code (18.2.12)
+--Could not find Impairment Group Code (18.2.13)
+--Could not find Impairment Group Code (18.4)
+--Could not find Impairment Group Code (18.4.1)
+--Could not find Impairment Group Code (18.4.2)
+--Could not find Impairment Group Code (18.10.1)
+--Could not find Impairment Group Code (18.10.2)
+

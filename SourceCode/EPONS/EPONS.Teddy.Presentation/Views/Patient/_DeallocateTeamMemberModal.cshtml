@@ -1,0 +1,100 @@
+﻿@model EPONS.Teddy.Application.Entities.TeamMember
+<div id="deallocateTeamMemberModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Deallocate Team Member</h4>
+            </div>
+            @using (Html.BeginForm("DeallocateTeamMember", "Patient"))
+            {
+                <div class="modal-body">
+                    <p class="text-danger">@TempData["Message_DeallocateTeamMember"]</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            What is the Primary Diagnosis on Discharge?
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(x => x.ReasonForAdmissionName, new
+                       {
+                           @class = "typeahead form-control",
+                           placeholder = "Select an ICD10 Code",
+                           Value = Model.ReasonForAdmissionName == null ? null : Model.ReasonForAdmissionName
+                       })
+
+                            @Html.ValidationMessageFor(x => x.ReasonForAdmissionName, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.ReasonForAdmissionTimestamp)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(x => x.ReasonForAdmissionTimestamp, "{0:yyyy-MM-dd HH:mm}", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.ReasonForAdmissionTimestamp, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DisplayNameFor(x => x.ImpairmentGroupId)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.DropDownListFor(x => x.ImpairmentGroupId, new SelectList(Model.ImpairmentGroups, "Id", "Name"), "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.ImpairmentGroupId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.DischargeTypeId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(x => x.DischargeTypeId, new SelectList(Model.DischargeTypes, "Id", "Name"), "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.DischargeTypeId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.PatientId)
+                    @Html.HiddenFor(x => x.UserIds)
+                    @Html.AntiForgeryToken()
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Deallocate</button>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+      @if (TempData["Message_DeallocateTeamMember"] != null && !TempData["Message_Data_UserIds"].ToString().Contains(",")) {
+          <text>
+    showDeallocateTeamMemberModal('@TempData["Message_Data_PatientId"]', '@TempData["Message_Data_UserIds"]');
+    </text>
+      }
+
+    $(document).ready(function () {
+        $('#deallocateTeamMemberModal input.typeahead').typeahead({
+            ajax: '@Url.Action("SearchICD10Codes", "Ajax")'
+        });
+    });
+
+    function showDeallocateTeamMemberModal(patientId, userId) {
+        $('#deallocateTeamMemberModal #PatientId').val(patientId);
+        $('#deallocateTeamMemberModal #UserIds').val(userId);
+        $('#deallocateTeamMemberModal').modal('show');
+    }
+
+
+</script>
+

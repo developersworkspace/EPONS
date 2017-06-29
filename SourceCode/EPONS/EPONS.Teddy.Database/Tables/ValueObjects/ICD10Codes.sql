@@ -1,0 +1,8 @@
+﻿IF OBJECT_ID('[ValueObjects].[ICD10Codes]', 'U') IS NOT NULL 
+  DROP TABLE [ValueObjects].[ICD10Codes]; 
+  
+CREATE TABLE [ValueObjects].[ICD10Codes] (
+	[ICD10CodeId] UNIQUEIDENTIFIER NOT NULL,
+	[Code] VARCHAR(256) NOT NULL,
+	[Name] VARCHAR(256) NOT NULL
+)

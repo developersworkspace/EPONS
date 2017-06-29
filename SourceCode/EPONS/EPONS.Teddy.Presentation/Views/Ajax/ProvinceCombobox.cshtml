@@ -1,0 +1,11 @@
+﻿@model EPONS.Teddy.Application.Entities.Patient
+@{
+    Layout = null;
+}
+@Html.DropDownListFor(x => x.ProvinceId, Model.Provinces.Select(x => new SelectListItem()
+{
+    Text = x.Name,
+    Value = x.Id.ToString(),
+    Selected = x.Id.ToString() == Model.ProvinceId.ToString()
+
+}), "", new { @class = "form-control" })

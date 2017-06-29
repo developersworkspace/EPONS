@@ -1,0 +1,105 @@
+﻿@model SADFM.Web.Models.APOMReportViewModel
+@{
+    Layout = null;
+    string path = Request.Url.Host + (Request.Url.Port == 80 ? "" : ":" + Request.Url.Port.ToString());
+}
+
+<style>
+    .btn {
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 25px;
+        font-weight: 700;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .blue {
+        background-color: blue;
+    }
+
+    .orange {
+        background-color: orange;
+    }
+</style>
+
+<div>
+
+    <div style="width: 18%; float:left">
+        <img src="@Html.Raw("http://" + path + "/Content/images/report_logo.png")" width="100%" />
+    </div>
+
+    <div style="width: 54%; margin-left: 10%; float: left; ">
+        <h4>
+            APOM Report
+            <br />
+            @Model.VisitDate.ToString("dd MMM yyyy")
+        </h4>
+        <h3>@Model.Patient.FirstName @Model.Patient.LastName</h3>
+        <h5>
+            Dob: @Model.Patient.BirthDate.Value.ToString("dd MMM yyyy") (@Math.Floor((DateTime.Now.Subtract(Model.Patient.BirthDate.Value).TotalDays / 365)))
+            <br />
+            @Model.Patient.Street
+            <br />
+            @Model.Patient.City
+            <br />
+            @Model.Patient.Country
+            <br />
+            @Model.Patient.PostalCode
+        </h5>
+    </div>
+    <div style="width: 18%; float: left; ">
+        <img src="@(Model.Patient.Avatar == null ? Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath("/Content/images/nopatient.png"))) :Model.Patient.Avatar)" width="100%" />
+    </div>
+
+</div>
+
+<div style="clear: left"></div>
+
+
+
+
+@foreach (var entry1 in Model.ScaleItems.Where(x => x.Value.Count != 0))
+{
+
+    <div>
+        <div style="width: 15%; display: inline-block;">
+            <h3>@entry1.Key</h3>
+        </div>
+        <div style="width: 70%; display: inline-block;">
+
+        </div>
+    </div>
+    <br />
+
+    foreach (var entry2 in entry1.Value)
+    {
+        <div>
+            <div style="width: 15%; display: inline-block;">
+
+            </div>
+            <div style="width: 30%; display: inline-block;">
+                <h4>@entry2.Key</h4>
+            </div>
+            <div style="width: 40%; display: inline-block;">
+                @entry2.Value
+            </div>
+        </div>
+        <br />
+
+    }
+}
+<img src="@Html.Raw(Model.Graph)" width="100%" />
+
