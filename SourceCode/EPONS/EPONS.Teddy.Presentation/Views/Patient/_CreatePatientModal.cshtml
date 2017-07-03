@@ -9,20 +9,76 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Create Patient</h4>
+                    <h4 class="modal-title">Register Patient</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            @Html.DisplayNameFor(x => x.IdentificationNumber)
-                            <br />
-                            <small>
-                                Search for a unique patient identification number in the ePONS database, e.g. ID or passport number
-                            </small>
-                        </div>
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(x => x.IdentificationNumber, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(x => x.IdentificationNumber, null, new { @class = "text-danger" })
+                    <div class="tabbable">
+                        <!-- Only required for left/right tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab1" data-toggle="tab">Identification Number</a></li>
+                            <li><a href="#tab2" data-toggle="tab">Passport Number</a></li>
+                            <li><a href="#tab3" data-toggle="tab">Details</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab1">
+                                <div class="row margin-top">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.IdentificationNumber)
+                                        <br />
+                                        <small>
+                                            Search for a unique patient identification number in the ePONS database, e.g. ID or passport number
+                                        </small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.IdentificationNumber, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.IdentificationNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab2">
+                                <div class="row margin-top">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.PassportNumber)
+                                        <br />
+                                        <small>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis enim massa, aliquam vel massa sit amet, rhoncus condimentum sapien.
+                                        </small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.PassportNumber, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.PassportNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab3">
+                                <div class="row margin-top">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.Firstname)
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.Firstname, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.Firstname, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.Lastname)
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.Lastname, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.Lastname, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.DateOfBirth)
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.DateOfBirth, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.DateOfBirth, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -34,3 +90,15 @@
         }
     </div>
 </div>
+<script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script>
+    $(function () {
+        $('#DateOfBirth').datepicker({
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            format: 'yyyy/mm/dd'
+        });
+
+    });
+</script>

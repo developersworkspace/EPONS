@@ -156,9 +156,17 @@ namespace EPONS.Teddy.Presentation.Controllers
             if (!viewObject.CanCreatePatient())
                 throw new BusinessRuleException("You are not authorized to create patients");
 
-            if (model.IdentificationNumber != null)
+            if (!string.IsNullOrWhiteSpace(model.IdentificationNumber))
             {
                 PatientDto patientDto = _patientGateway.Find(model.IdentificationNumber);
+
+                if (patientDto != null)
+                    return RedirectToAction("Edit", "Patient", new { patientId = patientDto.Id, modalType = (int)ModalTypes.PatientExist });
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.PassportNumber))
+            {
+                PatientDto patientDto = _patientGateway.Find(model.PassportNumber);
 
                 if (patientDto != null)
                     return RedirectToAction("Edit", "Patient", new { patientId = patientDto.Id, modalType = (int)ModalTypes.PatientExist });
@@ -174,6 +182,7 @@ namespace EPONS.Teddy.Presentation.Controllers
             }
 
             string identificationNumber = model.IdentificationNumber;
+            string passportNumber = model.PassportNumber;
             string firstname = model.Firstname;
             string lastname = model.Lastname;
             DateTime? dateOfBrith = model.DateOfBirth;
@@ -181,7 +190,7 @@ namespace EPONS.Teddy.Presentation.Controllers
             model = _patientService.Get();
             model.Firstname = firstname;
             model.Lastname = lastname;
-            model.IdentificationNumber = identificationNumber;
+            model.IdentificationNumber = string.IsNullOrWhiteSpace(identificationNumber)? passportNumber : identificationNumber;
             model.DateOfBirth = string.IsNullOrWhiteSpace(model.IdentificationNumber) ? dateOfBrith : model.IdentificationNumber.FromIdNumberToDateTime();
 
             ViewData["ModalType"] = ModalTypes.PatientNotExist;

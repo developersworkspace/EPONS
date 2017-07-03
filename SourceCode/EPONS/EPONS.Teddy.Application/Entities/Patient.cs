@@ -33,6 +33,8 @@ namespace EPONS.Teddy.Application.Entities
         public string ContactNumber { get; set; }
         [DisplayName("Identification Number")]
         public string IdentificationNumber { get; set; }
+        [DisplayName("Passport Number")]
+        public string PassportNumber { get; set; }
         public string Country { get; set; }
         [DisplayName("Country")]
         public Guid? CountryId { get; set; }
