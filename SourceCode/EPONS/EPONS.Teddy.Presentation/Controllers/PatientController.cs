@@ -1,4 +1,6 @@
-﻿using EPONS.Teddy.Application.Enums;
+﻿using Epons.Gateway;
+using Epons.Gateway.Models;
+using EPONS.Teddy.Application.Enums;
 using EPONS.Teddy.Application.Exceptions;
 using EPONS.Teddy.Application.Extensions;
 using EPONS.Teddy.Application.Repositories;
@@ -17,12 +19,14 @@ namespace EPONS.Teddy.Presentation.Controllers
         private PatientService _patientService;
         private VisitService _visitService;
         private ListRepository _listRepository;
+        private readonly PatientGateway _patientGateway;
 
         public PatientController()
         {
             _patientService = new PatientService(GetConnection());
             _visitService = new VisitService(GetConnection());
             _listRepository = new ListRepository(GetConnection());
+            _patientGateway = new PatientGateway();
         }
 
         #region Action Methods
@@ -154,17 +158,31 @@ namespace EPONS.Teddy.Presentation.Controllers
 
             if (model.IdentificationNumber != null)
             {
-                Application.EntityViews.Patient patient = _patientService.Get(model.IdentificationNumber);
+                PatientDto patientDto = _patientGateway.Find(model.IdentificationNumber);
 
-                if (patient != null)
-                    return RedirectToAction("Edit", "Patient", new { patientId = patient.Id, modalType = (int)ModalTypes.PatientExist });
+                if (patientDto != null)
+                    return RedirectToAction("Edit", "Patient", new { patientId = patientDto.Id, modalType = (int)ModalTypes.PatientExist });
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Firstname) && !string.IsNullOrWhiteSpace(model.Lastname) && model.DateOfBirth.HasValue)
+            {
+
+                PatientDto patientDto = _patientGateway.Find(model.Firstname, model.Lastname, model.DateOfBirth.Value);
+
+                if (patientDto != null)
+                    return RedirectToAction("Edit", "Patient", new { patientId = patientDto.Id, modalType = (int)ModalTypes.PatientExist });
             }
 
             string identificationNumber = model.IdentificationNumber;
+            string firstname = model.Firstname;
+            string lastname = model.Lastname;
+            DateTime? dateOfBrith = model.DateOfBirth;
 
             model = _patientService.Get();
+            model.Firstname = firstname;
+            model.Lastname = lastname;
             model.IdentificationNumber = identificationNumber;
-            model.DateOfBirth = string.IsNullOrWhiteSpace(model.IdentificationNumber) ? null : model.IdentificationNumber.FromIdNumberToDateTime();
+            model.DateOfBirth = string.IsNullOrWhiteSpace(model.IdentificationNumber) ? dateOfBrith : model.IdentificationNumber.FromIdNumberToDateTime();
 
             ViewData["ModalType"] = ModalTypes.PatientNotExist;
 
