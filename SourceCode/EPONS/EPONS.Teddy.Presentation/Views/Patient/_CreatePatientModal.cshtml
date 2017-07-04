@@ -79,6 +79,7 @@
                                     <div class="col-md-6">
                                         @Html.TextBoxFor(x => x.DateOfBirth, new { @class = "form-control" })
                                         @Html.ValidationMessageFor(x => x.DateOfBirth, null, new { @class = "text-danger" })
+                                        <p class="field-validation-valid text-danger" data-valmsg-for="DateOfBirth-Extra"></p>
                                     </div>
                                 </div>
                             </div>

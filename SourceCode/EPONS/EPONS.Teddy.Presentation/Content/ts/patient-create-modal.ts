@@ -1,12 +1,16 @@
 ﻿let $: any;
 
-const selectedTabId: string = $('#createPatientModal .modal-body .tab-content .tab-pane.active').attr('id');
+
 
 $('#createPatientModal form').submit(function (ev: Event) {
     ev.preventDefault();
-    const form = $(this);
 
-    const submitButton = form.find('[type=submit]');
+    const selectedTabId: string = $('#createPatientModal .modal-body .tab-content .tab-pane.active').attr('id');
+
+    const form = this;
+    const formElement = $(this);
+
+    const submitButton = formElement.find('[type=submit]');
 
     const text = submitButton.html();
 
@@ -21,7 +25,7 @@ $('#createPatientModal form').submit(function (ev: Event) {
 
     if (selectedTabId === 'tab1') {
 
-        $('.field-validation-valid[data-valmsg-for=IdentificationNumber]').html('');
+        $('#createPatientModal .field-validation-valid[data-valmsg-for=IdentificationNumber]').html('');
 
         const identificationNumber = $('#createPatientModal .modal-body .tab-content .tab-pane.active #IdentificationNumber').val();
 
@@ -33,11 +37,39 @@ $('#createPatientModal form').submit(function (ev: Event) {
                     submitButton.html(text);
                 }, 8000);
             } else {
-                $('.field-validation-valid[data-valmsg-for=IdentificationNumber]').html('Invalid Identification Number');
+                $('#createPatientModal .modal-body .tab-content .tab-pane.active .field-validation-valid[data-valmsg-for=IdentificationNumber]').html('Invalid Identification Number');
                 submitButton.removeClass('disabled');
                 submitButton.html(text);
             }
-        })
+        });
+    } else if (selectedTabId === 'tab3') {
+
+        $('#createPatientModal .modal-body .tab-content .tab-pane.active .field-validation-valid[data-valmsg-for=Firstname]').html('');
+        $('#createPatientModal .modal-body .tab-content .tab-pane.active .field-validation-valid[data-valmsg-for=Lastname]').html('');
+        $('#createPatientModal .modal-body .tab-content .tab-pane.active .field-validation-valid[data-valmsg-for=DateOfBirth-Extra]').html('');
+
+        const firstname = $('#createPatientModal .modal-body .tab-content .tab-pane.active #Firstname').val();
+        const lastname = $('#createPatientModal .modal-body .tab-content .tab-pane.active #Lastname').val();
+        const dateOfBirth = $('#createPatientModal .modal-body .tab-content .tab-pane.active #DateOfBirth').val();
+
+        if (!firstname) {
+            $('#createPatientModal .modal-body .tab-content .tab-pane.active .field-validation-valid[data-valmsg-for=Firstname]').html('Please enter a first name');
+        }
+
+        if (!lastname) {
+            $('#createPatientModal .modal-body .tab-content .tab-pane.active .field-validation-valid[data-valmsg-for=Lastname]').html('Please enter a last name');
+        }
+
+        if (!dateOfBirth) {
+            $('#createPatientModal .modal-body .tab-content .tab-pane.active .field-validation-valid[data-valmsg-for=DateOfBirth-Extra]').html('Please enter a date of birth');
+        }
+
+        if (firstname && lastname && dateOfBirth) {
+            form.submit();
+        } else {
+            submitButton.removeClass('disabled');
+            submitButton.html(text);
+        }
     } else {
         form.submit();
         setTimeout(function () {
