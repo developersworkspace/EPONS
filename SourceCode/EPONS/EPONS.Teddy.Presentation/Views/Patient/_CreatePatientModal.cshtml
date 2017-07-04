@@ -3,7 +3,10 @@
 
 <div id="createPatientModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-        @using (Html.BeginForm("CreateGet", "Patient", FormMethod.Get))
+        @using (Html.BeginForm("CreateGet", "Patient", FormMethod.Get, new
+        {
+            @class = "no-loader"
+        }))
         {
         <!-- Modal content-->
             <div class="modal-content">
@@ -91,6 +94,7 @@
     </div>
 </div>
 <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/Content/ts/patient-create-modal.js?id=@DateTime.UtcNow.Ticks"></script>
 <script>
     $(function () {
         $('#DateOfBirth').datepicker({

@@ -5,7 +5,7 @@
         private endpoint = 'http://api.sadfm.co.za';
 
         public identificationNumber(identificationNumber: string, cb: (result: boolean) => void): void {
-            this.httpRequest('GET', `${this.endpoint}/Validator/IdentificationNumber?identificationNumber=${identificationNumber}`, null, (result: boolean) => {
+            this.httpRequest('GET', `${this.endpoint}/api/Validator/IdentificationNumber?identificationNumber=${identificationNumber}`, null, (result: boolean) => {
                 cb(result);
             });
         }

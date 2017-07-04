@@ -5,7 +5,7 @@ var epons;
             this.endpoint = 'http://api.sadfm.co.za';
         }
         ValidatorGateway.prototype.identificationNumber = function (identificationNumber, cb) {
-            this.httpRequest('GET', this.endpoint + "/Validator/IdentificationNumber?identificationNumber=" + identificationNumber, null, function (result) {
+            this.httpRequest('GET', this.endpoint + "/api/Validator/IdentificationNumber?identificationNumber=" + identificationNumber, null, function (result) {
                 cb(result);
             });
         };

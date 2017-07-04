@@ -1,35 +1,44 @@
-var $;
-var selectedTabId = $('#createPatientModal .modal-body .tab-content .tab-pane.active').attr('id');
-$('#createPatientModal form').submit(function (ev) {
+﻿let $: any;
+
+const selectedTabId: string = $('#createPatientModal .modal-body .tab-content .tab-pane.active').attr('id');
+
+$('#createPatientModal form').submit(function (ev: Event) {
     ev.preventDefault();
-    var form = $(this);
-    var submitButton = form.find('[type=submit]');
-    var text = submitButton.html();
-    var loadingText = submitButton.attr('data-loading-text');
+    const form = $(this);
+
+    const submitButton = form.find('[type=submit]');
+
+    const text = submitButton.html();
+
+    const loadingText = submitButton.attr('data-loading-text');
+
     if (loadingText == null || loadingText == '')
         submitButton.html('Please wait..');
     else
         submitButton.html(loadingText);
+
     submitButton.addClass('disabled');
+
     if (selectedTabId === 'tab1') {
+
         $('.field-validation-valid[data-valmsg-for=IdentificationNumber]').html('');
-        var identificationNumber = $('#createPatientModal .modal-body .tab-content .tab-pane.active #IdentificationNumber').val();
-        epons.validateIdentificationNumber(identificationNumber, function (result) {
+
+        const identificationNumber = $('#createPatientModal .modal-body .tab-content .tab-pane.active #IdentificationNumber').val();
+
+        epons.validateIdentificationNumber(identificationNumber, (result: boolean) => {
             if (result) {
                 form.submit();
                 setTimeout(function () {
                     submitButton.removeClass('disabled');
                     submitButton.html(text);
                 }, 8000);
-            }
-            else {
+            } else {
                 $('.field-validation-valid[data-valmsg-for=IdentificationNumber]').html('Invalid Identification Number');
                 submitButton.removeClass('disabled');
                 submitButton.html(text);
             }
-        });
-    }
-    else {
+        })
+    } else {
         form.submit();
         setTimeout(function () {
             submitButton.removeClass('disabled');
@@ -37,4 +46,5 @@ $('#createPatientModal form').submit(function (ev) {
         }, 8000);
     }
 });
-//# sourceMappingURL=patient-list.js.map
+
+

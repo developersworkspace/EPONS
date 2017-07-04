@@ -37,4 +37,4 @@ $('#createPatientModal form').submit(function (ev) {
         }, 8000);
     }
 });
-//# sourceMappingURL=patient-list.js.map
+//# sourceMappingURL=patient-create-modal.js.map
