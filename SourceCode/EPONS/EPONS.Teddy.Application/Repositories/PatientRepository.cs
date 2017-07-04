@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using EPONS.Teddy.Application.Entities;
 using static Dapper.SqlMapper;
+using Epons.Gateway.Helpers;
 
 namespace EPONS.Teddy.Application.Repositories
 {
@@ -15,8 +16,15 @@ namespace EPONS.Teddy.Application.Repositories
 
         protected IDbConnection GetConnection()
         {
+            string host = ConfigurationManager.AppSettings["DatabaseHost"];
+            string user = ConfigurationManager.AppSettings["DatabaseUser"];
+            string name = ConfigurationManager.AppSettings["DatabaseName"];
+            string password = ConfigurationManager.AppSettings["DatabasePassword"];
+
+            string connectionString = $"data source={host};Initial Catalog={name};User ID={user};Password={Crypto.Decrypt(password)};";
+
             if (_connection == null)
-                _connection = new SqlConnection(ConfigurationManager.ConnectionStrings["SADFM"].ConnectionString);
+                _connection = new SqlConnection(connectionString);
 
             return _connection;
         }
@@ -139,8 +147,16 @@ namespace EPONS.Teddy.Application.Repositories
 
         internal int _CreateRefferingDr(EpisodeOfCare model)
         {
+
+            string host = ConfigurationManager.AppSettings["DatabaseHost"];
+            string user = ConfigurationManager.AppSettings["DatabaseUser"];
+            string name = ConfigurationManager.AppSettings["DatabaseName"];
+            string password = ConfigurationManager.AppSettings["DatabasePassword"];
+
+            string connectionString = $"data source={host};Initial Catalog={name};User ID={user};Password={Crypto.Decrypt(password)};";
+
             int drid;
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SADFM"].ConnectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand("[EPONS].[CreateDoctor]", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -171,9 +187,17 @@ namespace EPONS.Teddy.Application.Repositories
 
         internal int _CreateAttendingDr(EpisodeOfCare model)
         {
+
+            string host = ConfigurationManager.AppSettings["DatabaseHost"];
+            string user = ConfigurationManager.AppSettings["DatabaseUser"];
+            string name = ConfigurationManager.AppSettings["DatabaseName"];
+            string password = ConfigurationManager.AppSettings["DatabasePassword"];
+
+            string connectionString = $"data source={host};Initial Catalog={name};User ID={user};Password={Crypto.Decrypt(password)};";
+
             int drid;
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SADFM"].ConnectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand("[EPONS].[CreateDoctor]", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -627,7 +651,14 @@ namespace EPONS.Teddy.Application.Repositories
 
         internal int _UpdateEpisodeOfCare(EpisodeOfCare model)
         {
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SADFM"].ConnectionString))
+            string host = ConfigurationManager.AppSettings["DatabaseHost"];
+            string user = ConfigurationManager.AppSettings["DatabaseUser"];
+            string name = ConfigurationManager.AppSettings["DatabaseName"];
+            string password = ConfigurationManager.AppSettings["DatabasePassword"];
+
+            string connectionString = $"data source={host};Initial Catalog={name};User ID={user};Password={Crypto.Decrypt(password)};";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand("[EPONS].[UpdateEpisodeOfCare] ", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -657,7 +688,14 @@ namespace EPONS.Teddy.Application.Repositories
         }
         internal int _UpdateRefferingDr(EpisodeOfCare model)
         {
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SADFM"].ConnectionString))
+            string host = ConfigurationManager.AppSettings["DatabaseHost"];
+            string user = ConfigurationManager.AppSettings["DatabaseUser"];
+            string name = ConfigurationManager.AppSettings["DatabaseName"];
+            string password = ConfigurationManager.AppSettings["DatabasePassword"];
+
+            string connectionString = $"data source={host};Initial Catalog={name};User ID={user};Password={Crypto.Decrypt(password)};";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand("[EPONS].[UpdateDoctor]", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -685,8 +723,14 @@ namespace EPONS.Teddy.Application.Repositories
 
         internal int _UpdateAttendingDr(EpisodeOfCare model)
         {
+            string host = ConfigurationManager.AppSettings["DatabaseHost"];
+            string user = ConfigurationManager.AppSettings["DatabaseUser"];
+            string name = ConfigurationManager.AppSettings["DatabaseName"];
+            string password = ConfigurationManager.AppSettings["DatabasePassword"];
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SADFM"].ConnectionString))
+            string connectionString = $"data source={host};Initial Catalog={name};User ID={user};Password={Crypto.Decrypt(password)};";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand("[EPONS].[UpdateDoctor]", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

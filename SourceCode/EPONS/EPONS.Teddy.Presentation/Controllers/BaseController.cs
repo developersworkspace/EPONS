@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Runtime.Caching;
 using System.Web.Mvc;
 using System.Linq;
+using Epons.Gateway.Helpers;
 
 namespace EPONS.Teddy.Presentation.Controllers
 {
@@ -18,8 +19,15 @@ namespace EPONS.Teddy.Presentation.Controllers
 
         protected IDbConnection GetConnection()
         {
+            string host = ConfigurationManager.AppSettings["DatabaseHost"];
+            string user = ConfigurationManager.AppSettings["DatabaseUser"];
+            string name = ConfigurationManager.AppSettings["DatabaseName"];
+            string password = ConfigurationManager.AppSettings["DatabasePassword"];
+
+            string connectionString = $"data source={host};Initial Catalog={name};User ID={user};Password={Crypto.Decrypt(password)};";
+
             if (_connection == null)
-                _connection = new SqlConnection(ConfigurationManager.ConnectionStrings["SADFM"].ConnectionString);
+                _connection = new SqlConnection(connectionString);
 
             return _connection;
         }
