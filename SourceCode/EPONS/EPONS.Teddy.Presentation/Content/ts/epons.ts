@@ -14,6 +14,7 @@
             const xmlhttp = new XMLHttpRequest();
             xmlhttp.open(method, uri, true);
             xmlhttp.setRequestHeader("Content-type", "application/json");
+            xmlhttp.setRequestHeader("apikey", "2c0d64c1-d002-45f2-9dc4-784c24e996");
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     cb(JSON.parse(xmlhttp.responseText))
