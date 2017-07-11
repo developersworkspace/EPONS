@@ -18,7 +18,7 @@
                     <div class="tabbable">
                         <!-- Only required for left/right tabs -->
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab1" data-toggle="tab">Identification Number</a></li>
+                            <li class="active"><a href="#tab1" data-toggle="tab">RSA ID Number</a></li>
                             <li><a href="#tab2" data-toggle="tab">Passport Number</a></li>
                             <li><a href="#tab3" data-toggle="tab">Details</a></li>
                         </ul>
@@ -29,7 +29,7 @@
                                         @Html.DisplayNameFor(x => x.IdentificationNumber)
                                         <br />
                                         <small>
-                                            Search for a unique patient identification number in the ePONS database, e.g. ID or passport number
+                                            Search for a RSA ID Number in the ePONS database.
                                         </small>
                                     </div>
                                     <div class="col-md-6">
@@ -44,7 +44,7 @@
                                         @Html.DisplayNameFor(x => x.PassportNumber)
                                         <br />
                                         <small>
-                                            If the patient is not a South African citizen, you may use the patient's passport number to identify the patient.
+                                            If this patient is not a RSA citizen, you may search for an international passport number in the ePONS database.
                                         </small>
                                     </div>
                                     <div class="col-md-6">
@@ -54,6 +54,7 @@
                                 </div>
                             </div>
                             <div class="tab-pane" id="tab3">
+                                <small>If you don't have access to the patient's RSA ID Number or an international passport number, you may search for the patient by completing these three fields.</small>
                                 <div class="row margin-top">
                                     <div class="col-md-6">
                                         @Html.DisplayNameFor(x => x.Firstname)

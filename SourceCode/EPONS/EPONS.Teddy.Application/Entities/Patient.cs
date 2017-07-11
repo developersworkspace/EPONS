@@ -31,7 +31,7 @@ namespace EPONS.Teddy.Application.Entities
         public Guid? TitleId { get; set; }
         [DisplayName("Contact Number")]
         public string ContactNumber { get; set; }
-        [DisplayName("Identification Number")]
+        [DisplayName("RSA ID Number")]
         public string IdentificationNumber { get; set; }
         [DisplayName("Passport Number")]
         public string PassportNumber { get; set; }
