@@ -56,10 +56,15 @@ namespace EPONS.Teddy.Application.Services
             patient.Avatar = patientAvatar == null ? null : patientAvatar;
             byte[] facilityAvatar = _facilityRepository.FindAvatar(facilityId);
 
+
             ProgressReport progressReport = new ProgressReport()
             {
                 Patient = patient,
-                Visits = visits,
+                Visits = visits.Select((x) =>
+                {
+                    x.ProgressNotes = x.ProgressNotes.RemoveFontTags();
+                    return x;
+                }).ToList(),
                 ReferringDoctors = ReferringDoctors,
                 AttendingDoctors = AttendingDoctors,
                 EpisodesofCare = EpisodesofCare,

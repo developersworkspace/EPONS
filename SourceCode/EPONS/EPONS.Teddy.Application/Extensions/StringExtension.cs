@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -45,5 +46,43 @@ namespace EPONS.Teddy.Application.Extensions
             }
 
         }
+        
+        public static string RemoveFontTags(this string html)
+        {
+            var htmlDocument = new HtmlAgilityPack.HtmlDocument();
+            htmlDocument.LoadHtml(html);
+            foreach (var eachNode in htmlDocument.DocumentNode.SelectNodes("//*"))
+            {
+                // eachNode.Attributes.RemoveAll();
+                
+                if (eachNode.Name == "font")
+                {
+                    RemoveElementKeepText(eachNode);
+                }
+            }
+            html = htmlDocument.DocumentNode.OuterHtml;
+            return html;
+        }
+
+        private static void RemoveElementKeepText(HtmlNode node)
+        {
+            //node.ParentNode.RemoveChild(node, true);
+            HtmlNode parent = node.ParentNode;
+            HtmlNode prev = node.PreviousSibling;
+            HtmlNode next = node.NextSibling;
+
+            foreach (HtmlNode child in node.ChildNodes)
+            {
+                if (prev != null)
+                    parent.InsertAfter(child, prev);
+                else if (next != null)
+                    parent.InsertBefore(child, next);
+                else
+                    parent.AppendChild(child);
+
+            }
+            node.Remove();
+        }
+
     }
 }
