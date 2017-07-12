@@ -191,7 +191,7 @@ namespace EPONS.Teddy.Presentation.Controllers
             model.Firstname = firstname;
             model.Lastname = lastname;
             model.IdentificationNumber = string.IsNullOrWhiteSpace(identificationNumber)? passportNumber : identificationNumber;
-            model.DateOfBirth = string.IsNullOrWhiteSpace(model.IdentificationNumber) ? dateOfBrith : model.IdentificationNumber.FromIdNumberToDateTime();
+            model.DateOfBirth = string.IsNullOrWhiteSpace(identificationNumber) ? dateOfBrith : model.IdentificationNumber.FromIdNumberToDateTime();
 
             ViewData["ModalType"] = ModalTypes.PatientNotExist;
 
