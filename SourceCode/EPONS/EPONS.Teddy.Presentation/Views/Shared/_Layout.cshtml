@@ -17,6 +17,7 @@
     <link href="~/Content/css/animate.css" rel="stylesheet">
     <link href="~/Content/css/style.css" rel="stylesheet">
     <link href="~/Content/css/custom.css" rel="stylesheet" />
+    <link href="~/Content/css/epons.css" rel="stylesheet" />
 
     @RenderSection("styles", false)
 
@@ -403,6 +404,8 @@
     <script src="~/Content/js/plugins/validate/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
 
+    <script src="~/Content/ts/epons.js?id=@DateTime.UtcNow.Ticks"></script>
+
     @RenderSection("scripts", false)
 
     <script>
@@ -419,7 +422,7 @@
         $(document).ready(function () {
 
 
-            $('form').on('submit', function () {
+            $('form:not(.no-loader)').on('submit', function () {
                 var form = $(this);
 
                 if (form.valid()) {

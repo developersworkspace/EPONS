@@ -3,26 +3,87 @@
 
 <div id="createPatientModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-        @using (Html.BeginForm("CreateGet", "Patient", FormMethod.Get))
+        @using (Html.BeginForm("CreateGet", "Patient", FormMethod.Get, new
+        {
+            @class = "no-loader"
+        }))
         {
         <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Create Patient</h4>
+                    <h4 class="modal-title">Register Patient</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            @Html.DisplayNameFor(x => x.IdentificationNumber)
-                            <br />
-                            <small>
-                                Search for a unique patient identification number in the ePONS database, e.g. ID or passport number
-                            </small>
-                        </div>
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(x => x.IdentificationNumber, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(x => x.IdentificationNumber, null, new { @class = "text-danger" })
+                    <div class="tabbable">
+                        <!-- Only required for left/right tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab1" data-toggle="tab">RSA ID Number</a></li>
+                            <li><a href="#tab2" data-toggle="tab">Passport Number</a></li>
+                            <li><a href="#tab3" data-toggle="tab">Details</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab1">
+                                <div class="row margin-top">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.IdentificationNumber)
+                                        <br />
+                                        <small>
+                                            Search for a RSA ID Number in the ePONS database.
+                                        </small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.IdentificationNumber, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.IdentificationNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab2">
+                                <div class="row margin-top">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.PassportNumber)
+                                        <br />
+                                        <small>
+                                            If this patient is not a RSA citizen, you may search for an international passport number in the ePONS database.
+                                        </small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.PassportNumber, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.PassportNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab3">
+                                <small>If you don't have access to the patient's RSA ID Number or an international passport number, you may search for the patient by completing these three fields.</small>
+                                <div class="row margin-top">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.Firstname)
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.Firstname, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.Firstname, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.Lastname)
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.Lastname, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.Lastname, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        @Html.DisplayNameFor(x => x.DateOfBirth)
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(x => x.DateOfBirth, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.DateOfBirth, null, new { @class = "text-danger" })
+                                        <p class="field-validation-valid text-danger" data-valmsg-for="DateOfBirth-Extra"></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -34,3 +95,16 @@
         }
     </div>
 </div>
+<script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/Content/ts/patient-create-modal.js?id=@DateTime.UtcNow.Ticks"></script>
+<script>
+    $(function () {
+        $('#DateOfBirth').datepicker({
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            format: 'yyyy/mm/dd'
+        });
+
+    });
+</script>

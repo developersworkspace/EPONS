@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using RazorGenerator.Testing;
+using Epons.Gateway.Helpers;
 
 namespace EPONS.Teddy.Runner
 {
@@ -70,7 +71,14 @@ namespace EPONS.Teddy.Runner
 
         static IDbConnection GetConnection()
         {
-            return new SqlConnection(ConfigurationManager.ConnectionStrings["SADFM"].ConnectionString);
+            string host = ConfigurationManager.AppSettings["DatabaseHost"];
+            string user = ConfigurationManager.AppSettings["DatabaseUser"];
+            string name = ConfigurationManager.AppSettings["DatabaseName"];
+            string password = ConfigurationManager.AppSettings["DatabasePassword"];
+
+            string connectionString = $"data source={host};Initial Catalog={name};User ID={user};Password={Crypto.Decrypt(password)};";
+
+            return new SqlConnection(connectionString);
         }
     }
 }

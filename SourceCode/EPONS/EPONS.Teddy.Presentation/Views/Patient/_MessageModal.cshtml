@@ -27,11 +27,11 @@
             <div class="modal-body">
                 @if (modalType == EPONS.Teddy.Application.Enums.ModalTypes.PatientExist)
                 {
-                    <p>This patient exists in the ePONS database.  Please check:  That this is the correct patient, and that all information about this patient is up to date</p>
+                    <p>@Model.GetTitleLine() has a record in the ePONS database.  Please check that all demographic detail is up to date.</p>
                 }
                 else if (modalType == EPONS.Teddy.Application.Enums.ModalTypes.PatientNotExist)
                 {
-                    <p>This patient does NOT exist in the ePONS database.  Please create a new profile.</p>
+                    <p>There is no record of this patient in the ePONS database.  Click OK to create a profile for this patient.</p>
                 }
             </div>
             <div class="modal-footer">

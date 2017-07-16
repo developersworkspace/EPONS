@@ -1,4 +1,6 @@
-﻿using EPONS.Teddy.Application.Enums;
+﻿using Epons.Gateway;
+using Epons.Gateway.Models;
+using EPONS.Teddy.Application.Enums;
 using EPONS.Teddy.Application.Exceptions;
 using EPONS.Teddy.Application.Extensions;
 using EPONS.Teddy.Application.Repositories;
@@ -17,12 +19,14 @@ namespace EPONS.Teddy.Presentation.Controllers
         private PatientService _patientService;
         private VisitService _visitService;
         private ListRepository _listRepository;
+        private readonly PatientGateway _patientGateway;
 
         public PatientController()
         {
             _patientService = new PatientService(GetConnection());
             _visitService = new VisitService(GetConnection());
             _listRepository = new ListRepository(GetConnection());
+            _patientGateway = new PatientGateway();
         }
 
         #region Action Methods
@@ -152,19 +156,42 @@ namespace EPONS.Teddy.Presentation.Controllers
             if (!viewObject.CanCreatePatient())
                 throw new BusinessRuleException("You are not authorized to create patients");
 
-            if (model.IdentificationNumber != null)
+            if (!string.IsNullOrWhiteSpace(model.IdentificationNumber))
             {
-                Application.EntityViews.Patient patient = _patientService.Get(model.IdentificationNumber);
+                PatientDto patientDto = _patientGateway.Find(model.IdentificationNumber);
 
-                if (patient != null)
-                    return RedirectToAction("Edit", "Patient", new { patientId = patient.Id, modalType = (int)ModalTypes.PatientExist });
+                if (patientDto != null)
+                    return RedirectToAction("Edit", "Patient", new { patientId = patientDto.Id, modalType = (int)ModalTypes.PatientExist });
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.PassportNumber))
+            {
+                PatientDto patientDto = _patientGateway.Find(model.PassportNumber);
+
+                if (patientDto != null)
+                    return RedirectToAction("Edit", "Patient", new { patientId = patientDto.Id, modalType = (int)ModalTypes.PatientExist });
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Firstname) && !string.IsNullOrWhiteSpace(model.Lastname) && model.DateOfBirth.HasValue)
+            {
+
+                PatientDto patientDto = _patientGateway.Find(model.Firstname, model.Lastname, model.DateOfBirth.Value);
+
+                if (patientDto != null)
+                    return RedirectToAction("Edit", "Patient", new { patientId = patientDto.Id, modalType = (int)ModalTypes.PatientExist });
             }
 
             string identificationNumber = model.IdentificationNumber;
+            string passportNumber = model.PassportNumber;
+            string firstname = model.Firstname;
+            string lastname = model.Lastname;
+            DateTime? dateOfBrith = model.DateOfBirth;
 
             model = _patientService.Get();
-            model.IdentificationNumber = identificationNumber;
-            model.DateOfBirth = string.IsNullOrWhiteSpace(model.IdentificationNumber) ? null : model.IdentificationNumber.FromIdNumberToDateTime();
+            model.Firstname = firstname;
+            model.Lastname = lastname;
+            model.IdentificationNumber = string.IsNullOrWhiteSpace(identificationNumber)? passportNumber : identificationNumber;
+            model.DateOfBirth = string.IsNullOrWhiteSpace(identificationNumber) ? dateOfBrith : model.IdentificationNumber.FromIdNumberToDateTime();
 
             ViewData["ModalType"] = ModalTypes.PatientNotExist;
 

@@ -112,13 +112,19 @@
                 keyboardNavigation: false,
                 forceParse: false,
                 autoclose: true,
-                format: 'yyyy/mm/dd',
-                immediateUpdates: true
+                format: 'yyyy/mm/dd'
             });
+
+            @if (Model.Patient.DateOfBirth.HasValue) {
+            <text>
+                $('#DateOfBirth').datepicker("update", new Date('@Model.Patient.DateOfBirth.Value.ToString("yyyy/MM/dd")'));
+            </text>
+
+            }
 
             $("select").chosen({ placeholder_text_single: "", allow_single_deselect: true, width: '100%' });
 
-        });
+            });
 
     </script>
 }
