@@ -82,6 +82,7 @@ namespace EPONS.Teddy.Presentation.Controllers
             {
                 EndDate = DateTime.Now,
                 StartDate = DateTime.Now.AddMonths(-3),
+                FacilityId = baseObject.GetCurrentFacilityId().HasValue? baseObject.GetCurrentFacilityId().Value : new Guid(),
                 Facilities = new SelectList(_listRepository.GetFacilities(), "Id", "Name"),
                 MeasurementTools = new SelectList(_listRepository.GetMeasurementTools(), "Id", "Name")
             });

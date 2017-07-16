@@ -27,15 +27,22 @@
                 <div class="ibox-content">
                     @using (Html.BeginForm("FacilityPerformanceReport", "Report", FormMethod.Post, new { id = "formProgressReport" }))
                     {
-                        <div class="row">
-                            <div class="col-md-3">
-                                @Html.DisplayNameFor(x => x.FacilityId)
+                        if (Model.IsSuperAdmin())
+                        {
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.DisplayNameFor(x => x.FacilityId)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(x => x.FacilityId, Model.Facilities, "", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.FacilityId, null, new { @class = "text-danger" })
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(x => x.FacilityId, Model.Facilities, "", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(x => x.FacilityId, null, new { @class = "text-danger" })
-                            </div>
-                        </div>
+                        }
+                        else
+                        {
+                            @Html.HiddenFor((x) => x.FacilityId);
+                        }
                         <div class="row">
                             <div class="col-md-3">
                                 @Html.DisplayNameFor(x => x.MeasurementToolId)

@@ -144,6 +144,11 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             return User.CurrentFacility == null ? "No Facility" : User.CurrentFacility.Name;
         }
 
+        public Guid? GetCurrentFacilityId()
+        {
+            return User.CurrentFacility == null ? (Guid?)null : User.CurrentFacility.Id;
+        }
+
         public bool IsSuperAdmin()
         {
             if (Override)
