@@ -51,7 +51,14 @@ namespace EPONS.Teddy.Application.Extensions
         {
             var htmlDocument = new HtmlAgilityPack.HtmlDocument();
             htmlDocument.LoadHtml(html);
-            foreach (var eachNode in htmlDocument.DocumentNode.SelectNodes("//*"))
+            var nodes = htmlDocument.DocumentNode == null? null : htmlDocument.DocumentNode.SelectNodes("//*");
+
+            if (nodes == null)
+            {
+                return html;
+            }
+
+            foreach (var eachNode in nodes)
             {
                 // eachNode.Attributes.RemoveAll();
                 
