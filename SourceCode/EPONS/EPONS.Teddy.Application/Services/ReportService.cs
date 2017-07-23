@@ -78,7 +78,7 @@ namespace EPONS.Teddy.Application.Services
                 FacilityImage = facilityAvatar,
                 MeasurementToolChartsRadar = new Dictionary<EntityViews.CompletedMeasurementTool, byte[]>(),
                 MeasurementToolChartsLine = new Dictionary<EntityViews.CompletedMeasurementTool, byte[]>(),
-                VitalSignsChart = _chartingEngine.LineChart(1200, 1200, _helperService.GetVitalSignsChart(visits)).ToBytes()
+                VitalSignsChart = _helperService.GetVitalSignsChart(visits).DataSets.Count((x) => x.Data.Count((y) => y > 0) > 0) > 0? _chartingEngine.LineChart(1200, 1200, _helperService.GetVitalSignsChart(visits)).ToBytes() : null
             };
 
             foreach (var groupedCompletedMeasurementTools in completedMeasurementTools.GroupBy(x => x.Id))

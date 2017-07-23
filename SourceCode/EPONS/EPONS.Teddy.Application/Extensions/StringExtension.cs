@@ -49,6 +49,11 @@ namespace EPONS.Teddy.Application.Extensions
         
         public static string RemoveFontTags(this string html)
         {
+            if (html == null)
+            {
+                return null;
+            }
+
             var htmlDocument = new HtmlAgilityPack.HtmlDocument();
             htmlDocument.LoadHtml(html);
             var nodes = htmlDocument.DocumentNode == null? null : htmlDocument.DocumentNode.SelectNodes("//*");
