@@ -17,10 +17,10 @@ namespace EPONS.Teddy.Presentation.Controllers
         private ListRepository _listRepository;
 
         // OAuth2 Details
-        private const string OAuth2Uri = "http://localhost:3000";
+        private const string OAuth2Uri = "https://epons-oauth2-framework.openservices.co.za";
         private const string ClientId = "0zyrWYATtw";
         private const string ClientSecret = "x3h8CTB2Cj";
-        private const string RedirectUri = "http://localhost:5766/User/Callback";
+        private const string RedirectUri = "http://epons.sadfm.co.za/User/Callback";
 
 
         public UserController()
@@ -32,7 +32,7 @@ namespace EPONS.Teddy.Presentation.Controllers
         #region Action Methods
 
         [HttpGet]
-        public ActionResult Login(string method = "standard")
+        public ActionResult Login(string method = "oauth2")
         {
             if (method == "standard")
             {
