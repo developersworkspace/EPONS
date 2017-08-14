@@ -1,8 +1,10 @@
 ﻿using EPONS.Teddy.Application.Exceptions;
 using EPONS.Teddy.Application.Repositories;
 using EPONS.Teddy.Application.Services;
+using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -14,6 +16,13 @@ namespace EPONS.Teddy.Presentation.Controllers
         private UserService _userService;
         private ListRepository _listRepository;
 
+        // OAuth2 Details
+        private const string OAuth2Uri = "https://epons-oauth2-framework.openservices.co.za";
+        private const string ClientId = "0zyrWYATtw";
+        private const string ClientSecret = "x3h8CTB2Cj";
+        private const string RedirectUri = "http://epons.sadfm.co.za/User/Callback";
+
+
         public UserController()
         {
             _userService = new UserService(GetConnection());
@@ -23,9 +32,19 @@ namespace EPONS.Teddy.Presentation.Controllers
         #region Action Methods
 
         [HttpGet]
-        public ActionResult Login()
+        public ActionResult Login(string method = "oauth2")
         {
-            return View(new ViewObjects.User.Login());
+            if (method == "standard")
+            {
+                return View(new ViewObjects.User.Login());
+            }
+            else if (method == "oauth2")
+            {
+                string state = Guid.NewGuid().ToString();
+                return Redirect($"{OAuth2Uri}/authorize?response_type=code&client_id={ClientId}&redirect_uri={RedirectUri}&state={state}");
+            }
+
+            return Content("Invalid Method");
         }
 
 
@@ -64,6 +83,31 @@ namespace EPONS.Teddy.Presentation.Controllers
                 return Redirect(Request["ReturnUrl"]);
             else
                 return RedirectToAction("", "");
+        }
+
+        [HttpGet]
+        public ActionResult Callback(string code, string state)
+        {
+            var client = new RestClient(OAuth2Uri);
+            var request = new RestRequest("/token", Method.POST);
+
+            request.AddJsonBody(new
+            {
+                grant_type = "authorization_code",
+                client_id = ClientId,
+                client_secret = ClientSecret,
+                code = code,
+                redirect_uri = RedirectUri
+            });
+
+            IRestResponse<Dictionary<string, string>> response = client.Execute<Dictionary<string, string>>(request);
+
+            var token = new JwtSecurityToken(jwtEncodedString: response.Data["access_token"]);
+
+            FormsAuthentication.SetAuthCookie(token.Payload["username"].ToString(), true);
+
+            return RedirectToAction("", "Home");
+
         }
 
         //[HttpGet]
