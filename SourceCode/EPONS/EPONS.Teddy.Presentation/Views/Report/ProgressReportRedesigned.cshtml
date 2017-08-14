@@ -1,0 +1,45 @@
+﻿
+@model EPONS.Teddy.Presentation.ViewObjects.Report.ProgressReport
+@{
+    ViewBag.Title = "Progress Report";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Progress Report</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Report</a>
+            </li>
+            <li class="active">
+                <strong>Progress Report</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <div class="row" style="text-align: center; margin-top:15px">
+            <div class="col-xs-12">
+                <a href="@Url.Action("Edit", "Patient", new { patientId = Model.PatientId})" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Progress Report</h5>
+                </div>
+                <div class="ibox-content">
+                    <app-root></app-root>
+                    <script src="http://micro-ui.sadfm.co.za/inline.d1ca233a5d5842cc551e.bundle.js"></script>
+                    <script src="http://micro-ui.sadfm.co.za/polyfills.07685bca73161be59257.bundle.js"></script>
+                    <script src="http://micro-ui.sadfm.co.za/vendor.3e1f20bff74d8687da32.bundle.js"></script>
+                    <script src="http://micro-ui.sadfm.co.za/main.f4458a49fc278108f18c.bundle.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

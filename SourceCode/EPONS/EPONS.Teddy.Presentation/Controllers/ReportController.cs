@@ -24,6 +24,18 @@ namespace EPONS.Teddy.Presentation.Controllers
 
         [HttpGet]
         [Authorize(Order = 4)]
+        public ActionResult ProgressReportRedesigned(Guid patientId)
+        {
+            var baseObject = GetBaseObject();
+
+            return View(new ViewObjects.Report.ProgressReport(baseObject)
+            {
+                PatientId = patientId,
+            });
+        }
+
+        [HttpGet]
+        [Authorize(Order = 4)]
         public ActionResult ProgressReport(Guid patientId)
         {
             var baseObject = GetBaseObject();
