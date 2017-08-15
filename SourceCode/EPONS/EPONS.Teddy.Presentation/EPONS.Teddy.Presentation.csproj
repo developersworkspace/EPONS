@@ -502,6 +502,7 @@
     <Content Include="Views\User\_AddFacilityPermissionModal.cshtml" />
     <Content Include="Views\Patient\_PatientView.cshtml" />
     <Content Include="Views\Visit\_VisitVitalSigns.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <Content Include="Views\Report\FacilityPerformanceReport.cshtml" />
     <Content Include="Views\Report\_ViewDataTable.cshtml" />
