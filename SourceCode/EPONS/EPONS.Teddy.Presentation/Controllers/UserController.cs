@@ -20,8 +20,6 @@ namespace EPONS.Teddy.Presentation.Controllers
         private const string OAuth2Uri = "https://epons-oauth2-framework.openservices.co.za";
         private const string ClientId = "0zyrWYATtw";
         private const string ClientSecret = "x3h8CTB2Cj";
-        private const string RedirectUri = "http://epons.sadfm.co.za/User/Callback";
-
 
         public UserController()
         {
@@ -32,27 +30,13 @@ namespace EPONS.Teddy.Presentation.Controllers
         #region Action Methods
 
         [HttpGet]
-        public ActionResult Login(string method = "oauth2")
+        public ActionResult Login()
         {
-            if (method == "standard")
-            {
-                return View(new ViewObjects.User.Login());
-            }
-            else if (method == "oauth2")
-            {
-                string state = Guid.NewGuid().ToString();
-                return Redirect($"{OAuth2Uri}/authorize?response_type=code&client_id={ClientId}&redirect_uri={RedirectUri}&state={state}");
-            }
-
-            return Content("Invalid Method");
+            string baseUrl = this.GetWebAppRoot();
+            string redirectUri = $"{baseUrl}/User/Callback";
+            string state = Guid.NewGuid().ToString();
+            return Redirect($"{OAuth2Uri}/authorize?response_type=code&client_id={ClientId}&redirect_uri={redirectUri}&state={state}");
         }
-
-
-        //[HttpGet]
-        //public ActionResult LoginGoogle()
-        //{
-        //    return Redirect(_oauthService.GetAuthorizationRequestUrl());
-        //}
 
         [HttpGet]
         public ActionResult Logout()
@@ -61,35 +45,14 @@ namespace EPONS.Teddy.Presentation.Controllers
             return RedirectToAction("Login", "User");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken(Order = 4)]
-        public ActionResult Login(ViewObjects.User.Login model)
-        {
-            Application.EntityViews.User user = _userService.Validate(model.Username, model.Password);
-
-            if (user == null)
-            {
-                ViewBag.ErrorMessage = "Invalid login credentials";
-                return View(new ViewObjects.User.Login()
-                {
-                    Username = model.Username
-                });
-            }
-
-            FormsAuthentication.SetAuthCookie(user.Username, true);
-
-
-            if (!string.IsNullOrWhiteSpace(Request["ReturnUrl"]))
-                return Redirect(Request["ReturnUrl"]);
-            else
-                return RedirectToAction("", "");
-        }
-
         [HttpGet]
         public ActionResult Callback(string code, string state)
         {
             var client = new RestClient(OAuth2Uri);
             var request = new RestRequest("/token", Method.POST);
+
+            string baseUrl = this.GetWebAppRoot();
+            string redirectUri = $"{baseUrl}/User/Callback";
 
             request.AddJsonBody(new
             {
@@ -97,7 +60,7 @@ namespace EPONS.Teddy.Presentation.Controllers
                 client_id = ClientId,
                 client_secret = ClientSecret,
                 code = code,
-                redirect_uri = RedirectUri
+                redirect_uri = redirectUri
             });
 
             IRestResponse<Dictionary<string, string>> response = client.Execute<Dictionary<string, string>>(request);
@@ -109,43 +72,6 @@ namespace EPONS.Teddy.Presentation.Controllers
             return RedirectToAction("", "Home");
 
         }
-
-        //[HttpGet]
-        //public ActionResult ForgotPassword()
-        //{
-        //    FormsAuthentication.SignOut();
-        //    return View(new Models.UserForgotPassword());
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken(Order = 4)]
-        //public ActionResult ForgotPassword(ViewModels.Credentials model)
-        //{
-        //    _userService.RequestForgotPassword(model.Username);
-
-        //    return RedirectToAction("Login", "User");
-        //}
-
-        //[HttpGet]
-        //public ActionResult ResetPassword(string key, string checksum)
-        //{
-        //    FormsAuthentication.SignOut();
-        //    return View(new UserResetPassword()
-        //    {
-        //        Key = key,
-        //        Checksum = checksum
-        //    });
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken(Order = 4)]
-        //public ActionResult ResetPassword(UserResetPassword model)
-        //{
-        //    _userService.ResetPassword(model.Key, model.Checksum, model.NewPassword);
-
-        //    return RedirectToAction("Login", "User");
-        //}
-
 
         [HttpGet]
         [Authorize(Order = 4)]
@@ -304,5 +230,17 @@ namespace EPONS.Teddy.Presentation.Controllers
             return Redirect(Request.UrlReferrer.AbsoluteUri);
         }
         #endregion
+
+        private string GetWebAppRoot()
+        {
+            string host = (Request.Url.IsDefaultPort) ?
+                Request.Url.Host :
+                Request.Url.Authority;
+            host = String.Format("{0}://{1}", Request.Url.Scheme, host);
+            if (Request.ApplicationPath == "/")
+                return host;
+            else
+                return host + Request.ApplicationPath;
+        }
     }
 }
