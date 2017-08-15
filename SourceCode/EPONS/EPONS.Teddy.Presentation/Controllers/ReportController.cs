@@ -24,13 +24,15 @@ namespace EPONS.Teddy.Presentation.Controllers
 
         [HttpGet]
         [Authorize(Order = 4)]
-        public ActionResult ProgressReportRedesigned(Guid patientId)
+        public ActionResult ProgressReportRedesigned(Guid patientId, DateTime startDate, DateTime endDate)
         {
             var baseObject = GetBaseObject();
 
             return View(new ViewObjects.Report.ProgressReport(baseObject)
             {
                 PatientId = patientId,
+                StartDate = startDate,
+                EndDate = endDate
             });
         }
 

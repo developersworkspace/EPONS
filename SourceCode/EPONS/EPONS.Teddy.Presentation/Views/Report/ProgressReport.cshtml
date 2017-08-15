@@ -32,51 +32,46 @@
                     <h5>Progress Report Filter</h5>
                 </div>
                 <div class="ibox-content">
-    @using (Html.BeginForm("ProgressReport", "Report", FormMethod.Post, new { id = "formProgressReport" }))
-    {
-        <div class="row">
-            <div class="col-md-3">
-                @Html.DisplayNameFor(x => x.StartDate)
-            </div>
-            <div class="col-md-3">
-                @Html.TextBoxFor(x => x.StartDate, "{0:yyyy/MM/dd}", new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.StartDate, null, new { @class = "text-danger" })
-            </div>
-            <div class="col-md-3">
-                @Html.DisplayNameFor(x => x.EndDate)
-            </div>
-            <div class="col-md-3">
-                @Html.TextBoxFor(x => x.EndDate, "{0:yyyy/MM/dd}", new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.EndDate, null, new { @class = "text-danger" })
-            </div>
-        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div>
-                                    <input id="IncludeRadarChart" class="epons-checkbox" name="IncludeRadarChart" type="checkbox" value="true" checked>
-                                    <label for="IncludeRadarChart" class="epons-checkbox-label">@Html.DisplayNameFor(x => x.IncludeRadarChart)</label>
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.StartDate)
                         </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div>
-                                    <input id="IncludeLineChart" class="epons-checkbox" name="IncludeLineChart" type="checkbox" value="true">
-                                    <label for="IncludeLineChart" class="epons-checkbox-label">@Html.DisplayNameFor(x => x.IncludeLineChart)</label>
-                                </div>
-                            </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(x => x.StartDate, "{0:yyyy/MM/dd}", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.StartDate, null, new { @class = "text-danger" })
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button class="btn btn-success pull-right" type="submit" formtarget="_blank" onclick="btnPreview_click()">Preview</button>
-                            </div>
+                        <div class="col-md-3">
+                            @Html.DisplayNameFor(x => x.EndDate)
                         </div>
-                                @Html.HiddenFor(x => x.PatientId)
-                                @Html.AntiForgeryToken()
-                                }
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(x => x.EndDate, "{0:yyyy/MM/dd}", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.EndDate, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @*<div class="row">
+                        <div class="col-md-3">
+                            <div>
+                                <input id="IncludeRadarChart" class="epons-checkbox" name="IncludeRadarChart" type="checkbox" value="true" checked>
+                                <label for="IncludeRadarChart" class="epons-checkbox-label">@Html.DisplayNameFor(x => x.IncludeRadarChart)</label>
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div>
+                                <input id="IncludeLineChart" class="epons-checkbox" name="IncludeLineChart" type="checkbox" value="true">
+                                <label for="IncludeLineChart" class="epons-checkbox-label">@Html.DisplayNameFor(x => x.IncludeLineChart)</label>
+                            </div>
+                        </div>
+                    </div>*@
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-success pull-right" type="button" formtarget="_blank" onclick="btnView_click()">New Improved Progress Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -113,23 +108,12 @@
 
         });
 
-        function btnDownload_click() {
-            form = $('form#formProgressReport');
-            form.attr('action', '@Url.Action("ProgressReport", "Report")');
-            form.attr('method', 'post');
-            
-            return true;
+        function btnView_click() {
+
+            const startDate = $('#StartDate').val();
+            const endDate = $('#EndDate').val();
+            window.location.href = `/Report/ProgressReportRedesigned?patientId=@Model.PatientId&startDate=${startDate}&endDate=${endDate}`;
         }
-
-        function btnPreview_click() {
-            form = $('form#formProgressReport');
-            form.attr('action', '@Url.Action("ProgressReportPreview", "Report")');
-            form.attr('method', 'post');
-         
-            return true;
-        }
-
-
 
 
     </script>
