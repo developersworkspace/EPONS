@@ -23,18 +23,6 @@ namespace EPONS.Teddy.Application.Services
             return _userRepository.List(pageNumber, pageSize, query, out totalRecords);
         }
 
-        public EntityViews.User Validate(string username, string password)
-        {
-            string encryptedPassword = MD5Hex(SHA1(password));
-
-            EntityViews.User user = _userRepository.FindUserByUsernameAndPassword(username, encryptedPassword);
-
-            if (user == null)
-                return null;
-
-            return user;
-        }
-
         public void SetFacility(string username, Guid facilityId)
         {
             _userRepository.SetFacility(username, facilityId);

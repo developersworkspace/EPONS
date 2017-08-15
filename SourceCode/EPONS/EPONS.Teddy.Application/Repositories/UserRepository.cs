@@ -15,16 +15,6 @@ namespace EPONS.Teddy.Application.Repositories
         {
         }
 
-        public EntityViews.User FindUserByUsernameAndPassword(string username, string password)
-        {
-            return QueryOne<EntityViews.User>("[EPONS].[FindUserByUsernameAndPassword]", new
-            {
-                username = username,
-                password = password
-            });
-        }
-
-
         public Entities.User FindById(Guid userId)
         {
             Entities.User user = QueryOne<Entities.User>("[EPONS].[FindUserById]", new

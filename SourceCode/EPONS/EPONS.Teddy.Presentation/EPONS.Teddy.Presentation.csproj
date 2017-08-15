@@ -288,7 +288,6 @@
     <Compile Include="ViewObjects\Survey\Index.cs" />
     <Compile Include="ViewObjects\User\ChangePassword.cs" />
     <Compile Include="ViewObjects\User\Edit.cs" />
-    <Compile Include="ViewObjects\User\Login.cs" />
     <Compile Include="ViewObjects\Visit\Create.cs" />
     <Compile Include="ViewObjects\Visit\Edit.cs" />
   </ItemGroup>
@@ -480,8 +479,6 @@
     <Content Include="Views\Error\NoFunctionalityAvailable.cshtml" />
     <Content Include="Views\Patient\_ListMeasurementTools.cshtml" />
     <Content Include="Views\Patient\_AssignMeasurementToolModal.cshtml" />
-    <Content Include="Views\User\ForgotPassword.cshtml" />
-    <Content Include="Views\User\ResetPassword.cshtml" />
     <Content Include="Views\Report\ProgressReport.cshtml" />
     <Content Include="Views\Error\General.cshtml" />
     <Content Include="Views\Patient\_ListVisits.cshtml" />
@@ -498,8 +495,6 @@
     <Content Include="Views\Administration\_Pagination.cshtml" />
     <Content Include="Views\Administration\_ListUsers.cshtml" />
     <Content Include="Views\Patient\_ListTeamMembers.cshtml" />
-    <Content Include="Views\User\_Credentials.cshtml" />
-    <Content Include="Views\User\_Details.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\Patient\_AllocateTeamMemberModal.cshtml" />
     <Content Include="Views\Ajax\FacilityUsers.cshtml" />
@@ -529,7 +524,6 @@
     <Content Include="Views\Facility\_ListMeasurementTools.cshtml" />
     <Content Include="Views\OAuth\Invalid.cshtml" />
     <Content Include="Views\Administration\_CreateUserModal.cshtml" />
-    <Content Include="Views\User\_ChangePassword.cshtml" />
     <Content Include="Views\Patient\_DeallocateTeamMemberModal.cshtml" />
     <Content Include="Views\Patient\_DeallocateAllTeamMembersModal.cshtml" />
     <None Include="Properties\PublishProfiles\Local_Dev.pubxml" />

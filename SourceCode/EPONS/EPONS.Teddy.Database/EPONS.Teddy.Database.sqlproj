@@ -114,7 +114,6 @@
     <None Include="Procedures\FindMeasurementToolsByVisitId.sql" />
     <None Include="Procedures\FindMeasurementToolScoresByUserId.sql" />
     <None Include="Procedures\FindMeasurementToolsForVisitByPatientId.sql" />
-    <None Include="Procedures\FindUserByUsernameAndPassword.sql" />
     <None Include="Tables\ValueObjects\Genders.sql" />
     <None Include="Tables\ValueObjects\Races.sql" />
     <None Include="Tables\ValueObjects\Countries.sql" />
@@ -208,9 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Procedures\ListSupportServices.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Procedures\UpdateUserPassword.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Procedures\UpdatePatientSupportService.sql" />
@@ -312,5 +308,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Procedures\SetUserPosition.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Procedures\UpdateUserPassword.sql" />
   </ItemGroup>
 </Project>
