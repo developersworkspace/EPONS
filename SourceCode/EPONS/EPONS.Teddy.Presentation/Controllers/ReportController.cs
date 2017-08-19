@@ -24,7 +24,7 @@ namespace EPONS.Teddy.Presentation.Controllers
 
         [HttpGet]
         [Authorize(Order = 4)]
-        public ActionResult ProgressReportRedesigned(Guid patientId, DateTime startDate, DateTime endDate)
+        public ActionResult ProgressReportRedesigned(Guid patientId, DateTime startDate, DateTime endDate, bool includeRadarChart, bool includeLineChart)
         {
             var baseObject = GetBaseObject();
 
@@ -32,7 +32,9 @@ namespace EPONS.Teddy.Presentation.Controllers
             {
                 PatientId = patientId,
                 StartDate = startDate,
-                EndDate = endDate
+                EndDate = endDate,
+                IncludeLineChart = includeLineChart,
+                IncludeRadarChart = includeRadarChart
             });
         }
 
@@ -50,41 +52,6 @@ namespace EPONS.Teddy.Presentation.Controllers
                 IncludeRadarChart = true
             });
         }
-
-
-        [HttpPost]
-        [Authorize(Order = 4)]
-        [ValidateAntiForgeryToken(Order = 5)]
-        public ActionResult ProgressReport(ViewObjects.Report.ProgressReport model)
-        {
-            var baseObject = GetBaseObject();
-
-            string patientName;
-
-            var progressReport = _reportService.ProgressReport(model.PatientId, baseObject.User.CurrentFacility.Id, model.StartDate, model.EndDate, model.IncludeRadarChart, model.IncludeLineChart, out patientName);
-
-            string path = _pdfTemplatingEngine.Generate(string.Format(@"{0}\Resources\PDFTemplates\ProgressReport.html", AppDomain.CurrentDomain.BaseDirectory), progressReport);
-            string filename = string.Format("ProgressReport_{0} ({1} to {2}).pdf", patientName, model.StartDate.ToString("yyyy-MM-dd"), model.EndDate.ToString("yyyy-MM-dd"));
-
-            return File(path, "application/pdf", string.Format("ProgressReport_{0} ({1} to {2}).pdf", patientName, model.StartDate.ToString("yyyy-MM-dd"), model.EndDate.ToString("yyyy-MM-dd")));
-        }
-        public ActionResult ProgressReportPreview(ViewObjects.Report.ProgressReport model)
-        {
-            var baseObject = GetBaseObject();
-
-            string patientName;
-
-            var progressReportPreview = _reportService.ProgressReport(model.PatientId, baseObject.User.CurrentFacility.Id, model.StartDate, model.EndDate, model.IncludeRadarChart, model.IncludeLineChart, out patientName);
-
-            string path = _pdfTemplatingEngine.Generate(string.Format(@"{0}\Resources\PDFTemplates\ProgressReport.html", AppDomain.CurrentDomain.BaseDirectory), progressReportPreview);
-            string filename = string.Format("ProgressReport_{0} ({1} to {2}).pdf", patientName, model.StartDate.ToString("yyyy-MM-dd"), model.EndDate.ToString("yyyy-MM-dd"));
-
-            Response.AddHeader("Content-Disposition", "inline; filename=" + filename);
-            
-
-            return File(path, "application/pdf");
-        }
-
 
         [HttpGet]
         [Authorize(Order = 4)]

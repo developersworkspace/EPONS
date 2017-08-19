@@ -33,15 +33,14 @@
                     <h5>Progress Report</h5>
                 </div>
                 <div class="ibox-content">
-                    <epons-patient-report startDate="@Model.StartDate.ToString("yyyy-MM-dd")" endDate="@Model.EndDate.ToString("yyyy-MM-dd")" patientId="@Model.PatientId" facilityId="@Model.GetCurrentFacilityId()"></epons-patient-report>
+                    <epons-patient-report showRadarChart="@Model.IncludeRadarChart.ToString()" showLineChart="@Model.IncludeLineChart.ToString()" startDate="@Model.StartDate.ToString("yyyy-MM-dd")" endDate="@Model.EndDate.ToString("yyyy-MM-dd")" patientId="@Model.PatientId" facilityId="@Model.GetCurrentFacilityId()"></epons-patient-report>
                     <link href="http://ui-epons.sadfm.co.za/epons-patient-report/styles.d41d8cd98f00b204e980.bundle.css" rel="stylesheet">
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
                     
-                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-report/inline.94e3ad8f66efe9180ec6.bundle.js"></script>
-                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-report/polyfills.07685bca73161be59257.bundle.js"></script>
-                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-report/vendor.3e1f20bff74d8687da32.bundle.js"></script>
-                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-report/main.270784788297dacc8259.bundle.js"></script>
-
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-report/inline.0f84167343846fc76544.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-report/polyfills.23f92e0b79976f0b50d3.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-report/vendor.f1c528946ec77f03f53a.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-report/main.b3768c26bbae4ef45662.bundle.js"></script>
                 </div>
             </div>
         </div>

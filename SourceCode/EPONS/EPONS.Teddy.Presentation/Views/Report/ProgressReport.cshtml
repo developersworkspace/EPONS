@@ -48,11 +48,11 @@
                             @Html.ValidationMessageFor(x => x.EndDate, null, new { @class = "text-danger" })
                         </div>
                     </div>
-                    @*<div class="row">
+                    <div class="row">
                         <div class="col-md-3">
                             <div>
                                 <input id="IncludeRadarChart" class="epons-checkbox" name="IncludeRadarChart" type="checkbox" value="true" checked>
-                                <label for="IncludeRadarChart" class="epons-checkbox-label">@Html.DisplayNameFor(x => x.IncludeRadarChart)</label>
+                                <label for="IncludeRadarChart" class="epons-checkbox-label">Include Radar Chart</label>
                             </div>
                         </div>
                     </div>
@@ -60,10 +60,10 @@
                         <div class="col-md-3">
                             <div>
                                 <input id="IncludeLineChart" class="epons-checkbox" name="IncludeLineChart" type="checkbox" value="true">
-                                <label for="IncludeLineChart" class="epons-checkbox-label">@Html.DisplayNameFor(x => x.IncludeLineChart)</label>
+                                <label for="IncludeLineChart" class="epons-checkbox-label">Include Line Chart</label>
                             </div>
                         </div>
-                    </div>*@
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <button class="btn btn-success pull-right" type="button" formtarget="_blank" onclick="btnView_click()">New Improved Progress Report</button>
@@ -112,7 +112,10 @@
 
             const startDate = $('#StartDate').val();
             const endDate = $('#EndDate').val();
-            window.location.href = `/Report/ProgressReportRedesigned?patientId=@Model.PatientId&startDate=${startDate}&endDate=${endDate}`;
+            const includeLineChart = $('#IncludeLineChart').is(':checked');
+            const includeRadarChart = $('#IncludeRadarChart').is(':checked');
+
+            window.location.href = `/Report/ProgressReportRedesigned?patientId=@Model.PatientId&startDate=${startDate}&endDate=${endDate}&includeRadarChart=${includeRadarChart}&includeLineChart=${includeLineChart}`;
         }
 
 
