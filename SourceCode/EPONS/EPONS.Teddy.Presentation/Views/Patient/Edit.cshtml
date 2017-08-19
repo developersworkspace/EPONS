@@ -7,7 +7,7 @@
 }
 <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
 <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-md-8">
+    <div class="col-md-7">
         <h2>
             <form id="uploadAvatarForm" action="@Url.Action("UploadAvatar", "Patient")" method="post" enctype="multipart/form-data">
                 <img title="Double click here to upload a patient photograph" data-toggle="tooltip" data-placement="right" src="@Url.Action("Avatar", "Patient", new { patientId = Model.Patient.Id})" onclick="selectAvatar()" class="img-responsive img-circle pull-left profile" alt="Profile Image" />
@@ -29,16 +29,16 @@
             </li>
         </ol>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <br />
         <epons-patient-time-spent-dashboard patientId="@Model.Patient.Id"></epons-patient-time-spent-dashboard>
         <link href="http://ui-epons.sadfm.co.za/epons-patient-time-spent-dashboard/styles.d41d8cd98f00b204e980.bundle.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
-        <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-time-spent-dashboard/inline.d95a3ac8ebd1a8f89d8e.bundle.js"></script>
+        <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-time-spent-dashboard/inline.c2ef78e49846e7ad6bb5.bundle.js"></script>
         <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-time-spent-dashboard/polyfills.0963b44a58b5526cfab7.bundle.js"></script>
         <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-time-spent-dashboard/vendor.bdf1cc04a7bdedd2b030.bundle.js"></script>
-        <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-time-spent-dashboard/main.354679abf94fdabb71fc.bundle.js"></script>
+        <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-time-spent-dashboard/main.d122b0ca639d5742aa36.bundle.js"></script>
     </div>
     <div class="col-md-2">
         <br />
