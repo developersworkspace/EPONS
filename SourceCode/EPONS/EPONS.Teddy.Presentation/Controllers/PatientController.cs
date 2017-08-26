@@ -71,7 +71,6 @@ namespace EPONS.Teddy.Presentation.Controllers
 
             Application.Entities.Patient patient = _patientService.Get(patientId);
 
-            IList<Application.EntityViews.Case> cases = _patientService.ListCases(patientId);
             IList<Application.EntityViews.MeasurementTool> measurementTools = _patientService.ListMeasurementTools(patientId);
             IList<Application.EntityViews.TeamMember> teamMembers = _patientService.ListTeamMembers(patientId);
             IList<Application.EntityViews.Visit> visits = _visitService.ListVisits(patientId);
@@ -84,7 +83,6 @@ namespace EPONS.Teddy.Presentation.Controllers
 
             return View(new ViewObjects.Patient.Edit(baseObject)
             {
-                Cases = cases,
                 Patient = patient,
                 MeasurementTools = measurementTools,
                 TeamMembers = teamMembers,
@@ -118,7 +116,6 @@ namespace EPONS.Teddy.Presentation.Controllers
 
                 Application.Entities.Patient patient = _patientService.Get(model.Id);
 
-                IList<Application.EntityViews.Case> cases = _patientService.ListCases(model.Id);
                 IList<Application.EntityViews.MeasurementTool> measurementTools = _patientService.ListMeasurementTools(model.Id);
                 IList<Application.EntityViews.TeamMember> teamMembers = _patientService.ListTeamMembers(model.Id);
                 IList<Application.EntityViews.Visit> visits = _visitService.ListVisits(model.Id);
@@ -128,7 +125,6 @@ namespace EPONS.Teddy.Presentation.Controllers
 
                 return View(new ViewObjects.Patient.Edit(baseObject)
                 {
-                    Cases = cases,
                     Patient = patient,
                     MeasurementTools = measurementTools,
                     TeamMembers = teamMembers,

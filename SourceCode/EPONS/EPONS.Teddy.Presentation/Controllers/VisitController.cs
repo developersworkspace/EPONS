@@ -13,14 +13,12 @@ namespace EPONS.Teddy.Presentation.Controllers
         private PatientService _patientService;
         private VisitService _visitService;
         private ListRepository _listRepository;
-        private EpisodesofCareRepository _EpisodeOfCare;
 
         public VisitController()
         {
             _patientService = new PatientService(GetConnection());
             _visitService = new VisitService(GetConnection());
             _listRepository = new ListRepository(GetConnection());
-            _EpisodeOfCare = new EpisodesofCareRepository(GetConnection());
         }
 
         #region Action Methods

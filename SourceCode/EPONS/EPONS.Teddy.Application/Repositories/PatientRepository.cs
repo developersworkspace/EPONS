@@ -129,22 +129,6 @@ namespace EPONS.Teddy.Application.Repositories
             });
         }
 
-        internal void CreateEpisodeOfCare(Guid patientId, Guid userId, Guid facilityId, Guid? reasonForAdmissionId, DateTime? reasonForAdmissionTimestamp, string allocationNumber, Guid? impairmentGroupId, Guid? admissionTypeId)
-        {
-            Execute("[EPONS].[CreateEpisodeOfCare]", new
-            {
-                patientId = patientId,
-                facilityId = facilityId,
-                userid = userId,
-                reasonForAdmissionId = reasonForAdmissionId,
-                reasonForAdmissionTimestamp = reasonForAdmissionTimestamp,
-                allocationNumber = allocationNumber,
-                impairmentGroupId = impairmentGroupId,
-                admissionTypeId = admissionTypeId
-            });
-        }
-
-
         internal int _CreateRefferingDr(EpisodeOfCare model)
         {
 

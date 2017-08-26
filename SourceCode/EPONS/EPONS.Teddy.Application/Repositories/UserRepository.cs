@@ -259,13 +259,5 @@ namespace EPONS.Teddy.Application.Repositories
                 facilityId = facilityId
             });
         }
-        public void SetPosition(string username, Guid PositionId)
-        {
-            Execute("[EPONS].[SetUserPosition]", new
-            {
-                username = username,
-                PositionId = PositionId
-            });
-        }
     }
 }

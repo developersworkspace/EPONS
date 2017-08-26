@@ -13,128 +13,17 @@ namespace EPONS.Teddy.Application.Services
 {
     public class ReportService
     {
-        private HelperService _helperService = new HelperService();
-        private PNGChartingEngine _chartingEngine = new PNGChartingEngine();
         private PDFTemplatingEngine _pdfTemplatingEngine = new PDFTemplatingEngine();
         private PatientRepository _patientRepository;
-        private VisitRepository _visitRepository;
-        //private CaseRepository _caseRepository;
         private FacilityRepository _facilityRepository;
         private ListRepository _listRepository;
-        private DoctorsRepository _doctorsRepository;
-        private EpisodesofCareRepository _EpisodesofCareRepository;
-        private DiagnosesRepository _DiagnosesRepository;
+ 
 
         public ReportService(IDbConnection connection)
         {
             _patientRepository = new PatientRepository(connection);
-            _visitRepository = new VisitRepository(connection);
-            //_caseRepository = new CaseRepository(connection);
             _facilityRepository = new FacilityRepository(connection);
             _listRepository = new ListRepository(connection);
-            _doctorsRepository = new DoctorsRepository(connection);
-            _EpisodesofCareRepository = new EpisodesofCareRepository(connection);
-            _DiagnosesRepository = new DiagnosesRepository(connection);
-        }
-
-        public ProgressReport ProgressReport(Guid patientId, Guid facilityId, DateTime startDate, DateTime endDate, bool includeRadarChart, bool includeLineChart, out string patientName)
-        {
-
-            Entities.Patient patient = _patientRepository.FindById(patientId);
-            patientName = string.Format("{0} {1}", patient.Firstname, patient.Lastname);
-            IList<Entities.Visit> visits = _visitRepository.FindVisits(patientId, startDate, endDate);
-            IList<EntityViews.ReferringDoctors> ReferringDoctors = _doctorsRepository.ReferringDoctors(patientId, startDate, endDate);
-            IList<EntityViews.AttendingDoctors> AttendingDoctors = _doctorsRepository.AttendingDoctors(patientId, startDate, endDate);
-            IList<EntityViews.EpisodesofCare> EpisodesofCare = _EpisodesofCareRepository.EpisodesofCare(patientId, startDate, endDate);
-            IList<EntityViews.Diagnoses> Diagnoses = _DiagnosesRepository.Diagnoses(patientId);
-            //IList<EntityViews.Case> cases = _caseRepository.FindCases(patientId, startDate, endDate);
-            IList<EntityViews.MeasurementTool> measurementTools = _patientRepository.FindMeasurementTools(patientId, startDate, endDate);
-            IList<EntityViews.CompletedMeasurementTool> completedMeasurementTools = _patientRepository.FindCompletedMeasurementTools(patientId, startDate, endDate);
-
-            byte[] patientAvatar = _patientRepository.FindAvatar(patientId);
-
-            patient.Avatar = patientAvatar == null ? null : patientAvatar;
-            byte[] facilityAvatar = _facilityRepository.FindAvatar(facilityId);
-
-
-            ProgressReport progressReport = new ProgressReport()
-            {
-                Patient = patient,
-                Visits = visits.Select((x) =>
-                {
-                    x.ProgressNotes = x.ProgressNotes.RemoveFontTags();
-                    return x;
-                }).ToList(),
-                ReferringDoctors = ReferringDoctors,
-                AttendingDoctors = AttendingDoctors,
-                EpisodesofCare = EpisodesofCare,
-                Diagnoses = Diagnoses,
-                MeasurementTools = measurementTools,
-                StartDate = startDate,
-                EndDate = endDate,
-                TeamMembers = _patientRepository.FindTeamMembers(patientId, startDate, endDate),
-                DateFormat = "yyyy-MM-dd",
-                DateTimeFormat = "yyyy-MM-dd HH:mm",
-                FacilityImage = facilityAvatar,
-                MeasurementToolChartsRadar = new Dictionary<EntityViews.CompletedMeasurementTool, byte[]>(),
-                MeasurementToolChartsLine = new Dictionary<EntityViews.CompletedMeasurementTool, byte[]>(),
-                VitalSignsChart = _helperService.GetVitalSignsChart(visits).DataSets.Count((x) => x.Data.Count((y) => y > 0) > 0) > 0? _chartingEngine.LineChart(1200, 1200, _helperService.GetVitalSignsChart(visits)).ToBytes() : null
-            };
-
-            foreach (var groupedCompletedMeasurementTools in completedMeasurementTools.GroupBy(x => x.Id))
-            {
-                var cps = groupedCompletedMeasurementTools.OrderBy(x => x.StartDate).ToList();
-
-                var data = new List<EntityViews.CompletedMeasurementTool>();
-                if (groupedCompletedMeasurementTools.Count() == 0)
-                    break;
-                else if (groupedCompletedMeasurementTools.Count() == 1)
-                    data.Add(groupedCompletedMeasurementTools.ToList()[0]);
-                else if (groupedCompletedMeasurementTools.Count() == 2)
-                {
-                    data.Add(groupedCompletedMeasurementTools.ToList()[0]);
-                    data.Add(groupedCompletedMeasurementTools.ToList()[1]);
-                }
-                else if (groupedCompletedMeasurementTools.Count() == 3)
-                {
-                    data.Add(groupedCompletedMeasurementTools.ToList()[0]);
-                    data.Add(groupedCompletedMeasurementTools.ToList()[1]);
-                    data.Add(groupedCompletedMeasurementTools.ToList()[2]);
-                }
-                else
-                {
-                    data.Add(groupedCompletedMeasurementTools.ToList()[0]);
-                    data.Add(groupedCompletedMeasurementTools.ToList()[groupedCompletedMeasurementTools.Count() / 2]);
-                    data.Add(groupedCompletedMeasurementTools.ToList()[groupedCompletedMeasurementTools.Count() - 1]);
-                }
-
-
-                if (includeRadarChart)
-                {
-                    if (data.SelectMany(x => x.ScoreItems).Count(x => x.Value > 0) > 0)
-                    {
-                        Bitmap bmp = _chartingEngine.RadarChart(1200, 1200, _helperService.ToRadarChart(data), -1);
-                        
-                        progressReport.MeasurementToolChartsRadar.Add(groupedCompletedMeasurementTools.First(), bmp.ToBytes());
-                        bmp.Dispose();
-                    }
-                }
-
-
-                if (includeLineChart)
-                {
-                    if (data.SelectMany(x => x.ScoreItems).Count(x => x.Value > 0) > 0)
-                    {
-                        Bitmap bmp = _chartingEngine.LineChart(1200, 1200, _helperService.ToLineChart(cps), -1);
-
-                        progressReport.MeasurementToolChartsLine.Add(groupedCompletedMeasurementTools.First(), bmp.ToBytes());
-                        bmp.Dispose();
-                    }
-                }
-            }
-
-            return progressReport;
-
         }
 
         public Stream FacilityPerformanceReportStream(Guid measurementToolId, DateTime startDate, DateTime endDate, Guid facilityId, List<Guid> medicalSchemeIds, out string facilityName)

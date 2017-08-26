@@ -12,14 +12,12 @@ namespace EPONS.Teddy.Application.Services
     {
 
         private PatientRepository _patientRepository;
-        private CaseRepository _caseRepository;
         private ListRepository _listRepository;
         private VisitRepository _visitRepository;
 
         public PatientService(IDbConnection connection)
         {
             _patientRepository = new PatientRepository(connection);
-            _caseRepository = new CaseRepository(connection);
             _listRepository = new ListRepository(connection);
             _visitRepository = new VisitRepository(connection);
         }
@@ -51,12 +49,6 @@ namespace EPONS.Teddy.Application.Services
             teamMember.FacilityId = facility == null ? Guid.Empty : facility.Id;
 
             return teamMember;
-        }
-
-
-        public IList<EntityViews.Case> ListCases(Guid patientId)
-        {
-            return _caseRepository.FindCases(patientId);
         }
 
         public Guid Create(Entities.Patient patient)
@@ -163,7 +155,6 @@ namespace EPONS.Teddy.Application.Services
                 reasonForAdmissionId = icd10Codes.FirstOrDefault().Id;
             }
             model.ReasonForAdmissionId = reasonForAdmissionId;
-            //_patientRepository.CreateEpisodeOfCare(model.PatientId, model.FacilityId, reasonForAdmissionId, model.ReasonForAdmissionTimestamp, model.AllocationNumber, model.ImpairmentGroupId, model.AdmissionTypeId);
             _patientRepository._CreateEpisodeOfCare(model);
         }
 

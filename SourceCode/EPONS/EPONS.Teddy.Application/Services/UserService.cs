@@ -27,10 +27,7 @@ namespace EPONS.Teddy.Application.Services
         {
             _userRepository.SetFacility(username, facilityId);
         }
-        public void SetPosition(string username, Guid PositionId)
-        {
-            _userRepository.SetPosition(username, PositionId);
-        }
+
         public Entities.User Get(Guid id)
         {
             Entities.User userModel = _userRepository.FindById(id);

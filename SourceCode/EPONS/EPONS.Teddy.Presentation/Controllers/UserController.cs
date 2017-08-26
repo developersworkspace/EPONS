@@ -81,12 +81,7 @@ namespace EPONS.Teddy.Presentation.Controllers
 
             return Redirect(Request.UrlReferrer.AbsoluteUri);
         }
-        public ActionResult SetPosition(Guid PositionId)
-        {
-            _userService.SetPosition(User.Identity.Name, PositionId);
 
-            return Redirect(Request.UrlReferrer.AbsoluteUri);
-        }
         [HttpGet]
         [Authorize(Order = 4)]
         public ActionResult Impersonate(string username)
