@@ -220,7 +220,7 @@
 @if (Model.CanAllocateTeamMember(Model.EpisodesOfCare))
 {
 
-    @Html.Partial("_AllocateTeamMemberModal", Model.TeamMember, new ViewDataDictionary { { "TeamMembers", Model.TeamMembers } })
+    @Html.Partial("_AllocateTeamMemberModal", Model.TeamMember, new ViewDataDictionary { { "TeamMembers", Model.TeamMembers }, { "BaseModel", baseModel } })
 }
 
 @Html.Partial("_CreateEpisodeOfCareModal", Model.EpisodeOfCare)

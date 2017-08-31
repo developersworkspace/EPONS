@@ -1,6 +1,7 @@
 ﻿@model EPONS.Teddy.Application.Entities.TeamMember
 @{
     var teamMembers = (List<EPONS.Teddy.Application.EntityViews.TeamMember>)ViewData["TeamMembers"];
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)ViewData["BaseModel"];
 
 }
 <div id="allocateTeamMemberModal" class="modal fade" role="dialog">
@@ -16,17 +17,28 @@
             {
                 <div class="modal-body">
                     <p class="text-danger">@TempData["Message_AllocateTeamMember"]</p>
-                    <div class="row">
-                        <div class="col-md-3">
-                            @Html.DisplayNameFor(x => x.FacilityId)
+
+                    @if (baseModel.IsSuperAdmin())
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.DisplayNameFor(x => x.FacilityId)
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            @Html.DropDownListFor(x => x.FacilityId, new SelectList(Model.Facilities, "Id", "Name"), "", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(x => x.FacilityId, null, new { @class = "text-danger" })
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(x => x.FacilityId, new SelectList(Model.Facilities, "Id", "Name"), "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.FacilityId, null, new { @class = "text-danger" })
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <text>
+                            @Html.HiddenFor(x => x.FacilityId)
+                        </text>
+                    }
+
                     <div class="row">
                         <div class="col-md-3">
                             @Html.DisplayNameFor(x => x.UserIds)
@@ -77,7 +89,7 @@
         });
 
         $('#FacilityId').change();
-    
+
     });
 
     function showAllocateTeamMemberModal() {
