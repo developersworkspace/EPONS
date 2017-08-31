@@ -72,14 +72,6 @@ namespace EPONS.Teddy.Presentation.Controllers
             return Json(icd10Codes.Select(x => new { id = x.Id, name = x.Name }), JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpGet]
-        //public ActionResult SearchUsers(string query)
-        //{
-        //    int totalRecords;
-
-        //    return Json(_userService.List(1, 100, query, out totalRecords).Select(x => new { id = x.Id, name = x.DisplayName }), JsonRequestBehavior.AllowGet);
-        //}
-
         [HttpGet]
         public ActionResult FacilityUsers(Guid patientId, Guid facilityId)
         {

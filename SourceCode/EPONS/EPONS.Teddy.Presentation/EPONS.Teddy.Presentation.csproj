@@ -242,17 +242,14 @@
     <Compile Include="Attributes\Models\RequestObject.cs" />
     <Compile Include="ConfigurationDefaults.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\CaseController.cs" />
     <Compile Include="Controllers\DatabaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FacilityController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MessagingController.cs" />
-    <Compile Include="Controllers\OAuthController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
@@ -418,9 +415,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\PDFTemplates\ProgressReport.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="scripts\ai.0.15.0-build58334.js" />
     <Content Include="scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
@@ -442,9 +436,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Account\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\font-awesome\fonts\fontawesome-webfontd41d.eot" />
@@ -485,10 +477,6 @@
     <Content Include="Views\Patient\_CreatePatientModal.cshtml" />
     <Content Include="Views\Patient\Create.cshtml" />
     <Content Include="Views\Patient\_PatientCreate.cshtml" />
-    <Content Include="Views\Case\Create.cshtml" />
-    <Content Include="Views\Case\_CaseCreate.cshtml" />
-    <Content Include="Views\Case\Edit.cshtml" />
-    <Content Include="Views\Case\_CaseDetails.cshtml" />
     <Content Include="Views\Visit\_VisitDetails.cshtml" />
     <Content Include="Views\Visit\_VisitNotes.cshtml" />
     <Content Include="Views\Administration\List.cshtml" />
@@ -524,7 +512,6 @@
     <Content Include="Views\Facility\_FacilityEdit.cshtml" />
     <Content Include="Views\Facility\_AddMeasurementToolModal.cshtml" />
     <Content Include="Views\Facility\_ListMeasurementTools.cshtml" />
-    <Content Include="Views\OAuth\Invalid.cshtml" />
     <Content Include="Views\Administration\_CreateUserModal.cshtml" />
     <Content Include="Views\Patient\_DeallocateTeamMemberModal.cshtml" />
     <Content Include="Views\Patient\_DeallocateAllTeamMembersModal.cshtml" />
