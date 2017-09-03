@@ -28,7 +28,14 @@
 
         <div class="row" style="text-align: center; margin-top:15px">
             <div class="col-xs-12">
-                <a href="@Url.Action("List", "Administration")" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+                @if (baseModel.IsSuperAdmin())
+                {
+                    <a href="@Url.Action("List", "Administration")" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("List", "Patient")" class="btn btn-warning btn-sm" style="width: 90%;"><i class="fa fa-close"></i>&nbsp;Close</a>
+                }
             </div>
         </div>
     </div>
