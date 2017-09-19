@@ -21,7 +21,8 @@ ROUND([visit].[PulseOximetry], 2) AS [PulseOximetry],
 ROUND([visit].[RespiratoryRate], 2) AS [RespiratoryRate],
 [visit].[IsPrivate] AS [IsPrivate],
 [impairmentGroup].[ImpairmentGroupId] AS [ImpairmentGroupId],
-[impairmentGroup].[Code] + ' - ' + [impairmentGroup].[Name]  AS [ImpairmentGroup]
+[impairmentGroup].[Code] + ' - ' + [impairmentGroup].[Name]  AS [ImpairmentGroup],
+[visit].[DurationofVisitinMinutes] AS [DurationOfVisit]
 FROM [Visit].[Details] AS [visit]
 LEFT JOIN [ValueObjects].[ImpairmentGroups] AS [impairmentGroup]
 ON [impairmentGroup].[ImpairmentGroupId] = (SELECT TOP 1 [patientImpairmentGroup].[ImpairmentGroupId] FROM [Audit].[PatientImpairmentGroup] AS [patientImpairmentGroup] WHERE [patientImpairmentGroup].[AuditTimestamp] <= [visit].[Timestamp] ORDER BY [patientImpairmentGroup].[AuditTimestamp] DESC)
