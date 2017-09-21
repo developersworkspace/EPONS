@@ -24,7 +24,7 @@ namespace EPONS.Teddy.Presentation.Controllers
 
         [HttpGet]
         [Authorize(Order = 4)]
-        public ActionResult ProgressReportRedesigned(Guid patientId, DateTime startDate, DateTime endDate, bool includeRadarChart, bool includeLineChart)
+        public ActionResult ProgressReportRedesigned(Guid patientId, DateTime startDate, DateTime endDate, bool includeRadarChart, bool includeLineChart, bool showCaseManagerNotes, bool showDailyClinicalNotes)
         {
             var baseObject = GetBaseObject();
 
@@ -34,7 +34,9 @@ namespace EPONS.Teddy.Presentation.Controllers
                 StartDate = startDate,
                 EndDate = endDate,
                 IncludeLineChart = includeLineChart,
-                IncludeRadarChart = includeRadarChart
+                IncludeRadarChart = includeRadarChart,
+                ShowCaseManagerNotes = showCaseManagerNotes,
+                ShowDailyClinicalNotes = showCaseManagerNotes
             });
         }
 

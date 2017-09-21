@@ -33,7 +33,7 @@
                     <h5>Progress Report</h5>
                 </div>
                 <div class="ibox-content">
-                    <epons-patient-report showRadarChart="@Model.IncludeRadarChart.ToString()" showLineChart="@Model.IncludeLineChart.ToString()" startDate="@Model.StartDate.ToString("yyyy-MM-dd")" endDate="@Model.EndDate.ToString("yyyy-MM-dd")" patientId="@Model.PatientId" facilityId="@Model.GetCurrentFacilityId()"></epons-patient-report>
+                    <epons-patient-report showRadarChart="@Model.IncludeRadarChart.ToString()" showLineChart="@Model.IncludeLineChart.ToString()" startDate="@Model.StartDate.ToString("yyyy-MM-dd")" endDate="@Model.EndDate.ToString("yyyy-MM-dd")" patientId="@Model.PatientId" facilityId="@Model.GetCurrentFacilityId()" showDailyClinicalNotes="@Model.ShowDailyClinicalNotes" showCaseManagerNotes="@Model.ShowCaseManagerNotes"></epons-patient-report>
                     <link href="http://ui-epons.sadfm.co.za/epons-patient-report/styles.d41d8cd98f00b204e980.bundle.css" rel="stylesheet">
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
                     
