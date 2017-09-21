@@ -271,9 +271,9 @@
                             </a>
                         </li>
                         <li>
-                            <span class="btn btn-sm btn-success" data-toggle="collapse" data-target="#sendMessageToDevelopers">
-                                <i class="fa fa-send-o"></i> Send message to Developers
-                            </span>
+                            <a target="_blank" href="https://chat-application.openservices.co.za">
+                                <i class="fa fa-send-o"></i> Live Chat with Support Team
+                            </a>
                         </li>
                     </ul>
 
@@ -302,21 +302,6 @@
                         </p>
                     </div>
                 }
-                <div id="sendMessageToDevelopers" class="collapse">
-                    <div class="container">
-                        <div class="col-md-8 col-md-offset-2">
-                            <form action="@Url.Action("SendMessage", "Ajax")" method="POST">
-                                <div class="form-group">
-                                    <label for="comment">Enter message to developers here:</label>
-                                    <textarea class="form-control" rows="5" name="message" id="message"></textarea>
-                                </div>
-                                <button class="btn btn-success pull-right" type="submit">Send</button>
-                            </form>
-                        </div>
-                    </div>
-                    <br />
-                    <br />
-                </div>
                 @RenderBody()
             </div>
             <div class="footer">
