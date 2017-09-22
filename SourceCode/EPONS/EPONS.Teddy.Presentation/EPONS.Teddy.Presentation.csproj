@@ -242,6 +242,7 @@
     <Compile Include="Attributes\Models\RequestObject.cs" />
     <Compile Include="ConfigurationDefaults.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -436,6 +437,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Account\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
