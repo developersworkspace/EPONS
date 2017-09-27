@@ -30,7 +30,7 @@
         <div class="col-md-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Progress Report</h5>
+                    <h5>Patient Report</h5>
                 </div>
                 <div class="ibox-content">
                     <epons-patient-report showRadarChart="@Model.IncludeRadarChart.ToString()" showLineChart="@Model.IncludeLineChart.ToString()" startDate="@Model.StartDate.ToString("yyyy-MM-dd")" endDate="@Model.EndDate.ToString("yyyy-MM-dd")" patientId="@Model.PatientId" facilityId="@Model.GetCurrentFacilityId()" showDailyClinicalNotes="@Model.ShowDailyClinicalNotes" showCaseManagerNotes="@Model.ShowCaseManagerNotes"></epons-patient-report>
