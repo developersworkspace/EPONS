@@ -12,7 +12,8 @@ SELECT
 [user].[Firstname] AS [Firstname],
 [user].[Lastname] AS [Lastname],
 [teamMember].[AllocationTimestamp] AS [AllocationDate],
-[teamMember].[DeallocationTimestamp] AS [DeallocationDate]
+[teamMember].[DeallocationTimestamp] AS [DeallocationDate],
+[position].[Name] AS [Position]
 FROM [Patient].[TeamMembers] AS [teamMember]
 INNER JOIN [User].[Details] AS [user]
 ON 
@@ -27,6 +28,8 @@ AND
 [userPermission].[FacilityId] = [facility].[FacilityId]
 INNER JOIN [ValueObjects].[Permissions] AS [permission]
 ON [permission].[PermissionId] = [userPermission].[PermissionId] 
+INNER JOIN [ValueObjects].[Positions] AS [position]
+ON [position].[PositionId] = [user].[CurrentPositionId]
 ORDER BY [teamMember].[DeallocationTimestamp] ASC, [teamMember].[AllocationTimestamp] DESC
 
 EXEC [Audit].[CreateLogEntry] '[EPONS].[FindTeamMembersByPatientId]', 'Executed'
