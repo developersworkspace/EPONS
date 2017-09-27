@@ -13,7 +13,7 @@
                 @Html.DisplayNameFor(model => model.Fullname)
             </th>
             <th class="hidden-sm hidden-xs">
-                @Html.DisplayNameFor(model => model.Permission)
+                @Html.DisplayNameFor(model => model.Position)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AllocationDate)
@@ -34,7 +34,7 @@
                     @item.Fullname
                 </td>
                 <td class="hidden-sm hidden-xs">
-                    @item.Permission
+                    @item.Position
                 </td>
                 <td>
                     @item.AllocationDate.ToString(ConfigurationDefaults.DateFormat)

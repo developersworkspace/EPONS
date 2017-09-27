@@ -63,7 +63,21 @@ namespace EPONS.Teddy.Application.Services
 
         public IList<EntityViews.MeasurementTool> ListMeasurementTools(Guid patientId)
         {
-            return _patientRepository.FindMeasurementTools(patientId);
+            IList<CompletedMeasurementTool> completedMeasurementTools =  _patientRepository.FindCompletedMeasurementTools(patientId, DateTime.Now.Subtract(new TimeSpan(365, 0, 0, 0)), DateTime.Now);
+
+            IList<EntityViews.MeasurementTool> measurementTools = _patientRepository.FindMeasurementTools(patientId);
+
+            foreach (EntityViews.CompletedMeasurementTool completedMeasurementTool in completedMeasurementTools)
+            {
+                EntityViews.MeasurementTool measurementTool = measurementTools.SingleOrDefault((x) => x.Id == completedMeasurementTool.Id);
+
+                if (measurementTool != null)
+                {
+                    measurementTool.LastCompletedTimestamp = measurementTool.LastCompletedTimestamp < completedMeasurementTool.StartDate ? completedMeasurementTool.StartDate : measurementTool.LastCompletedTimestamp; 
+                }
+            }
+
+            return measurementTools;
         }
 
         public IList<EntityViews.TeamMember> ListTeamMembers(Guid patientId)

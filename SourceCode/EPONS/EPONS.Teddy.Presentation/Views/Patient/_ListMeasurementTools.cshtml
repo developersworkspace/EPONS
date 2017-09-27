@@ -18,7 +18,7 @@
 
     @foreach (var item in Model)
     {
-        <tr>
+        <tr style="@(item.IsOverDue()? "background-color: #ffb2b2" : "")" >
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
