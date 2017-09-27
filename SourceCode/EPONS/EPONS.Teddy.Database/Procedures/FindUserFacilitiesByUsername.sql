@@ -16,5 +16,6 @@ AND
 [credentials].[UserId] = [facilityPermission].[UserId]
 INNER JOIN [Facility].[Details] AS [facility]
 ON [facility].[FacilityId] = [facilityPermission].[FacilityId]
+ORDER BY [facility].[Name] ASC
 
 EXEC [Audit].[CreateLogEntry] '[EPONS].[FindUserFacilitiesByUsername]', 'Executed'

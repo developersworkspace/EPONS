@@ -48,7 +48,7 @@ namespace EPONS.Teddy.Presentation.Controllers
             {
                 MessagesList = messages,
                 Patient = _patientService.Get(patientId),
-                TeamMembers = _patientService.ListTeamMembers(patientId).GroupBy(x => x.Id).Select(x => x.First()).ToList()
+                TeamMembers = _patientService.ListTeamMembers(patientId).GroupBy(x => x.Id).Select(x => x.First()).OrderBy((x) => x.Fullname).ToList()
             });
         }
 
@@ -73,7 +73,7 @@ namespace EPONS.Teddy.Presentation.Controllers
             {
                 MessagesList = messages,
                 Patient = _patientService.Get(model.PatientId),
-                TeamMembers = _patientService.ListTeamMembers(model.PatientId).GroupBy(x => x.Id).Select(x => x.First()).ToList()
+                TeamMembers = _patientService.ListTeamMembers(model.PatientId).GroupBy(x => x.Id).Select(x => x.First()).OrderBy((x) => x.Fullname).ToList()
             });
         }
     }
