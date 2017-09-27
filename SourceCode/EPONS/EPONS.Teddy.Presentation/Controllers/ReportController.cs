@@ -36,7 +36,7 @@ namespace EPONS.Teddy.Presentation.Controllers
                 IncludeLineChart = includeLineChart,
                 IncludeRadarChart = includeRadarChart,
                 ShowCaseManagerNotes = showCaseManagerNotes,
-                ShowDailyClinicalNotes = showCaseManagerNotes
+                ShowDailyClinicalNotes = showDailyClinicalNotes
             });
         }
 
