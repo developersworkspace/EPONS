@@ -1,5 +1,7 @@
 ﻿@model EPONS.Teddy.Application.Entities.Visit
-
+@{ 
+    var parentModel = (EPONS.Teddy.Presentation.ViewObjects.Visit.Create)ViewData["Model"];
+}
 
 <div class="row">
     <div class="col-md-3">
@@ -9,10 +11,21 @@
 @Html.DropDownListFor(x => x.ImpairmentGroupId, new SelectList(Model.ImpairmentGroups, "Id", "Name"), "", new
 {
     @class = "form-control",
+    disabled = "disabled",
     value = Model.ImpairmentGroupId == null ? null : Model.ImpairmentGroupId,
 
 })
 @Html.ValidationMessageFor(x => x.ImpairmentGroupId, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        Primary Diagnosis
+    </div>
+    <div class="col-md-9">
+       <select disabled class="form-control">
+           <option selected>@parentModel.EpisodeOfCare.ReasonForAdmissionName</option>
+       </select>
     </div>
 </div>
 <div class="row">
@@ -26,31 +39,33 @@
 </div>
 <div class="row">
     <div class="col-md-3">
-        @Html.DisplayNameFor(x => x.DurationOfVisit)
+        @Html.DisplayNameFor(x => x.DurationOfVisit) (minutes)
     </div>
     <div class="col-md-9">
-    @{
-        var DurationList = new SelectList(new[] {
-
-                new SelectListItem { Text = "5 Minutes", Value = "5"},
-                new SelectListItem { Text = "10 Minutes", Value = "10"},
-                new SelectListItem { Text = "15 Minutes", Value = "15"},
-                new SelectListItem { Text = "20 Minutes", Value = "20"},
-                new SelectListItem { Text = "25 Minutes", Value = "25"},
-                new SelectListItem { Text = "30 Minutes", Value = "30"},
-                new SelectListItem { Text = "35 Minutes", Value = "35"},
-                new SelectListItem { Text = "40 Minutes", Value = "10"},
-                new SelectListItem { Text = "45 Minutes", Value = "15"},
-                new SelectListItem { Text = "50 Minutes", Value = "20"},
-                new SelectListItem { Text = "55 Minutes", Value = "25"},
-                new SelectListItem { Text = "60 Minutes", Value = "30"},
-       }, "Value", "Text");
-    }
-    @Html.DropDownList("DurationOfVisit", DurationList, "", new
-{
-    @class = "form-control",
-    @onchange = "EnableSubmit()"
-})
+        <input name="DurationOfVisit" class="form-control" type="text" list="durations" onchange="EnableSubmit()" />
+        <datalist id="durations">
+            <option>5</option>
+            <option>10</option>
+            <option>15</option>
+            <option>20</option>
+            <option>25</option>
+            <option>30</option>
+            <option>35</option>
+            <option>40</option>
+            <option>45</option>
+            <option>50</option>
+            <option>55</option>
+            <option>60</option>
+        </datalist>
+        <p class="text-danger small"></p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        Visit done by
+    </div>
+    <div class="col-md-9">
+        @parentModel.User.Title @parentModel.User.Firstname @parentModel.User.Lastname
     </div>
 </div>
 @Html.HiddenFor(x => x.PatientId)

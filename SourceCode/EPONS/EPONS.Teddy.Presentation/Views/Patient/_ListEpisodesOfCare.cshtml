@@ -60,21 +60,12 @@
                 @Html.DisplayFor(modelItem => item.AttendingDoctorName)
             </td>
             <td>
-                @*@Html.Partial("EditEpisodeOfCare", typeof(EpisodeOfCare))*@
-                @*<button onclick="showeditEpisodeOfCareModal()" class="btn btn-primary btn-sm pull-right">Create</button>*@
-                @if(item.DeallocationTimestamp == null) { 
-                <button onclick="showEditEpisodeOfCareModal($(this))" class="btn btn-primary btn-sm edit" EpisodeOfCareId="@item.EpisodeOfCareId">Edit</button>
+                @if (item.DeallocationTimestamp == null)
+                {
+                    <button onclick="showEditEpisodeOfCareModal($(this))" class="btn btn-primary btn-sm edit" EpisodeOfCareId="@item.EpisodeOfCareId">Edit</button>
                 }
-                @*<a href="@Url.Action("EditEpisodeOfCare", "Patient", new {episodeofCareId = item.EpisodeOfCareId})" class="btn btn-primary btn-sm pull-right">">Edit</a>*@
-                @*<a href="javascript:void(0);" id="myModalContent" data-id="@item.EpisodeOfCareId">Edit</a>*@ 
             </td>
         </tr>
     }
 
 </table>
-
-
-@*<script type="text/x-mustache-template" id="modalTemplate">
-    <%Html.RenderPartial("EPONS.Teddy.Application.Entities.EpisodeOfCare");%>
-    @Html.Partial("EditEpisodeOfCare", typeof(EpisodeOfCare))
-</script>*@
