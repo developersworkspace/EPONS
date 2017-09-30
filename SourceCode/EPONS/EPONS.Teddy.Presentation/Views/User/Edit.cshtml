@@ -117,26 +117,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <span>Change Password</span>
-                                </h4>
-                                <button data-toggle="collapse" data-parent="#accordion" href="#collapse4" class="collapsed btn btn-success btn-sm pull-right" aria-expanded="false">
-                                    <i class="fa fa-minus"></i>
-                                    <i class="fa fa-plus"></i>
-                                    View
-                                </button>
-                            </div>
-                            <div id="collapse4" class="panel-collapse collapse" aria-expanded="false">
-                                <div class='panel-body'>
-                                    @Html.Partial("_ChangePassword", new EPONS.Teddy.Presentation.ViewObjects.User.ChangePassword()
-                               {
-                                   UserId = Model.UserModel.Id
-                               })
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
