@@ -1,5 +1,8 @@
 ﻿@using EPONS.Teddy.Application.Entities
 @model IEnumerable<EPONS.Teddy.Application.EntityViews.EpisodeOfCare>
+@{ 
+    var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)ViewData["BaseModel"];
+}
 
 <table class="table">
     <tr>
@@ -60,7 +63,7 @@
                 @Html.DisplayFor(modelItem => item.AttendingDoctorName)
             </td>
             <td>
-                @if (item.DeallocationTimestamp == null)
+                @if (item.DeallocationTimestamp == null && baseModel.User.Permissions.Count(x => x.Name == "Case Manager") > 0)
                 {
                     <button onclick="showEditEpisodeOfCareModal($(this))" class="btn btn-primary btn-sm edit" EpisodeOfCareId="@item.EpisodeOfCareId">Edit</button>
                 }

@@ -113,7 +113,10 @@
                             </div>
                             <div id="collapse2" class="panel-collapse collapse" aria-expanded="false">
                                 <div class="panel-body">
-                                    @Html.Partial("_ListEpisodesOfCare", Model.EpisodesOfCare)
+                                    @Html.Partial("_ListEpisodesOfCare", Model.EpisodesOfCare, new ViewDataDictionary()
+                               {
+                                   new KeyValuePair<string, object>("BaseModel", baseModel)
+                               })
                                 </div>
                             </div>
                         </div>
