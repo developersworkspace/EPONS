@@ -17,6 +17,8 @@ namespace EPONS.Teddy.Presentation.ViewObjects.Report
         public bool IncludeRadarChart { get; set; }
         [Display(Name = "Include Line Chart")]
         public bool IncludeLineChart { get; set; }
+        public bool ShowCaseManagerNotes { get; set; }
+        public bool ShowDailyClinicalNotes { get; set; }
 
         public ProgressReport() : base()
         {

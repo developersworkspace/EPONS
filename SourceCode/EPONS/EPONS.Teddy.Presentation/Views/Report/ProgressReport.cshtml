@@ -1,18 +1,18 @@
 ﻿@model EPONS.Teddy.Presentation.ViewObjects.Report.ProgressReport
 @{
-    ViewBag.Title = "Progress Report";
+    ViewBag.Title = "Patient Report";
 }
 
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-md-10">
-        <h2>Progress Report</h2>
+        <h2>Patient Report</h2>
         <ol class="breadcrumb">
             <li>
                 <a href="@Url.Action("","")">Report</a>
             </li>
             <li class="active">
-                <strong>Progress Report</strong>
+                <strong>Patient Report</strong>
             </li>
         </ol>
     </div>
@@ -29,7 +29,7 @@
         <div class="col-md-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Progress Report Filter</h5>
+                    <h5>Patient Report Filter</h5>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
@@ -66,7 +66,8 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-success pull-right" type="button" formtarget="_blank" onclick="btnView_click()">New Improved Progress Report</button>
+                            <button class="btn btn-success pull-right" type="button" formtarget="_blank" onclick="btnView_click('true', 'false')" style="margin-left: 10px">Progress Report for Case Manager</button>
+                            <button class="btn btn-success pull-right" type="button" formtarget="_blank" onclick="btnView_click('false', 'true')">Daily Clinical Notes</button>
                         </div>
                     </div>
                 </div>
@@ -108,14 +109,14 @@
 
         });
 
-        function btnView_click() {
+        function btnView_click(showCaseManagerNotes, showDailyClinicalNotes) {
 
             const startDate = $('#StartDate').val();
             const endDate = $('#EndDate').val();
             const includeLineChart = $('#IncludeLineChart').is(':checked');
             const includeRadarChart = $('#IncludeRadarChart').is(':checked');
 
-            window.location.href = `/Report/ProgressReportRedesigned?patientId=@Model.PatientId&startDate=${startDate}&endDate=${endDate}&includeRadarChart=${includeRadarChart}&includeLineChart=${includeLineChart}`;
+            window.location.href = `/Report/ProgressReportRedesigned?patientId=@Model.PatientId&startDate=${startDate}&endDate=${endDate}&includeRadarChart=${includeRadarChart}&includeLineChart=${includeLineChart}&showCaseManagerNotes=${showCaseManagerNotes}&showDailyClinicalNotes=${showDailyClinicalNotes}`;
         }
 
 
