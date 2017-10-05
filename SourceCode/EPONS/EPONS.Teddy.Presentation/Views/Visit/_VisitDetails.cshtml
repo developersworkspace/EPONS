@@ -12,6 +12,7 @@
 {
     @class = "form-control",
     disabled = "disabled",
+    data_placeholder = " ",
     value = Model.ImpairmentGroupId == null ? null : Model.ImpairmentGroupId,
 
 })
@@ -23,7 +24,7 @@
         Primary Diagnosis
     </div>
     <div class="col-md-9">
-       <select disabled class="form-control">
+       <select data-placeholder=" ", disabled class="form-control">
            <option selected>@parentModel.EpisodeOfCare.ReasonForAdmissionName</option>
        </select>
     </div>
