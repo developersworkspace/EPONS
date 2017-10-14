@@ -9,9 +9,11 @@ using System.Runtime.Caching;
 using System.Web.Mvc;
 using System.Linq;
 using Epons.Gateway.Helpers;
+using EPONS.Teddy.Presentation.Attributes;
 
 namespace EPONS.Teddy.Presentation.Controllers
 {
+    [ResponseTime]
     public class BaseController : Controller
     {
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using StatsdClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,36 +22,56 @@ namespace EPONS.Teddy.Application.Repositories
 
         protected List<T> Query<T>(string spName, object parameters)
         {
-            var data = _connection.Query<T>(spName, parameters, commandType: CommandType.StoredProcedure);
+            using (Metrics.StartTimer($"Repository-Query-{spName}"))
+            {
+                var data = _connection.Query<T>(spName, parameters, commandType: CommandType.StoredProcedure);
 
-            _logger.InfoFormat("Executed {0} - Returned {1} results", spName, data.Count());
+                _logger.InfoFormat("Executed {0} - Returned {1} results", spName, data.Count());
 
-            return data.ToList();
+                Metrics.Counter("Repository-Query");
+
+                return data.ToList();
+            }
         }
 
         protected T QueryOne<T>(string spName, object parameters)
         {
-            var data = _connection.Query<T>(spName, parameters, commandType: CommandType.StoredProcedure);
+            using (Metrics.StartTimer($"Repository-QueryOne-{spName}"))
+            {
+                var data = _connection.Query<T>(spName, parameters, commandType: CommandType.StoredProcedure);
 
-            _logger.InfoFormat("Executed {0} - Returned {1} results", spName, data.Count());
+                _logger.InfoFormat("Executed {0} - Returned {1} results", spName, data.Count());
 
-            return data.FirstOrDefault();
+                Metrics.Counter("Repository-QueryOne");
+
+                return data.FirstOrDefault();
+            }
         }
 
         protected GridReader QueryMultiple(string spName, object parameters)
         {
-            GridReader gridReader = _connection.QueryMultiple(spName, parameters, commandType: CommandType.StoredProcedure);
+            using (Metrics.StartTimer($"Repository-QueryMultiple-{spName}"))
+            {
+                GridReader gridReader = _connection.QueryMultiple(spName, parameters, commandType: CommandType.StoredProcedure);
 
-            _logger.InfoFormat("Executed {0}", spName);
+                _logger.InfoFormat("Executed {0}", spName);
 
-            return gridReader;
+                Metrics.Counter("Repository-QueryMultiple");
+
+                return gridReader;
+            }
         }
 
         protected void Execute(string spName, object parameters)
         {
-            _connection.Execute(spName, parameters, commandType: CommandType.StoredProcedure);
+            using (Metrics.StartTimer($"Repository-Execute-{spName}"))
+            {
+                _connection.Execute(spName, parameters, commandType: CommandType.StoredProcedure);
 
-            _logger.InfoFormat("Executed {0}", spName);
+                _logger.InfoFormat("Executed {0}", spName);
+
+                Metrics.Counter("Repository-Execute");
+            }
         }
     }
 }
