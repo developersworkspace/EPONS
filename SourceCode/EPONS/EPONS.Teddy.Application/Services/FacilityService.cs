@@ -8,6 +8,7 @@ using EPONS.Teddy.Application.EntityViews;
 using EPONS.Teddy.Application.Repositories;
 using EPONS.Teddy.Application.ValueObjects;
 using EPONS.Teddy.Application.Exceptions;
+using StatsdClient;
 
 namespace EPONS.Teddy.Application.Services
 {
@@ -22,52 +23,79 @@ namespace EPONS.Teddy.Application.Services
 
         public List<Facility> List()
         {
-            return _facilityRepository.List();
+            using (Metrics.StartTimer($"FacilityService-List"))
+            {
+                return _facilityRepository.List();
+            }
         }
 
 
         public void Create(Entities.Facility model)
         {
-            _facilityRepository.SaveFacility(model);
+            using (Metrics.StartTimer($"FacilityService-Create"))
+            {
+                _facilityRepository.SaveFacility(model);
+            }
         }
 
         public Entities.Facility Get(Guid facilityId)
         {
-            return _facilityRepository.FindById(facilityId);
+            using (Metrics.StartTimer($"FacilityService-Get"))
+            {
+                return _facilityRepository.FindById(facilityId);
+            }
         }
         public byte[] Avatar(Guid facilityId)
         {
-            return _facilityRepository.FindAvatar(facilityId);
+            using (Metrics.StartTimer($"FacilityService-Avatar"))
+            {
+                return _facilityRepository.FindAvatar(facilityId);
+            }
         }
 
         public List<ListItem> ListMeasurementTools(Guid facilityId)
         {
-            return _facilityRepository.FindMeasurementToolsById(facilityId);
+            using (Metrics.StartTimer($"FacilityService-ListMeasurementTools"))
+            {
+                return _facilityRepository.FindMeasurementToolsById(facilityId);
+            }
         }
 
         public void AddMeasurementTool(Guid facilityId, Guid measurementToolId)
         {
-            var measurementTools = _facilityRepository.FindMeasurementToolsById(facilityId);
+            using (Metrics.StartTimer($"FacilityService-AddMeasurementTool"))
+            {
+                var measurementTools = _facilityRepository.FindMeasurementToolsById(facilityId);
 
-            if (measurementTools.Count(x => x.Id == measurementToolId) > 0)
-                throw new BusinessRuleException("Facility already has this measurement tool assigned");
-               
-            _facilityRepository.CreateFacilityMeasurementTool(facilityId, measurementToolId);
+                if (measurementTools.Count(x => x.Id == measurementToolId) > 0)
+                    throw new BusinessRuleException("Facility already has this measurement tool assigned");
+
+                _facilityRepository.CreateFacilityMeasurementTool(facilityId, measurementToolId);
+            }
         }
 
         public void RemoveMeasurementTool(Guid facilityId, Guid measurementToolId)
         {
-            _facilityRepository.DeleteMeasurementTool(facilityId, measurementToolId);
+            using (Metrics.StartTimer($"FacilityService-RemoveMeasurementTool"))
+            {
+                _facilityRepository.DeleteMeasurementTool(facilityId, measurementToolId);
+            }
         }
 
         public void Save(Entities.Facility model)
         {
-            _facilityRepository.UpdateFacility(model);
+            using (Metrics.StartTimer($"FacilityService-Save"))
+            {
+                _facilityRepository.UpdateFacility(model);
+            }
         }
 
         public void SaveAvatar(Guid facilityId, byte[] bytes)
         {
-            _facilityRepository.UpdateFacilityAvatar(facilityId, bytes);
+            using (Metrics.StartTimer($"FacilityService-SaveAvatar"))
+            {
+                _facilityRepository.UpdateFacilityAvatar(facilityId, bytes);
+            }
         }
     }
 }
