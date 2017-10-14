@@ -28,7 +28,7 @@ AND
 [userPermission].[FacilityId] = [facility].[FacilityId]
 INNER JOIN [ValueObjects].[Permissions] AS [permission]
 ON [permission].[PermissionId] = [userPermission].[PermissionId] 
-INNER JOIN [ValueObjects].[Positions] AS [position]
+LEFT JOIN [ValueObjects].[Positions] AS [position]
 ON [position].[PositionId] = [user].[CurrentPositionId]
 ORDER BY [teamMember].[DeallocationTimestamp] ASC, [teamMember].[AllocationTimestamp] DESC
 
