@@ -113,7 +113,10 @@
                             </div>
                             <div id="collapse2" class="panel-collapse collapse" aria-expanded="false">
                                 <div class="panel-body">
-                                    @Html.Partial("_ListEpisodesOfCare", Model.EpisodesOfCare)
+                                    @Html.Partial("_ListEpisodesOfCare", Model.EpisodesOfCare, new ViewDataDictionary()
+                               {
+                                   new KeyValuePair<string, object>("BaseModel", baseModel)
+                               })
                                 </div>
                             </div>
                         </div>
@@ -347,10 +350,10 @@
 
             function bindSavedDetails(data) {
 
-
-
-
                 $("#editEpisodeOfCareModal").find('#ReasonForAdmissionName').val(data.Name)
+                if (!data.Name) {
+                    $("#editEpisodeOfCareModal").find('#ReasonForAdmissionName').attr('style', 'border-color: red');
+                }
                 $("#editEpisodeOfCareModal").find('#ReferringDoctorId').val(data.ReferringDoctorName)
                 $("#editEpisodeOfCareModal").find('#AttendingDoctorId').val(data.ReferringDoctorNumber)
 
@@ -404,6 +407,12 @@
                         $(this).attr('selected', true);
                     }
                 })
+
+                debugger;
+
+                if (!data.ImpairmentGroupId) {
+                    $('#ImpairmentGroupId_chosen .chosen-single').css('border-color', 'red');
+                }
 
 
                 $("#editEpisodeOfCareModal").find('#ImpairmentGroupId > option').each(function (index, value) {

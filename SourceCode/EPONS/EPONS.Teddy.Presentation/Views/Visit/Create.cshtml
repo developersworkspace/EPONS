@@ -3,6 +3,8 @@
     ViewBag.Title = "Create";
     var baseModel = (EPONS.Teddy.Presentation.ViewObjects.Base)Model;
     ViewData["BaseModel"] = baseModel;
+
+    ViewData["Model"] = Model;
 }
 
 
@@ -65,8 +67,6 @@
                                 <div id="collapse1" class="panel-collapse collapse in" aria-expanded="true">
                                     <div class='panel-body'>
                                         @Html.Partial("_VisitDetails", Model.Visit)
-
-
                                     </div>
                                 </div>
                             </div>
@@ -387,8 +387,16 @@
         }
 
         function EnableSubmit() {
-            var button = document.getElementById('SaveButton');
-            button.disabled = false;
+            
+
+            if (isNaN($('[name=DurationOfVisit]').val())) {
+                $('[name=DurationOfVisit], p').html('In this field you can only enter numbers.  No letters allowed.  Enter the number of minutes you have spent with the patient.');
+            } else {
+                $('[name=DurationOfVisit], p').html('');
+
+                var button = document.getElementById('SaveButton');
+                button.disabled = false;
+            }
         }
 
 

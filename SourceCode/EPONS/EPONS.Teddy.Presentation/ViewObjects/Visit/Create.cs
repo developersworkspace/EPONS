@@ -9,7 +9,8 @@ namespace EPONS.Teddy.Presentation.ViewObjects.Visit
         public IList<Application.EntityViews.MeasurementTool> MeasurementTools { get; set; } = new List<Application.EntityViews.MeasurementTool>();
         public IList<Application.EntityViews.Survey> Surveys { get; set; } = new List<Application.EntityViews.Survey>();
         public Application.Entities.Patient Patient { get; set; }
-       public Guid[] ScoreValues { get; set; } = new Guid[0];
+        public Application.EntityViews.EpisodeOfCare EpisodeOfCare { get; set; }
+        public Guid[] ScoreValues { get; set; } = new Guid[0];
 
         public Create(Base baseModel) : base(baseModel)
         {

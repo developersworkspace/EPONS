@@ -34,6 +34,8 @@ namespace EPONS.Teddy.Presentation.Controllers
             IList<Application.EntityViews.MeasurementTool> measurementTools =_visitService.GetMeasurementToolsForVisit(patientId);
             IList<Application.EntityViews.TeamMember> teamMembers = _patientService.ListTeamMembers(patientId);
             IList<Application.EntityViews.CompletedMeasurementTool> completedMeasurementTools = _patientService.ListCompletedMeasurementTools(patient.Id, DateTime.Now.AddYears(-1), DateTime.Now);
+            IList<Application.EntityViews.EpisodeOfCare> episodeOfCares = _patientService.ListEpisodesOfCare(patientId, baseObject.GetCurrentFacilityId().Value);
+
 
             if (!patient.CanAccess(baseObject.User, teamMembers, baseObject.User.Permissions))
                 throw new BusinessRuleException("You are not autorized to view this patient");
@@ -57,6 +59,7 @@ namespace EPONS.Teddy.Presentation.Controllers
                     ImpairmentGroups = _listRepository.GetImpairmentGroups()
                
                 },
+                EpisodeOfCare = episodeOfCares.FirstOrDefault(),
                 Patient = patient,
                 MeasurementTools = measurementTools,
                 Surveys = _patientService.ListSurveys(patientId)
@@ -81,6 +84,7 @@ namespace EPONS.Teddy.Presentation.Controllers
 
                 IList<Application.EntityViews.TeamMember> teamMembers = _patientService.ListTeamMembers(model.PatientId);
                 IList<Application.EntityViews.MeasurementTool> measurementTools = _visitService.GetMeasurementToolsForVisit(model.PatientId);
+                IList<Application.EntityViews.EpisodeOfCare> episodeOfCares = _patientService.ListEpisodesOfCare(model.PatientId, baseObject.GetCurrentFacilityId().Value);
 
                 if (!patient.CanAccess(baseObject.User, teamMembers, baseObject.User.Permissions))
                     throw new BusinessRuleException("You are not autorized to view this patient");
@@ -94,6 +98,7 @@ namespace EPONS.Teddy.Presentation.Controllers
                         ImpairmentGroupId = model.ImpairmentGroupId
                     },
                     Patient = patient,
+                    EpisodeOfCare = episodeOfCares.FirstOrDefault(),
                     MeasurementTools = measurementTools,
                     ScoreValues = scoreValues
                 });

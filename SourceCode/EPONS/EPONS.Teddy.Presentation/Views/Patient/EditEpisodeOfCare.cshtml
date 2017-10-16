@@ -1,6 +1,6 @@
 ﻿@model EPONS.Teddy.Application.Entities.EpisodeOfCare
 @{
-
+    
 }
 <style type="text/css">
     .display {
@@ -280,7 +280,7 @@
                             </div>
                         </div>
 
-                        @Html.HiddenFor(x => x.EpisodeOfCareId)   
+                        @Html.HiddenFor(x => x.EpisodeOfCareId)
                         @Html.HiddenFor(x => x.ReferringDoctorId)
                         @Html.HiddenFor(x => x.AttendingDoctorId)
                     </section>
@@ -300,9 +300,9 @@
                         </table>
                     </section>
                     @*<h4>Attending Doctor</h4>
-        <input type="checkbox" id="attendingCheckbox">*@
+                        <input type="checkbox" id="attendingCheckbox">*@
                     <section id="ShowHideDischarge1" style="display:none">
-                            <div class="row">
+                        <div class="row">
                             <div class="col-md-12">
                                 @Html.DisplayNameFor(x => x.DischargeTypeId)
                             </div>
@@ -319,18 +319,18 @@
                                 @Html.ValidationMessageFor(x => x.DischargeTypeId, null, new { @class = "text-danger" })
                             </div>
                         </div>
-                        
-                        </section>
-                        @Html.HiddenFor(x => x.PatientId)
-                        @Html.HiddenFor(x => x.FacilityId)
-                        @Html.AntiForgeryToken()
+
+                    </section>
+                    @Html.HiddenFor(x => x.PatientId)
+                    @Html.HiddenFor(x => x.FacilityId)
+                    @Html.AntiForgeryToken()
 
 
 
-</div>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="SaveButton"  hidden="false" type="submit" class="btn btn-primary">Update</button>
+                    <button id="SaveButton" hidden="false" type="submit" class="btn btn-primary">Update</button>
                 </div>
             }
 
@@ -388,7 +388,12 @@
             ajax: '@Url.Action("SearchICD10Codes", "Ajax")'
         });
 
-        $('#ShowDischargeCheckbox')
+        @if (Model.ReasonForAdmissionName == null)
+        {
+           <text>
+            $('#ImpairmentGroupId_chosen .chosen-single.chosen-single-with-deselect').css('border-color', 'red');
+           </text>
+        }
 
     });
 
