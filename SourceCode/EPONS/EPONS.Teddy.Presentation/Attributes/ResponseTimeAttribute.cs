@@ -27,6 +27,7 @@ namespace EPONS.Teddy.Presentation.Attributes
 
             Metrics.Timer(statName, Convert.ToInt32(stopwatch.ElapsedMilliseconds));
             Metrics.Timer("HTTPResponseTime", Convert.ToInt32(stopwatch.ElapsedMilliseconds));
+            Metrics.Timer($"HTTP.{filterContext.RequestContext.HttpContext.Request.HttpMethod}.{filterContext.RequestContext.HttpContext.Response.StatusCode}", Convert.ToInt32(stopwatch.ElapsedMilliseconds));
         }
     }
 }
