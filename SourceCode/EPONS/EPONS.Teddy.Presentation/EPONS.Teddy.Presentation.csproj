@@ -540,6 +540,7 @@
     <Content Include="Views\Patient\_CreateEpisodeOfCareModal.cshtml" />
     <Content Include="Views\Patient\EditEpisodeOfCare.cshtml" />
     <Content Include="Views\Report\ProgressReportRedesigned.cshtml" />
+    <Content Include="Views\User\_ChangePassword.cshtml" />
     <None Include="Web.EPONS.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
