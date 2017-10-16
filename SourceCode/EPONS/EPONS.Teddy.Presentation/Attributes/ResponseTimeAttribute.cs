@@ -19,8 +19,13 @@ namespace EPONS.Teddy.Presentation.Attributes
         {
             base.OnActionExecuted(filterContext);
 
+            string statName = $"HTTPResponseTime-{filterContext.ActionDescriptor.ControllerDescriptor.ControllerName}-{filterContext.ActionDescriptor.ActionName}";
+
             System.Diagnostics.Stopwatch stopwatch = (System.Diagnostics.Stopwatch)filterContext.RequestContext.HttpContext.Items[Key];
 
+            stopwatch.Stop();
+
+            Metrics.Timer(statName, Convert.ToInt32(stopwatch.ElapsedMilliseconds));
             Metrics.Timer("HTTPResponseTime", Convert.ToInt32(stopwatch.ElapsedMilliseconds));
         }
     }
