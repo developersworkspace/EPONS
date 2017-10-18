@@ -25,12 +25,6 @@ namespace EPONS.Teddy.Presentation
             log4net.Config.XmlConfigurator.Configure();
             EPONSSection config = ConfigurationManager.GetSection("EPONS") as EPONSSection;
 
-            Metrics.Configure(new MetricsConfig
-            {
-                StatsdServerName = "open-stats.openservices.co.za",
-                Prefix = "EPONS",
-            });
-
         }
 
         public void Application_Error(object sender, EventArgs e)
