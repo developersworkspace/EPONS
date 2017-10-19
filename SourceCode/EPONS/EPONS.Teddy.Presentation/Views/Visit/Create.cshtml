@@ -271,8 +271,8 @@
 @section styles {
     <link href="~/Content/css/plugins/chosen/chosen.css" rel="stylesheet" />
     <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
-    <link href="~/Content/css/plugins/summernote/summernote.css" rel="stylesheet" />
-    <link href="~/Content/css/plugins/summernote/summernote-bs3.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote-bs4.css" rel="stylesheet" />
     <link href="~/Content/css/plugins/datetimepicker/bootstrap-datetimepicker.css" rel="stylesheet" />
     <link href="~/Content/css/visit.css" rel="stylesheet" />
 
@@ -281,7 +281,7 @@
 @section scripts {
     <script src="~/Content/js/plugins/chosen/chosen.jquery.js"></script>
     <script src="~/Content/js/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="~/Content/js/plugins/summernote/summernote.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.min.js"></script>
     <script src="~/Content/js/plugins/datetimepicker/bootstrap-datetimepicker.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/validate.js/0.11.1/validate.min.js"></script>
     <script src="~/Content/js/epons-visit-validations.js?id=@DateTime.UtcNow.Ticks"></script>
@@ -305,17 +305,31 @@
                 height: 300,
                 toolbar: [
     ['style', ['bold', 'italic', 'underline', 'clear']],
-    ['fontsize', ['fontsize']],
     ['color', ['color']],
     ['para', ['ul', 'ol', 'paragraph']],
-    ['height', ['height']],
     ['insert', ['picture', 'link']]
                 ]
             });
+
+            $('.summernote').on('summernote.paste', function (customEvent, nativeEvent) {
+                
+                var code = $(customEvent.currentTarget).val();
+                console.log(code);
+
+                code = code.replace(/style="[^\"]*"/gi, '');
+                code = code.replace(/face="[^\"]*"/gi, '');
+
+                $(customEvent.currentTarget).val(code)
+            });
+
+            $('.summernote').summernote('fontName', 'Arial');
+            $('.summernote').summernote('fontSize', 20);
+
             $("#Timestamp").datetimepicker({ format: 'yyyy/mm/dd hh:ii' });
 
 
             $('form#createVisit').on('submit', function () {
+
                 var form = $(this);
 
                 if (form.valid()) {
