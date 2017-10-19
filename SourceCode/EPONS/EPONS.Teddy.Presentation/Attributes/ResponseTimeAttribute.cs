@@ -1,5 +1,4 @@
-﻿using StatsdClient;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -12,7 +11,7 @@ namespace EPONS.Teddy.Presentation.Attributes
     {
         private const string Key = "ResponseTimeAttribute";
 
-        private static UdpClient _udpClient = new UdpClient("localhost", 8125);
+        private static UdpClient _udpClient = new UdpClient();
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -64,7 +63,7 @@ namespace EPONS.Teddy.Presentation.Attributes
                 }
             });
 
-            SendMetric("HTTPRequests", 1, "c", new string[][] {
+            SendMetric("HTTPRequest", 1, "c", new string[][] {
                 new string[]
                 {
                     "Token",
@@ -101,12 +100,13 @@ namespace EPONS.Teddy.Presentation.Attributes
 
         private void SendMetric(string name, long value, string type, string[][] tags)
         {
+            _udpClient.Connect("open-stats.openservices.co.za", 8125);
 
             string tagsString = String.Join(",", tags.Select((x) => $"{x[0]}:{x[1]}").ToArray());
 
-            byte[] bytes = Encoding.ASCII.GetBytes($"{name}:{value}|{type}|#${tagsString}");
+            byte[] bytes = Encoding.ASCII.GetBytes($"{name}:{value}|{type}|#{tagsString}");
 
-            _udpClient.Send(new byte[] { 1, 2, 3, 4, 5 }, 5);
+            _udpClient.Send(bytes, bytes.Length);
         }
     }
 }

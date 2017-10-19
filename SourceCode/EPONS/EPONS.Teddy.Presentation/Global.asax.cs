@@ -1,6 +1,5 @@
 ﻿using EPONS.Teddy.Application.Configuration;
 using RestSharp;
-using StatsdClient;
 using System;
 using System.Configuration;
 using System.Web;
