@@ -311,16 +311,23 @@
                 ]
             });
 
-            $('.summernote').on('summernote.paste', function (customEvent, nativeEvent) {
-                
-                var code = $(customEvent.currentTarget).val();
-                console.log(code);
+            $('.summernote').each(function (index, element) {
+                $(element).on('summernote.paste', function (customEvent, nativeEvent) {
 
-                code = code.replace(/style="[^\"]*"/gi, '');
-                code = code.replace(/face="[^\"]*"/gi, '');
+                    setTimeout(function () {
+                        var code = $(element).summernote('code');
 
-                $(customEvent.currentTarget).val(code)
+
+                        code = code.replace(/style="[^\"]*"/gi, '');
+                        code = code.replace(/face="[^\"]*"/gi, '');
+
+                        $(element).summernote('code', code);
+
+                    }, 200);
+                });
             });
+
+            
 
             $('.summernote').summernote('fontName', 'Arial');
             $('.summernote').summernote('fontSize', 20);
