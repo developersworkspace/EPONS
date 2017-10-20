@@ -327,41 +327,44 @@
                 });
             });
 
-            
+            @if (Model.Settings.ContainsKey("ePONSFont")) {
+                <text>
+                    $('.note-editable').css('font-family', '@Model.Settings["ePONSFont"]');
 
-            $('.summernote').summernote('fontName', 'Arial');
-            $('.summernote').summernote('fontSize', 20);
+                </text>
+            }
+
 
             $("#Timestamp").datetimepicker({ format: 'yyyy/mm/dd hh:ii' });
 
 
             $('form#createVisit').on('submit', function () {
 
-                var form = $(this);
+                    var form = $(this);
 
-                if (form.valid()) {
+                    if (form.valid()) {
 
-                    var submitButton = form.find('[type=submit]');
+                        var submitButton = form.find('[type=submit]');
 
-                    form.find('input[type=radio]').removeAttr('disabled');
+                        form.find('input[type=radio]').removeAttr('disabled');
 
-                    var subscores = '';
+                        var subscores = '';
 
                     $('.modal input[type=radio]:checked').each(function () {
-                        var element = $(this);
+                            var element = $(this);
 
-                        name = element.attr('name');
-                        value = element.val();
+                            name = element.attr('name');
+                            value = element.val();
 
-                        subscores += '<input type="hidden" name="' + name + '" value="' + value + '">';
-                    });
+                            subscores += '<input type="hidden" name="' + name + '" value="' + value + '">';
+                        });
 
                     $('#subscores').html(subscores);
-                }
+                    }
+
+                });
 
             });
-
-        });
 
 
 
@@ -408,7 +411,7 @@
         }
 
         function EnableSubmit() {
-            
+
 
             if (isNaN($('[name=DurationOfVisit]').val())) {
                 $('[name=DurationOfVisit], p').html('In this field you can only enter numbers.  No letters allowed.  Enter the number of minutes you have spent with the patient.');

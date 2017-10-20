@@ -16,6 +16,7 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             AdminMessageTitle = baseModel.AdminMessageTitle;
             AdminMessageBody = baseModel.AdminMessageBody;
             Override = false;
+            Settings = baseModel.Settings;
 
 
         }
@@ -26,6 +27,8 @@ namespace EPONS.Teddy.Presentation.ViewObjects
 
         public string AdminMessageTitle { get; set; }
         public string AdminMessageBody { get; set; }
+
+        public Dictionary<string, string> Settings = new Dictionary<string, string>();
 
         public string DisplayName { get; set; }
         public Application.Entities.User User { get; set; }

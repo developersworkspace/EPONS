@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Linq;
 using Epons.Gateway.Helpers;
 using EPONS.Teddy.Presentation.Attributes;
+using Epons.Gateway;
 
 namespace EPONS.Teddy.Presentation.Controllers
 {
@@ -18,6 +19,12 @@ namespace EPONS.Teddy.Presentation.Controllers
     {
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IDbConnection _connection;
+        private SettingGateway _settingGateway;
+
+        public BaseController()
+        {
+            _settingGateway = new SettingGateway();
+        }
 
         protected IDbConnection GetConnection()
         {
@@ -61,6 +68,10 @@ namespace EPONS.Teddy.Presentation.Controllers
                 result.AdminMessageTitle = adminMessageData.First().Title;
                 result.AdminMessageBody = adminMessageData.First().Message;
             }
+
+            string ePONSFont = _settingGateway.Find("ePONSFont");
+
+            result.Settings.Add("ePONSFont", ePONSFont);
 
             return result;
         }
