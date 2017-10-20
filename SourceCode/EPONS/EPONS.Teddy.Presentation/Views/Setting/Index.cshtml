@@ -1,4 +1,5 @@
-﻿@{
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Base
+@{
     ViewBag.Title = "Setting";
 }
 
@@ -29,7 +30,15 @@
                     <h5>Settings</h5>
                 </div>
                 <div class="ibox-content">
-
+                    @foreach(var setting in Model.Settings)
+                    {
+                        <form method="get" action="@Url.Action("Update", "Setting")">
+                            <label>@setting.Key</label>
+                            <input type="text" name="value" value="@setting.Value" class="form-control" />
+                            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Save</button>
+                            <input type="hidden" name="name" value="@setting.Key" class="form-control" />
+                        </form>
+                    }
                 </div>
             </div>
         </div>
