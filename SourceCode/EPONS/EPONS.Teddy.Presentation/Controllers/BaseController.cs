@@ -73,6 +73,10 @@ namespace EPONS.Teddy.Presentation.Controllers
 
             result.Settings.Add("ePONSFont", ePONSFont);
 
+            string ePONSFontSize = _settingGateway.Find("ePONSFontSize");
+
+            result.Settings.Add("ePONSFontSize", ePONSFont);
+
             return result;
         }
 

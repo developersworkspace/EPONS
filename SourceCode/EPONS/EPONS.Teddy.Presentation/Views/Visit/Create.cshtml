@@ -334,6 +334,13 @@
                 </text>
             }
 
+            @if (Model.Settings.ContainsKey("ePONSFontSize")) {
+                <text>
+                    $('.note-editable').css('font-size', '@Model.Settings["ePONSFontSize"]');
+
+                </text>
+            }
+
 
             $("#Timestamp").datetimepicker({ format: 'yyyy/mm/dd hh:ii' });
 
