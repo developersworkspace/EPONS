@@ -104,7 +104,7 @@
                                             <h3>Daily Notes</h3>
                                             <span>(Notes you enter here will <b class="text-danger">not</b> be included in the Patient Progress Report for the Case Manager)</span>
                                         </div>
-                                        <div class="col-md-10" id="extranotes">
+                                        <div class="col-md-10" id="extranotes" style="font-family: @Model.Settings["ePONSFont"]; font-size: @Model.Settings["ePONSFontSize"]">
                                             <div class="ibox float-e-margins">
                                                 <div class="ibox-content no-padding">
                                                     @if (Model.Visit.IsPrivate && Model.Visit.UserId != Model.User.Id)
@@ -128,7 +128,7 @@
                                             <h3>Patient Progress Notes</h3>
                                             <span>(Notes you enter here will be used to compile the formal Patient Progress Report for the Case Manager)</span>
                                         </div>
-                                        <div class="col-md-10" id="notes">
+                                        <div class="col-md-10" id="notes" style="font-family: @Model.Settings["ePONSFont"]; font-size: @Model.Settings["ePONSFontSize"]">
                                             <div class="ibox float-e-margins">
                                                 <div class="ibox-content no-padding">
                                                     @Html.Raw(HttpUtility.HtmlDecode(Model.Visit.ProgressNotes))
