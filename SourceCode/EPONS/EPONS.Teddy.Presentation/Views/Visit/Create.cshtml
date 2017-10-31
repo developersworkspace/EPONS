@@ -318,8 +318,29 @@
                         var code = $(element).summernote('code');
 
 
-                        code = code.replace(/style="[^\"]*"/gi, '');
-                        code = code.replace(/face="[^\"]*"/gi, '');
+                        code = code.replace(/style="([^\"]*)"/, function (all, g1) {
+
+                            var styleContent = g1.replace('&quot;', '"');
+
+                            var styleElements = styleContent.split(';');
+
+                            var newStyleElements = [];
+
+                            for (var element of styleElements) {
+                                var splittedElement = element.split(':');
+                                if (splittedElement[0] === 'font-family') {
+                                    newStyleElements.push('font-family:@Model.Settings["ePONSFont"]');
+                                } else if (splittedElement[0] === 'font-size') {
+                                    newStyleElements.push('font-size:@Model.Settings["ePONSFontSize"]');
+                                } else {
+                                    newStyleElements.push(element);
+                                }
+                            }
+
+                            var newStyleContent = `style="${newStyleElements.join(';').replace('"', '&quot;')}"`;
+
+                            return newStyleContent;
+                        });
 
                         $(element).summernote('code', code);
 
