@@ -318,7 +318,7 @@
                         var code = $(element).summernote('code');
 
 
-                        code = code.replace(/style="([^\"]*)"/, function (all, g1) {
+                        code = code.replace(/style="([^\"]*)"/g, function (all, g1) {
 
                             var styleContent = g1.replace('&quot;', '"');
 
