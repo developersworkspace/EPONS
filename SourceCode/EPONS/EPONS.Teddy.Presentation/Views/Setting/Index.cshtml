@@ -30,14 +30,47 @@
                     <h5>Settings</h5>
                 </div>
                 <div class="ibox-content">
-                    @foreach(var setting in Model.Settings)
+                    @foreach (var setting in Model.Settings)
                     {
-                        <form method="get" action="@Url.Action("Update", "Setting")">
-                            <label>@setting.Key</label>
-                            <input type="text" name="value" value="@setting.Value" class="form-control" />
-                            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Save</button>
-                            <input type="hidden" name="name" value="@setting.Key" class="form-control" />
-                        </form>
+                        if (setting.Key == "ePONSFont")
+                        {
+                            <form method="get" action="@Url.Action("Update", "Setting")">
+                                <label>@setting.Key</label>
+                                <select name="value" class="form-control">
+                                    <option @(setting.Value == "Arial"? "selected" : "")>Arial</option>
+                                    <option @(setting.Value == "Helvetica" ? "selected" : "")>Helvetica</option>
+                                    <option @(setting.Value == "Times New Roman" ? "selected" : "")>Times New Roman</option>
+                                    <option @(setting.Value == "Courier" ? "selected" : "")>Courier</option>
+                                    <option @(setting.Value == "Verdana" ? "selected" : "")>Verdana</option>
+                                    <option @(setting.Value == "" ? "selected" : "")>Tahoma</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px">Save</button>
+                                <input type="hidden" name="name" value="@setting.Key" class="form-control" />
+                            </form>
+                        }
+                        else if (setting.Key == "ePONSFontSize")
+                        {
+                            <form method="get" action="@Url.Action("Update", "Setting")">
+                                <label>@setting.Key</label>
+                                <select name="value" class="form-control">
+                                    <option @(setting.Value == "9pt"? "selected" : "")>9pt</option>
+                                    <option @(setting.Value == "10pt" ? "selected" : "")>10pt</option>
+                                    <option @(setting.Value == "11pt" ? "selected" : "")>11pt</option>
+                                    <option @(setting.Value == "12pt" ? "selected" : "")>12pt</option>    
+                                </select>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px">Save</button>
+                                <input type="hidden" name="name" value="@setting.Key" class="form-control" />
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="get" action="@Url.Action("Update", "Setting")">
+                                <label>@setting.Key</label>
+                                <input type="text" name="value" value="@setting.Value" class="form-control" />
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px">Save</button>
+                                <input type="hidden" name="name" value="@setting.Key" class="form-control" />
+                            </form>
+                        }
                     }
                 </div>
             </div>
