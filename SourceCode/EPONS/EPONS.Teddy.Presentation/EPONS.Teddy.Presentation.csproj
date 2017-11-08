@@ -459,6 +459,7 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="Content\ePONS-User-Manual.pdf" />
     <None Include="Project_Readme.html" />
     <Content Include="Views\Shared\_Anonymous.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
