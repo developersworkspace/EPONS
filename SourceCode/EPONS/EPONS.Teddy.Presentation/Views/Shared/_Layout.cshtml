@@ -107,8 +107,13 @@
                             </ul>
                         </li>
                     }
+
                     <li>
-                        <a href="@Url.Content("~/Content/ePONS-User-Manual.pdf")" target="_blank"><i class="fa fa-question"></i> <span class="nav-label">User Manual</span></a>
+                        <a href="#"><i class="fa fa-question"></i> <span class="nav-label">Help </span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="@Url.Content("~/Content/ePONS-User-Manual.pdf")">User Manual</a></li>
+                            <li><a href="@Url.Action("TrainingVideos", "Help")">Training Videos</a></li>
+                        </ul>
                     </li>
                 </ul>
 

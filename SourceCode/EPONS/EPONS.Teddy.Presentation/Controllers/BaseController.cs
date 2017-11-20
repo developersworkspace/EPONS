@@ -77,6 +77,10 @@ namespace EPONS.Teddy.Presentation.Controllers
 
             result.Settings.Add("ePONSFontSize", ePONSFontSize);
 
+            string userAccreditationExpiry = _settingGateway.Find("UserAccreditationExpiry");
+
+            result.Settings.Add("UserAccreditationExpiry", userAccreditationExpiry);
+
             return result;
         }
 
