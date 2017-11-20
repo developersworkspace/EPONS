@@ -8,7 +8,8 @@ AS
 SELECT 
 [measurementTool].[MeasurementToolId] AS [Id],
 [measurementTool].[Name] AS [Name],
-[measurementToolScore].[Score] AS [Score]
+[measurementToolScore].[Score] AS [Score],
+[measurementToolScore].[Timestamp] AS [Timestamp]
 FROM [User].[MeasurementToolScores] AS [measurementToolScore]
 INNER JOIN [ValueObjects].[MeasurementTools] AS [measurementTool]
 ON [measurementTool].[MeasurementToolId] = [measurementToolScore].[MeasurementToolId]

@@ -14,6 +14,7 @@ namespace EPONS.Teddy.Application.ValueObjects
         public Guid Id { get; set; }
         public string Name { get; set; }
         public int Score { get; set; }
+        public DateTime Timestamp { get; set; }
 
         public IList<ListItem> MeasurementTools { get; set; } = new List<ListItem>();
     }

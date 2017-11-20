@@ -219,7 +219,7 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             if (User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "FAM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "APOM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Eta" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Epsilon")
                 return true;
 
-            return User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80) > 0;
+            return User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays > 180) > 0;
         }
 
         public string CanUseMeasurementToolMessage(Guid id)
@@ -230,7 +230,12 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             if (User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "FAM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "APOM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Eta" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Epsilon")
                 return null;
 
-            return User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80) > 0 ? null : "You don't have access to this measurement tools. Please completed your moodle course.";
+            if (User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays > 180) > 0)
+            {
+                return null;
+            }
+
+            return "You don't have access to this measurement tools. Please completed your moodle course.";
         }
 
         public bool CanEnterNoteToVisit()
