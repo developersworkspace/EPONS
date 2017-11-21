@@ -74,7 +74,7 @@
                         else
                         {
                             <form method="get" action="@Url.Action("Update", "Setting")">
-                                <label>@setting.Key</label>
+                                <label>Accreditation for Measurement Tools expire after X days</label>
                                 <input type="text" name="value" value="@setting.Value" class="form-control" />
                                 <button type="submit" class="btn btn-primary" style="margin-top: 10px">Save</button>
                                 <input type="hidden" name="name" value="@setting.Key" class="form-control" />

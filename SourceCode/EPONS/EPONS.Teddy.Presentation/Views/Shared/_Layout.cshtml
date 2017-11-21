@@ -527,7 +527,7 @@
         function onClick_DownloadUserManual() {
             $('#downloadUserManualModal').modal('toggle');
 
-            openInNewTab('@Url.Content("~/Content/ePONS-User-Manual.pdf")');
+            openInNewTab('@Url.Action("UserManual", "Help")');
         }
 
         function openInNewTab(url) {
