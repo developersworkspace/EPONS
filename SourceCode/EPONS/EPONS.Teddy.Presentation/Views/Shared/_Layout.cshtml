@@ -314,7 +314,7 @@
 
                 @foreach (var item in baseModel.User.MeasurementToolScores)
                 {
-                    if (DateTime.UtcNow.Subtract(item.Timestamp).TotalDays > 180 && item.Name != "FAM" && item.Name != "APOM" && item.Name != "Eta" && item.Name != "Epsilon")
+                    if (DateTime.UtcNow.Subtract(item.Timestamp).TotalDays > Convert.ToInt32(Model.Settings["UserAccreditationExpiry"]) && item.Name != "FAM" && item.Name != "APOM" && item.Name != "Eta" && item.Name != "Epsilon")
                     {
                         <div class="alert alert-warning">
                             <strong>Notification!</strong>

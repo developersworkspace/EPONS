@@ -79,7 +79,7 @@ namespace EPONS.Teddy.Presentation.Controllers
 
             string userAccreditationExpiry = _settingGateway.Find("UserAccreditationExpiry");
 
-            result.Settings.Add("UserAccreditationExpiry", userAccreditationExpiry);
+            result.Settings.Add("UserAccreditationExpiry", string.IsNullOrWhiteSpace(userAccreditationExpiry)? "180" : userAccreditationExpiry);
 
             return result;
         }

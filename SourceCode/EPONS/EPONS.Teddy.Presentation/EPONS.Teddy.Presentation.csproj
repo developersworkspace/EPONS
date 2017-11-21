@@ -30,6 +30,7 @@
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
     <ApplicationInsightsResourceId>/subscriptions/9aa017d5-8dc1-4d9b-86f0-e2c3a1580bfd/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/EPONS.Teddy.Presentation</ApplicationInsightsResourceId>
     <TypeScriptToolsVersion>2.4</TypeScriptToolsVersion>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -256,6 +257,7 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SettingController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
+    <Compile Include="Controllers\TrainingVideosController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VisitController.cs" />
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
@@ -541,6 +543,7 @@
     <Content Include="Views\Report\ProgressReportRedesigned.cshtml" />
     <Content Include="Views\User\_ChangePassword.cshtml" />
     <Content Include="Views\Setting\Index.cshtml" />
+    <Content Include="Views\TrainingVideos\Index.cshtml" />
     <None Include="Web.EPONS.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
