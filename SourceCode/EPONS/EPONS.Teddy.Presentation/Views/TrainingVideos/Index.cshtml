@@ -1,7 +1,42 @@
-﻿
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Base
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Training Videos";
 }
 
-<h2>Index</h2>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Training Videos</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>Training Videos</a>
+            </li>
+            <li class="active">
+                <strong>Index</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
 
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Training Videos</h5>
+                </div>
+                <div class="ibox-content">
+                    <epons-training-videos name="@Request.QueryString["name"]"></epons-training-videos>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-training-videos/inline.319054b77edfab6939d1.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-training-videos/polyfills.35726d60cdf25fecc5f1.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-training-videos/vendor.7c7d05b8ad8f47938037.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-training-videos/main.5b2ca19b9e77e9140486.bundle.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

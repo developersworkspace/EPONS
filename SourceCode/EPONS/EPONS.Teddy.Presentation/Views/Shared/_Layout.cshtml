@@ -15,7 +15,7 @@
     <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet">
 
     <link href="~/Content/css/animate.css" rel="stylesheet">
-    <link href="~/Content/css/style.css" rel="stylesheet">
+    <link href="~/Content/css/style.css?timestamp=@DateTime.UtcNow.Ticks" rel="stylesheet">
     <link href="~/Content/css/custom.css" rel="stylesheet" />
     <link href="~/Content/css/epons.css" rel="stylesheet" />
 
@@ -112,7 +112,7 @@
                         <a href="#"><i class="fa fa-question"></i> <span class="nav-label">Help </span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="#" data-toggle="modal" data-target="#downloadUserManualModal">User Manual</a></li>
-                            <li><a href="@Url.Action("TrainingVideos", "Help")">Training Videos</a></li>
+                            <li><a href="@Url.Action("", "TrainingVideos")">Training Videos</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -320,7 +320,10 @@
                             <strong>Notification!</strong>
                             <br />
                             <p>
-                                Your accreditation for the @item.Name measurement tool expires on @item.Timestamp.AddDays(180).ToString("yyyy-MM-dd"). Please make sure that you repeat your @item.Name exam before @item.Timestamp.AddDays(180).ToString("yyyy-MM-dd") to ensure you are able to score your patients after @item.Timestamp.AddDays(180).ToString("yyyy-MM-dd").  To refresh your knowledge of the @item.Name you may watch these <a href="#">training videos</a>.
+                                Your accreditation for the @item.Name measurement tool expires on @item.Timestamp.AddDays(180).ToString("yyyy-MM-dd"). Please make sure that you repeat your @item.Name exam before @item.Timestamp.AddDays(180).ToString("yyyy-MM-dd") to ensure you are able to score your patients after @item.Timestamp.AddDays(180).ToString("yyyy-MM-dd").  To refresh your knowledge of the @item.Name you may watch these <a href="@Url.Action("", "TrainingVideos", new
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                          name = item.Name
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      })">training videos</a>.
                             </p>
                         </div>
                     }
@@ -405,10 +408,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
+                    <h4 class="modal-title">Please do NOT print this user manual</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Some text in the modal.</p>
+                    <p>Please do NOT print this user manual. Features of this program change without notice.  If you print this manual it will be out of date and be meaningless.  DO NOT WASTE PAPER!</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" onclick="onClick_DownloadUserManual()">Download</button>
