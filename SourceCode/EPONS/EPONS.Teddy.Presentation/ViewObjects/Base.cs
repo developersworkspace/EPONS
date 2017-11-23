@@ -219,7 +219,7 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             if (User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "FAM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "APOM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Eta" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Epsilon")
                 return true;
 
-            return User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays > Convert.ToInt32(Settings["UserAccreditationExpiry"])) > 0;
+            return User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays < Convert.ToInt32(Settings["UserAccreditationExpiry"])) > 0;
         }
 
         public string CanUseMeasurementToolMessage(Guid id)
@@ -230,7 +230,7 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             if (User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "FAM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "APOM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Eta" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Epsilon")
                 return null;
 
-            if (User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays > Convert.ToInt32(Settings["UserAccreditationExpiry"])) > 0)
+            if (User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays < Convert.ToInt32(Settings["UserAccreditationExpiry"])) > 0)
             {
                 return null;
             }
