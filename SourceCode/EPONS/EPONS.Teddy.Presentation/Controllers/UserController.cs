@@ -17,7 +17,7 @@ namespace EPONS.Teddy.Presentation.Controllers
         private ListRepository _listRepository;
 
         // OAuth2 Details
-        private const string OAuth2Uri = "http://epons-oauth2-framework.openservices.co.za";
+        private const string OAuth2Uri = "http://secure.epons.sadfm.co.za";
         private const string ClientId = "0zyrWYATtw";
         private const string ClientSecret = "x3h8CTB2Cj";
 
