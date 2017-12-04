@@ -82,7 +82,7 @@
                     @Html.DisplayNameFor(x => x.IdentificationNumber)
                 </div>
                 <div class="col-md-3">
-                    @Html.TextBoxFor(x => x.IdentificationNumber, new { @class = "form-control", @readonly = "readonly"})
+                    @Html.TextBoxFor(x => x.IdentificationNumber, new { @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.IdentificationNumber, null, new { @class = "text-danger" })
                 </div>
             </div>
