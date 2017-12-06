@@ -62,10 +62,10 @@
                                 <input type="hidden" name="name" value="@setting.Key" class="form-control" />
                             </form>
                         }
-                        else if (setting.Key == "UserAccreditationExpiry")
+                        else if (setting.Key.StartsWith("UserMeasurementToolAccreditationExpiry-"))
                         {
                             <form method="get" action="@Url.Action("Update", "Setting")">
-                                <label>Accreditation for Measurement Tools expire after X days</label>
+                                <label>Accreditation for [@setting.Key.Substring("UserMeasurementToolAccreditationExpiry-".Length)] expires after X days</label>
                                 <input type="number" name="value" value="@setting.Value" class="form-control" />
                                 <button type="submit" class="btn btn-primary" style="margin-top: 10px">Save</button>
                                 <input type="hidden" name="name" value="@setting.Key" class="form-control" />
