@@ -1,0 +1,41 @@
+﻿@model EPONS.Teddy.Presentation.ViewObjects.Base
+@{
+    ViewBag.Title = "Accreditation Summary";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-md-10">
+        <h2>Accreditation Summary</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("","")">Home</a>
+            </li>
+            <li>
+                <a>Accreditation Summary</a>
+            </li>
+            <li class="active">
+                <strong>Index</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Accreditation Summary</h5>
+                </div>
+                <div class="ibox-content">
+                    <epons-measurement-tool-accreditation></epons-measurement-tool-accreditation>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-measurement-tool-accreditation/inline.b150664be40b231344d4.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-measurement-tool-accreditation/polyfills.026a9068668493734b04.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-measurement-tool-accreditation/main.2c33e96312c63158d21f.bundle.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

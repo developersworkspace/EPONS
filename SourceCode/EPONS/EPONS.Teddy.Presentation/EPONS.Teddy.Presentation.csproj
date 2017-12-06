@@ -245,6 +245,7 @@
     <Compile Include="ConfigurationDefaults.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccreditationSummaryController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -546,6 +547,7 @@
     <Content Include="Views\User\_ChangePassword.cshtml" />
     <Content Include="Views\Setting\Index.cshtml" />
     <Content Include="Views\TrainingVideos\Index.cshtml" />
+    <Content Include="Views\AccreditationSummary\Index.cshtml" />
     <None Include="Web.EPONS.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
