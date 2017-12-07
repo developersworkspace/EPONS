@@ -77,9 +77,27 @@ namespace EPONS.Teddy.Presentation.Controllers
 
             result.Settings.Add("ePONSFontSize", ePONSFontSize);
 
-            string userAccreditationExpiry = _settingGateway.Find("UserAccreditationExpiry");
+            string[] userMeasurementToolAccreditationExpirySettings = new string[]
+            {
+                "UserMeasurementToolAccreditationExpiry-Alpha",
+                "UserMeasurementToolAccreditationExpiry-APOM",
+                "UserMeasurementToolAccreditationExpiry-Beta",
+                "UserMeasurementToolAccreditationExpiry-Delta",
+                "UserMeasurementToolAccreditationExpiry-Epsilon",
+                "UserMeasurementToolAccreditationExpiry-Eta",
+                "UserMeasurementToolAccreditationExpiry-FAM",
+                "UserMeasurementToolAccreditationExpiry-Gamma",
+                "UserMeasurementToolAccreditationExpiry-Omega",
+                "UserMeasurementToolAccreditationExpiry-VitalSigns",
+                "UserMeasurementToolAccreditationExpiry-Zeta",
+            };
 
-            result.Settings.Add("UserAccreditationExpiry", string.IsNullOrWhiteSpace(userAccreditationExpiry)? "180" : userAccreditationExpiry);
+            foreach (var userMeasurementToolAccreditationExpirySetting in userMeasurementToolAccreditationExpirySettings)
+            {
+                string value = _settingGateway.Find(userMeasurementToolAccreditationExpirySetting);
+
+                result.Settings.Add(userMeasurementToolAccreditationExpirySetting, string.IsNullOrWhiteSpace(value) || value == "null"? "180" : value);
+            }
 
             return result;
         }

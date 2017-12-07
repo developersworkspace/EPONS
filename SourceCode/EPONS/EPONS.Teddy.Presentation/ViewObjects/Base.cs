@@ -208,7 +208,7 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             return User.IsSuperAdmin;
         }
 
-        public bool CanUseMeasurementTool(Guid id)
+        public bool CanUseMeasurementTool(Guid id, string name)
         {
             if (Override)
                 return true;
@@ -219,10 +219,10 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             if (User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "FAM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "APOM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Eta" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Epsilon")
                 return true;
 
-            return User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays < Convert.ToInt32(Settings["UserAccreditationExpiry"])) > 0;
+            return User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays < Convert.ToInt32(Settings[$"UserMeasurementToolAccreditationExpiry-{name}"])) > 0;
         }
 
-        public string CanUseMeasurementToolMessage(Guid id)
+        public string CanUseMeasurementToolMessage(Guid id, string name)
         {
             if (User.CurrentFacilityMeasurementTools.Count(x => x.Id == id) == 0)
                 return "Your facility does not have access to this measurement tool. Please contact your administrator.";
@@ -230,7 +230,7 @@ namespace EPONS.Teddy.Presentation.ViewObjects
             if (User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "FAM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "APOM" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Eta" || User.CurrentFacilityMeasurementTools.Single(x => x.Id == id).Name == "Epsilon")
                 return null;
 
-            if (User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays < Convert.ToInt32(Settings["UserAccreditationExpiry"])) > 0)
+            if (User.MeasurementToolScores.Count(x => x.Id == id && x.Score >= 80 && DateTime.UtcNow.Subtract(x.Timestamp).TotalDays < Convert.ToInt32(Settings[$"UserMeasurementToolAccreditationExpiry-{name}"])) > 0)
             {
                 return null;
             }

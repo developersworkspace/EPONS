@@ -131,7 +131,7 @@
                                     </div>
                                     <div id="@item.Id" class="panel-collapse collapse" aria-expanded="true">
                                         <div class='panel-body'>
-                                            @if (Model.CanUseMeasurementTool(item.Id))
+                                            @if (Model.CanUseMeasurementTool(item.Id, item.Name))
                                             {
                                                 foreach (var scoreItem in item.ScoreItems)
                                                 {
@@ -165,7 +165,7 @@
                                             }
                                             else
                                             {
-                                                <p>@Model.CanUseMeasurementToolMessage(item.Id)</p>
+                                                <p>@Model.CanUseMeasurementToolMessage(item.Id, item.Name)</p>
                                             }
                                         </div>
                                     </div>

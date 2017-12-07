@@ -310,22 +310,10 @@
                     </div>
                 }
 
-                @foreach (var item in baseModel.User.MeasurementToolScores)
-                {
-                    if (DateTime.UtcNow.Subtract(item.Timestamp).TotalDays > (Convert.ToInt32(Model.Settings["UserAccreditationExpiry"]) - 10) && item.Name != "FAM" && item.Name != "APOM" && item.Name != "Eta" && item.Name != "Epsilon")
-                    {
-                        <div class="alert alert-warning">
-                            <strong>Notification!</strong>
-                            <br />
-                            <p>
-                                Your accreditation for the @item.Name measurement tool expires on @item.Timestamp.AddDays(Convert.ToInt32(Model.Settings["UserAccreditationExpiry"])).ToString("yyyy-MM-dd"). Please make sure that you repeat your @item.Name exam before @item.Timestamp.AddDays(Convert.ToInt32(Model.Settings["UserAccreditationExpiry"])).ToString("yyyy-MM-dd") to ensure you are able to score your patients after @item.Timestamp.AddDays(Convert.ToInt32(Model.Settings["UserAccreditationExpiry"])).ToString("yyyy-MM-dd").  To refresh your knowledge of the @item.Name you may watch these <a @*href="@Url.Action("", "TrainingVideos", new
-                                                                                                                                                                                                                                                                                                                                                                                                                                                      {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                          name = item.Name
-                                                                                                                                                                                                                                                                                                                                                                                                                                                      })"*@ href="#" data-toggle="modal" data-target="#trainingVideosModal">training videos</a>.
-                            </p>
-                        </div>
-                    }
-                }
+                <epons-user-messages userId="@Model.User.Id"></epons-user-messages>
+                <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-user-messages/inline.bc489428a7edb0deba5e.bundle.js"></script>
+                <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-user-messages/polyfills.026a9068668493734b04.bundle.js"></script>
+                <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-user-messages/main.cfcd4efe3b1f84877fcc.bundle.js"></script>
 
 
                 @RenderBody()
