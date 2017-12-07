@@ -1,21 +1,7 @@
-﻿@model IEnumerable<EPONS.Teddy.Application.ValueObjects.MeasurementToolScore>
+﻿@model EPONS.Teddy.Application.Entities.User
 
-<table class="table table-condensed">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Name)</th>
-            <th>@Html.DisplayNameFor(model => model.Score)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Score</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<epons-user-measurement-tool-accreditations userId="@Model.Id"></epons-user-measurement-tool-accreditations>
+<script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-user-measurement-tool-accreditations/inline.8a1500af208eb7ad80b4.bundle.js"></script>
+<script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-user-measurement-tool-accreditations/polyfills.026a9068668493734b04.bundle.js"></script>
+<script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-user-measurement-tool-accreditations/main.7f4f13d32cc02e85a0c6.bundle.js"></script>
 
