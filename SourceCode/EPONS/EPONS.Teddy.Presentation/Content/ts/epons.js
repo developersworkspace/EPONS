@@ -1,6 +1,6 @@
 var epons;
 (function (epons) {
-    var ValidatorGateway = (function () {
+    var ValidatorGateway = /** @class */ (function () {
         function ValidatorGateway() {
             this.endpoint = 'http://api.sadfm.co.za';
         }
