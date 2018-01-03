@@ -355,7 +355,7 @@ namespace EPONS.Teddy.Presentation.Controllers
         [Authorize(Order = 4)]
         public ActionResult Delete(Guid patientId)
         {
-            _patientService.Delete(patientId);
+            _patientGateway.Delete(patientId);
 
             return RedirectToAction("List", "Patient");
         }
