@@ -48,6 +48,7 @@
                     @if (Request["type"] == null || Request["type"] == "active")
                     {
                         <epons-patient-list userId="@Model.User.Id" facilityId="@Model.GetCurrentFacilityId()"></epons-patient-list>
+
                         <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-list/inline.7e8c8249c914c75b9218.bundle.js"></script>
                         <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-list/main.caa0c7e54311f7ef3737.bundle.js"></script>
                     }
