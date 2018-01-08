@@ -407,8 +407,6 @@
                     }
                 })
 
-                debugger;
-
                 if (!data.ImpairmentGroupId) {
                     $('#ImpairmentGroupId_chosen .chosen-single').css('border-color', 'red');
                 }
@@ -433,7 +431,18 @@
                     if (this.value === data.DischargeTypeId) {
                         $(this).attr('selected', true);
                     }
-                })
+                });
+
+                $('#editEpisodeOfCareModal').find('#ImpairmentGroupId').chosen().change(function () {
+                    if ($('#editEpisodeOfCareModal').find('#ImpairmentGroupId').val() && $('#editEpisodeOfCareModal').find('#ReasonForAdmissionName').val()) {
+                        $("#ShowDischargeCheckbox").css('display', '')
+                        $("#ShowDischargeLabel").css('display', 'none')
+
+                    } else {
+                        $("#ShowDischargeCheckbox").css('display', 'none')
+                        $("#ShowDischargeLabel").css('display', '')
+                    }
+                });
 
 
                 $("select").trigger("chosen:updated");
