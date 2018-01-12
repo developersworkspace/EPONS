@@ -44,30 +44,10 @@
                     </div>
                 </div>
                 <div class="ibox-content">
+                    <epons-patient-list type="@(Request["type"] == null? "active" : Request["type"])" userId="@Model.User.Id" facilityId="@Model.GetCurrentFacilityId()"></epons-patient-list>
 
-                    @if (Request["type"] == null || Request["type"] == "active")
-                    {
-                        <epons-patient-list userId="@Model.User.Id" facilityId="@Model.GetCurrentFacilityId()"></epons-patient-list>
-
-                        <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-list/inline.7e8c8249c914c75b9218.bundle.js"></script>
-                        <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-list/main.caa0c7e54311f7ef3737.bundle.js"></script>
-                    }
-                    else
-                    {
-                        <div class="table-responsive">
-                            <form role="search" action="@Url.Action("List","Patient")" method="get">
-                                <div class="input-group">
-                                    <input type="text" placeholder="Search for patient..." class="form-control" name="query" id="query" value="@Request["query"]">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-secondary" type="submit">Search</button>
-                                    </span>
-                                    <input type="hidden" value="@(Request["type"] == null? "active" : Request["type"])" name="type">
-                                </div>
-                            </form>
-                            @Html.Partial("_ListPatients", Model.Patients)
-                            @Html.Partial("_Pagination", Model.Pagination)
-                        </div>
-                    }
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-list/inline.97709da7159749e7bc72.bundle.js"></script>
+                    <script type="text/javascript" src="http://ui-epons.sadfm.co.za/epons-patient-list/main.f842008bbf1b7dfdf4e6.bundle.js"></script>
                 </div>
             </div>
         </div>
