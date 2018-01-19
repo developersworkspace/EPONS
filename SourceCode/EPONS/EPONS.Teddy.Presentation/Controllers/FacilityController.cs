@@ -172,6 +172,26 @@ namespace EPONS.Teddy.Presentation.Controllers
             return File(bytes, "image/png");
         }
 
+        [HttpGet]
+        [Authorize(Order = 4)]
+
+        public ActionResult Lock(Guid facilityId)
+        {
+            _facilityService.Lock(facilityId);
+
+            return RedirectToAction("Edit", "Facility", new { facilityId = facilityId });
+        }
+
+        [HttpGet]
+        [Authorize(Order = 4)]
+
+        public ActionResult Unlock(Guid facilityId)
+        {
+            _facilityService.Unlock(facilityId);
+
+            return RedirectToAction("Edit", "Facility", new { facilityId = facilityId });
+        }
+
         #endregion
     }
 }

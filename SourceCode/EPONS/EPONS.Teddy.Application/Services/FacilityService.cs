@@ -8,12 +8,15 @@ using EPONS.Teddy.Application.EntityViews;
 using EPONS.Teddy.Application.Repositories;
 using EPONS.Teddy.Application.ValueObjects;
 using EPONS.Teddy.Application.Exceptions;
+using Epons.Gateway;
 
 namespace EPONS.Teddy.Application.Services
 {
     public class FacilityService
     {
         private FacilityRepository _facilityRepository;
+
+        private FacilityGateway _facilityGateway = new FacilityGateway();
 
         public FacilityService(IDbConnection connection)
         {
@@ -33,7 +36,13 @@ namespace EPONS.Teddy.Application.Services
 
         public Entities.Facility Get(Guid facilityId)
         {
-            return _facilityRepository.FindById(facilityId);
+            var facility = _facilityRepository.FindById(facilityId);
+
+            var facilityDto = _facilityGateway.Find(facilityId);
+
+            facility.Locked = facilityDto.Locked;
+
+            return facility;
         }
         public byte[] Avatar(Guid facilityId)
         {
@@ -68,6 +77,16 @@ namespace EPONS.Teddy.Application.Services
         public void SaveAvatar(Guid facilityId, byte[] bytes)
         {
             _facilityRepository.UpdateFacilityAvatar(facilityId, bytes);
+        }
+
+        public void Lock(Guid id)
+        {
+            _facilityGateway.Lock(id);
+        }
+
+        public void Unlock(Guid id)
+        {
+            _facilityGateway.Unlock(id);
         }
     }
 }

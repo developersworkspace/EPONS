@@ -20,6 +20,8 @@ namespace EPONS.Teddy.Application.Entities
         [DisplayName("Admission Type")]
         public Guid? AdmissionTypeId { get; set; }
 
+        public bool Locked { get; set; }
+
         public IList<ValueObjects.ListItem> AdmissionTypes { get; set; } = new List<ValueObjects.ListItem>();
     }
 }
